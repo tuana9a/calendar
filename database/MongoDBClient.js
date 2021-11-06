@@ -12,4 +12,8 @@ class MongoDBClient {
     }
 }
 
-module.exports.mongodbClient = new MongoDBClient();
+const mongodbClient = new MongoDBClient();
+
+module.exports = {
+    mongodbClient: mongodbClient,
+};

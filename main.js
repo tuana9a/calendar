@@ -3,6 +3,7 @@ const http = require("http");
 const https = require("https");
 const express = require("express");
 
+const { apis } = require("./apis");
 const { AppConfig } = require("./configs");
 const { mongodbClient } = require("./database/MongoDBClient");
 
@@ -14,6 +15,11 @@ async function main() {
     if (AppConfig.security.cors) {
         server.use(cors());
     }
+
+    server.get("/test/get", apis.testGet);
+    server.post("/test/post", apis.testPost);
+    server.post("/test/api/test", apis.insertTest);
+
     await mongodbClient.connect(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);
     let port = parseInt(process.env.PORT) || AppConfig.listen_port;

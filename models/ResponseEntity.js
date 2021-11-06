@@ -1,4 +1,4 @@
-export class ResponseEntity {
+class ResponseEntity {
     code = 0;
     message = null;
     data = null;
@@ -7,7 +7,8 @@ export class ResponseEntity {
         return new ResponseEntityBuilder();
     }
 }
-export class ResponseEntityBuilder {
+
+class ResponseEntityBuilder {
     object;
     constructor() {
         this.object = new ResponseEntity();
@@ -28,3 +29,7 @@ export class ResponseEntityBuilder {
         return this.object;
     }
 }
+module.exports = {
+    ResponseEntity: ResponseEntity,
+    ResponseEntityBuilder: ResponseEntityBuilder,
+};

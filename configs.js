@@ -1,17 +1,15 @@
 const fs = require("fs");
 
 let hardCodeConfig = {
-    app_config_path: "resource/app-config.json",
-    register_preview_config_path: "resource/register-preview-config.json",
-    automation_config: "resource/automation-config.json",
-    screenshot_captcha_path: "resource/temp.png",
+    app_config_path: "resource/app.conf.json",
 };
 const HardCodeConfig = hardCodeConfig;
-module.exports.HardCodeConfig = hardCodeConfig;
 
 let appConfig = {
     bind: "127.0.0.1",
     listen_port: 80,
+    log_enabled: true,
+    log_destination: "cs",
     security: {
         cors: false,
         ssl: false,
@@ -26,4 +24,9 @@ let appConfig = {
     },
 };
 appConfig = JSON.parse(fs.readFileSync(HardCodeConfig.app_config_path, { flag: "r", encoding: "utf-8" }));
-module.exports.AppConfig = appConfig;
+const AppConfig = appConfig;
+
+module.exports = {
+    HardCodeConfig: HardCodeConfig,
+    AppConfig: AppConfig,
+};

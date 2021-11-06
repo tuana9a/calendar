@@ -2,7 +2,8 @@
 
 let isServiceWorkderAvailable = "serviceWorker" in navigator;
 
-const CACHE_NAME = "webapp";
+const SERVICE_WORKER_FILE = "sw.js";
+const CACHE_NAME = "app";
 const CACHED_URLS = [];
 
 class CachesUtils {

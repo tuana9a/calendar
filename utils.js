@@ -1,5 +1,5 @@
-import { LOGGER } from "./logger";
-import { ResponseEntity } from "./models/ResponseEntity";
+const { ResponseEntity } = require("./models/ResponseEntity");
+const { ValidationError } = require("./exceptions");
 
 class Utils {
     reformatString(input) {
@@ -19,36 +19,7 @@ class Utils {
         }
     }
 }
-export const utils = new Utils();
-
-class ExpressUtils {
-    makeWrapperHandler(handler = async () => {}) {
-        async function wrapperHandler(req, resp) {
-            try {
-                await handler(req, resp);
-            } catch (err) {
-                console.log("[ SAFE CATCH ]");
-                console.error(err);
-                LOGGER.error(err);
-                try {
-                    // posible resp closed
-                    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-                    resp.send(ResponseEntity.builder().code(0).message("failed").data(err).build());
-                } catch (err) {
-                    console.log("[ SAFE CATCH ]");
-                    console.error(err);
-                    LOGGER.error(err);
-                } finally {
-                    // finally close any connection with client
-                    // don't cause exception even resp closed
-                    resp.end();
-                }
-            }
-        }
-        return wrapperHandler;
-    }
-}
-export const expressUtils = new ExpressUtils();
+const utils = new Utils();
 
 class DateTimeUtils {
     getDate(date = new Date()) {
@@ -67,4 +38,9 @@ class DateTimeUtils {
         return this.getDate(date) + " " + this.getTime(date);
     }
 }
-export const dateTimeUtils = new DateTimeUtils();
+const dateTimeUtils = new DateTimeUtils();
+
+module.exports = {
+    utils: utils,
+    dateTimeUtils: dateTimeUtils,
+};
