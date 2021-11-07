@@ -25,7 +25,7 @@ function dbLog(option = new LogOption()) {
     mongodbClient.getClient().db("logs").collection(option.collection).insertOne(record);
 }
 
-function consoleLog(option = new LogOption()) {
+function csLog(option = new LogOption()) {
     let now = new Date();
     let content = dateTimeUtils.getDate(now) + ` ${option.type} ` + option.data + "\n";
     console.log(content);
@@ -34,7 +34,7 @@ function consoleLog(option = new LogOption()) {
 const _log = {
     fs: fsLog,
     db: dbLog,
-    cs: consoleLog,
+    cs: csLog,
 };
 
 function log(option = new LogOption()) {

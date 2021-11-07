@@ -10,7 +10,7 @@ class AppUserController {
     }
     login(user) {
         //TODO
-        // login trả về cookie kèm jwt để cho việc xác thực 
+        // login trả về cookie kèm jwt để cho việc xác thực
     }
     logout(user) {
         //TODO
@@ -22,12 +22,11 @@ class AppUserController {
     }
     delete(user) {
         //TODO
-        // 
+        //
     }
     findById(id) {
         //TODO
     }
-    
 }
 const appUserController = new AppUserController();
 

@@ -1,7 +1,6 @@
 const { MongoClient } = require("mongodb");
 
 class MongoDBClient {
-    mongoClient;
     async connect(connectionString = "") {
         this.mongoClient = new MongoClient(connectionString);
         await this.mongoClient.connect();

@@ -24,7 +24,7 @@ function wrapExpressHandler(handler = async () => {}) {
 }
 
 async function testGet(req, resp) {
-    // VD: url = http://localhost/test?q=tuan&e=me
+    // VD: url = http://localhost/test/get?q=tuan&e=me
     // thì data = {q: "tuan", e: "me"};
 
     let data = {};
