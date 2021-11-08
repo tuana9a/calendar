@@ -2,7 +2,11 @@
 
 const DAYWEEK_COUNT = 7;
 
-class CommonUtils {
+export class CommonUtils {
+    static INSTANCE = new CommonUtils();
+    static getInstance() {
+        return this.INSTANCE;
+    }
     getCookie(name) {
         let pattern = name + "=";
         let cookies = document.cookie.split(";");
@@ -34,9 +38,12 @@ class CommonUtils {
         return value ? value : 0;
     }
 }
-export const commonUtils = new CommonUtils();
 
-class DateUtils {
+export class DateUtils {
+    static INSTANCE = new DateUtils();
+    static getInstance() {
+        return this.INSTANCE;
+    }
     dateToDash(input = new Date()) {
         let day = input.getDate();
         let month = input.getMonth() + 1; //EXPLAIN: range: 0-11
@@ -91,14 +98,17 @@ class DateUtils {
         //EXPLAIN: đéo biết giải thích thế nào cái cộng 1, thời gian mệt vlòn
     }
     calcCurrentWeek(firstWeekDay = "") {
-        let start = dateUtils.fromStringToDate_VN(firstWeekDay);
-        let weeks = Math.floor(dateUtils.daysBetween(start, new Date()) / DAYWEEK_COUNT);
+        let start = DateUtils.getInstance().fromStringToDate_VN(firstWeekDay);
+        let weeks = Math.floor(DateUtils.getInstance().daysBetween(start, new Date()) / DAYWEEK_COUNT);
         return weeks + 1; //EXPLAIN: vd chia đc 0.5 thì là tuần 1, chia đc 1.2 là tuần 2
     }
 }
-export const dateUtils = new DateUtils();
 
-class RandomUtils {
+export class RandomUtils {
+    static INSTANCE = new RandomUtils();
+    static getInstance() {
+        return this.INSTANCE;
+    }
     color_hex(r = { s: 0, e: 255 }, g = { s: 0, e: 255 }, b = { s: 0, e: 255 }) {
         let _r = Math.floor(r.s + Math.random() * (r.e - r.s));
         let _g = Math.floor(g.s + Math.random() * (g.e - g.s));
@@ -115,4 +125,3 @@ class RandomUtils {
         return `rgb(${_r},${_g},${_b}`;
     }
 }
-export const randomUtils = new RandomUtils();
