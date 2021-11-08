@@ -1,7 +1,7 @@
 const { LOGGER } = require("./logger");
 const { validations } = require("./validations");
 const { ResponseEntity } = require("./models/ResponseEntity");
-const { testController } = require("./controllers/TestController");
+const { TestController } = require("./controllers/TestController");
 const { ValidationError } = require("./exceptions");
 
 function wrapExpressHandler(handler = async () => {}) {
@@ -33,7 +33,7 @@ async function testGet(req, resp) {
     }
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("all query in your url is").data(data));
+    resp.send(ResponseEntity.builder().code(1).message("all query in your url is").data(data).build());
 }
 
 async function testPost(req, resp) {
@@ -45,17 +45,17 @@ async function testPost(req, resp) {
     let data = { body: body };
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(data));
+    resp.send(ResponseEntity.builder().code(1).message("success").data(data).build());
 }
 
 async function insertTest(req, resp) {
     let test = req.body;
 
     validations.checkTest(test);
-    let result = await testController.insert(test);
+    let result = await TestController.getInstance().insert(test);
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result));
+    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
 }
 
 const apis = {

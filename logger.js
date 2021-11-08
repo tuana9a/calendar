@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const { AppConfig } = require("./configs");
 const { LogOption } = require("./models/LogOption");
-const { mongodbClient } = require("./database/MongoDBClient");
+const { MongoDBClient } = require("./database/MongoDBClient");
 const { dateTimeUtils } = require("./utils");
 
 function fsLog(option = new LogOption()) {
@@ -22,7 +22,7 @@ function dbLog(option = new LogOption()) {
         data: option.data,
         _timestamp: now,
     };
-    mongodbClient.getClient().db("logs").collection(option.collection).insertOne(record);
+    MongoDBClient.getInstance().db("logs").collection(option.collection).insertOne(record);
 }
 
 function csLog(option = new LogOption()) {

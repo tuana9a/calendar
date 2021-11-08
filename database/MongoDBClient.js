@@ -1,18 +1,16 @@
 const { MongoClient } = require("mongodb");
 
 class MongoDBClient {
-    async connect(connectionString = "") {
+    static async init(connectionString = "") {
         this.mongoClient = new MongoClient(connectionString);
         await this.mongoClient.connect();
         return this.mongoClient;
     }
-    getClient() {
+    static getInstance() {
         return this.mongoClient;
     }
 }
 
-const mongodbClient = new MongoDBClient();
-
 module.exports = {
-    mongodbClient: mongodbClient,
+    MongoDBClient: MongoDBClient,
 };

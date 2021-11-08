@@ -5,7 +5,7 @@ const express = require("express");
 
 const { apis } = require("./apis");
 const { AppConfig } = require("./configs");
-const { mongodbClient } = require("./database/MongoDBClient");
+const { MongoDBClient } = require("./database/MongoDBClient");
 
 async function main() {
     const server = express();
@@ -20,7 +20,7 @@ async function main() {
     server.post("/test/post", apis.testPost);
     server.post("/test/api/test", apis.insertTest);
 
-    await mongodbClient.connect(AppConfig.database.connection_string);
+    await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);
     let port = parseInt(process.env.PORT) || AppConfig.listen_port;
     if (AppConfig.security.ssl) {

@@ -1,9 +1,12 @@
-const { mongodbClient } = require("../database/MongoDBClient");
+const { MongoDBClient } = require("../database/MongoDBClient");
 
 /*
 trước khi vào controller thì tầng apis.js phải qua các validates.js
  */
 class AppUserController {
+    static getInstance() {
+        return instance;
+    }
     register(user) {
         //TODO
         // phải check đã tồn tại mới cho đăng ký, insert
@@ -28,8 +31,8 @@ class AppUserController {
         //TODO
     }
 }
-const appUserController = new AppUserController();
+const instance = new AppUserController();
 
 module.exports = {
-    appUserController: appUserController,
+    AppUserController: AppUserController,
 };

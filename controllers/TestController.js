@@ -1,14 +1,18 @@
-const { mongodbClient } = require("../database/MongoDBClient");
+const { MongoDBClient } = require("../database/MongoDBClient");
 const { Test } = require("../models/Test");
 
 class TestController {
+    static getInstance() {
+        return instance;
+    }
+
     async insert(test = new Test()) {
-        let insertResult = await mongodbClient.getClient().db("test").collection("test").insertOne(test);
+        let insertResult = await MongoDBClient.getInstance().db("test").collection("test").insertOne(test);
         return insertResult.insertedId;
     }
 }
-const testController = new TestController();
+const instance = new TestController();
 
 module.exports = {
-    testController: testController,
+    TestController: TestController,
 };
