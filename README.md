@@ -1,4 +1,4 @@
-# calendar
+# #structure
 
 cấu trúc project như sau
 
@@ -18,16 +18,15 @@ models/         chứa các model trong mô hình MVC gồm user, event, ...
 
 utils.js        tập các tiện ích cho project
 
-# coding
-
-singpleton
-
-MVC
-
-express
-
-mongodb
-
-# how to run
+# #how to run
 
 npm start
+
+# #changelog
+
+2021-10-31: code phần khung: singleton, express, mongodb
+
+2021-11-08: cập nhật lại singleton cả phía frontend và backend, cụ thể vào xem trong code
+
+2021-11-09: thêm apis.js ở phía frontend cái này sẽ chứa toàn bộ request để gửi tới backend,<br>
+các pha khác phía frontend thì cần import file này và sử dụng trực tiếp mà không cần phải hard code ở trong từng file
