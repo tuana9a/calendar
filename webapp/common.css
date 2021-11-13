@@ -3,6 +3,7 @@ html {
 }
 body {
     position: relative;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 input::-webkit-outer-spin-button,
@@ -25,6 +26,9 @@ input::-webkit-inner-spin-button {
 .margin-auto {
     margin: auto;
 }
+.margin-bottom-25px{
+    margin-bottom: 25px;
+}
 
 .color-red {
     color: red;
@@ -38,10 +42,15 @@ input::-webkit-inner-spin-button {
 .color-violet {
     color: violet;
 }
+.color-dodgerblue{
+    color: dodgerblue;
+}
 .background-color-white {
     background-color: white;
 }
-
+.background-color-white-dark{
+    background-color: #f1f1f1;
+}
 .font-weight-bold {
     font-weight: bold;
 }
@@ -69,6 +78,22 @@ input::-webkit-inner-spin-button {
     font-size: 20px;
 }
 
+.border-1px{
+    border: 1px;
+}
+
+.border-solid{
+    border: solid;
+}
+
+.border-white-darker{
+    border: #f1f1f1;
+}
+
+.padding-16px{
+    padding: 16px;
+}
+
 /* DAD CHILD */
 .display-none {
     display: none;
@@ -94,6 +119,7 @@ input::-webkit-inner-spin-button {
 .flex-wrap-wrap {
     flex-wrap: wrap;
 }
+
 
 .width-10percent {
     width: 10%;
@@ -156,3 +182,25 @@ input::-webkit-inner-spin-button {
 .min-width-100percent {
     min-width: 100%;
 }
+
+
+.register-hr-box{
+    border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.registerbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+  }
+  
+  .registerbtn:hover {
+    opacity: 1;
+  }
+  
