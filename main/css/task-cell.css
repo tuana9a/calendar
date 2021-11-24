@@ -1,11 +1,11 @@
-.taskCell {
+.task-cell {
     /* border-inline-start: 1px solid currentColor; */
     /* border-block-end: 1px solid currentColor; */
     border: 1px solid white;
     padding: 0.25rem;
 }
 
-.taskCell.is-active::before {
+.task-cell.is-active::before {
     content: "(Sin titulo)";
     font-size: small;
     background: #c6dafc;

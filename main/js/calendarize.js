@@ -133,7 +133,7 @@ function Calendarize() {
                 }
             };
 
-            var $mainDay = document.getElementsByClassName("taskCell");
+            var $mainDay = document.getElementsByClassName("task-cell");
             let countMainDay = 0;
 
             $monthNode.classList.add("month");
@@ -161,7 +161,7 @@ function Calendarize() {
                 $dayNode.innerText = daysPrevMonth.length - (skipLength - (i + 1));
                 $monthNode.appendChild($dayNode);
                 $mainDay[countMainDay].innerText = "";
-                $mainDay[countMainDay].style.color = "";
+                $mainDay[countMainDay].style.backgroundColor = "";
                 $mainDay[countMainDay].innerText = daysPrevMonth.length - (skipLength - (i + 1));
                 countMainDay += 1;
             }
@@ -230,7 +230,7 @@ function Calendarize() {
                 $dayNode.classList.add("dummy-day");
                 $dayNode.innerText = j + 1;
                 $monthNode.appendChild($dayNode);
-                $mainDay[countMainDay].style.color = "";
+                $mainDay[countMainDay].style.backgroundColor = "";
                 $mainDay[countMainDay].innerText = "";
                 $mainDay[countMainDay].innerText = j + 1;
                 countMainDay += 1;
@@ -238,7 +238,7 @@ function Calendarize() {
 
             if (countMainDay == 35) {
                 for (let i = 0; i < 7; i++) {
-                    $mainDay[countMainDay + i].style.color = "";
+                    $mainDay[countMainDay + i].style.backgroundColor = "";
                     $mainDay[countMainDay + i].innerText = "";
                 }
             }
