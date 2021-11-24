@@ -5,56 +5,59 @@ html, body {
 } */
 
 .month {
-	width: 200px;
-	padding: 20px 0px 20px 0px;
-	background: #fff;
-	position: relative;
-	overflow: hidden;
-	float: left;
-	margin: 20px;
-	height: 220px;
+    width: 200px;
+    padding: 20px 0px 20px 0px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    float: left;
+    margin: 20px;
+    height: 220px;
 }
 .month h4 {
-	text-align: center;
-	margin: -20px -20px 30px -20px;
-	padding: 20px 0;
-	background: var(--blue10);
-	color: #e7e7e7;
+    text-align: center;
+    margin: -20px -20px 30px -20px;
+    padding: 20px 0;
+    background: var(--blue10);
+    color: #e7e7e7;
 }
 
-.day, .dow, .dummy-day {
-	display: inline-block;
-	width: 12.7864%;
-	/* float: left; */
-	text-align: center;
-	margin-right: 1.5%;
+.day,
+.dow,
+.dummy-day {
+    display: inline-block;
+    width: 12.7864%;
+    /* float: left; */
+    text-align: center;
+    margin-right: 1.5%;
 }
 
 .dow {
-	font-weight: bold;
-	margin-bottom: 10px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .day {
-	color: #333;
-	cursor: pointer;
-	box-shadow: inset 0 0 0 1px #eee;
+    color: #333;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px #eee;
 }
 .day.weekend {
-	background: #fafaff;
+    background: #fafaff;
 }
 .day:hover {
-	background: var(--blue10);
+    background: var(--blue10);
 }
 
-.day, .dummy-day {
-	height: 20px;
-	line-height: 20px;
-	margin-bottom: 1.5%;
-	background: #fff;
+.day,
+.dummy-day {
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 1.5%;
+    background: #fff;
 }
 
 .dummy-day {
-	background: #f5f5f5;
-	color: #ccc;
+    background: #f5f5f5;
+    color: #ccc;
 }

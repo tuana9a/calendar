@@ -7,7 +7,7 @@
     /* position: sticky; */
     inset-block-start: 0;
     background: var(--white);
-    border-block-end: 1px solid currentColor;
+    /* border-block-end: 1px solid currentColor; */
 }
 
 .calendarDay a {
@@ -16,12 +16,12 @@
     outline: none;
 }
 
-.calendarDay a:hover span:nth-of-type(2), 
+.calendarDay a:hover span:nth-of-type(2),
 .calendarDay a:focus span:nth-of-type(2) {
     background: var(--gray10);
 }
 
-.calendarDay.is-selected a:hover span:nth-of-type(2), 
+.calendarDay.is-selected a:hover span:nth-of-type(2),
 .calendarDay.is-selected a:focus span:nth-of-type(2) {
     background: var(--blue30);
 }
@@ -39,7 +39,7 @@
 }
 
 .calendarDay::before {
-    content: '';
+    content: "";
     inline-size: 1px;
     block-size: 2rem;
     background: currentColor;
@@ -61,8 +61,8 @@
 
 .calendar-day .calendarDay {
     align-items: flex-start;
-    padding-inline-start: .25rem;
-  }
+    padding-inline-start: 0.25rem;
+}
 
 .calendar-day .calendarDay a {
     margin-block-start: 1.5rem;

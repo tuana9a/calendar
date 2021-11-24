@@ -1,177 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;1,100&family=Roboto:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;1,100&family=Roboto:wght@400;500&display=swap"
-        rel="stylesheet">
+        <link rel="stylesheet" href="./css/index.css" />
+        <title>Calendar</title>
+    </head>
 
-    <link rel="stylesheet" href="./css/index.css">
-    <title>Calendar</title>
-</head>
-
-<body>
-    <div class="page">
-        <header class="header">
-            <div class="header-primary">
-                <div class="header-logo">
-                    <button id="button-menu" class="button is-compact">
-                        <i class="icon-hamburguerButton"></i>
-                    </button>
-                    <a href="/" aria-current="page" aria-label="Calendar" tabindex="-1">
-                        <img src="./images/logo.png" alt="">
+    <body>
+        <div class="page">
+            <header class="header">
+                <div class="header-primary">
+                    <div class="header-logo">
+                        <button id="button-menu" class="button is-compact">
+                            <i class="icon-hamburguerButton"></i>
+                        </button>
+                        <a href="/" aria-current="page" aria-label="Calendar" tabindex="-1">
+                            <img src="./images/logo.png" alt="" />
+                        </a>
+                    </div>
+                    <div class="calendarStatus">
+                        <button id="this-day" class="button is-secondary">Hôm nay</button>
+                        <span class="calendarStatus-navigation">
+                            <button id="backward-day" class="button is-compact is-switched" aria-label="Backward Day">
+                                <i class="icon-chevronLeft" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                        <span class="calendarStatus-navigation">
+                            <button id="forward-day" class="button is-compact is-switched" aria-label="Forward Day">
+                                <i class="icon-chevronRight" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                        <time id="this-fullday" class="calendarStatus-date">16 tháng 11 năm 2021</time>
+                    </div>
+                </div>
+                <div class="header-secondary">
+                    <a href="#user">
+                        <img src="./images/user.png" alt="" />
                     </a>
                 </div>
-                <div class="calendarStatus">
-                    <button id="this-day" class="button is-secondary">Hôm nay</button>
-                    <span class="calendarStatus-navigation">
-                        <button id="backward-day" class="button is-compact is-switched" aria-label="Backward Day">
+            </header>
+            <div class="sidebar">
+                <button id="create-event" class="button is-rounded is-shadowed">
+                    <i class="icon-plus" aria-hidden="true"></i>
+                    <span>Tạo</span>
+                </button>
+                <div class="button-miniCalendar">
+                    <div>
+                        <button id="this-month" class="button is-secondary">Today</button>
+                    </div>
+                    <div>
+                        <button id="backward-month" class="button is-compact is-switched" aria-label="Backward Month">
                             <i class="icon-chevronLeft" aria-hidden="true"></i>
                         </button>
-                    </span>
-                    <span class="calendarStatus-navigation">
-                        <button id="forward-day" class="button is-compact is-switched" aria-label="Forward Day">
+                    </div>
+                    <div>
+                        <button id="forward-month" class="button is-compact is-switched" aria-label="Forward Month">
                             <i class="icon-chevronRight" aria-hidden="true"></i>
                         </button>
-                    </span>
-                    <time id="this-fullday" class="calendarStatus-date">16 tháng 11 năm 2021</time>
-                </div>
-            </div>
-            <div class="header-secondary">
-                <select class="select" id="choose-option">
-                    <option value="" selected>Ngày</option>
-                    <option value="">Tuần</option>
-                    <option value="">Tháng</option>
-                    <option value="">Năm</option>
-                </select>
-                <a href="#user">
-                    <img src="./images/user.png" alt="">
-                </a>
-            </div>
-        </header>
-        <div class="sidebar">
-            <button id="create-event" class="button is-rounded is-shadowed">
-                <i class="icon-plus" aria-hidden="true"></i>
-                <span>Tạo</span>
-            </button>
-            <div class="button-miniCalendar">
-                <div>
-                    <button id="this-month" class="button is-secondary">Today</button>
-                </div>
-                <div>
-                    <button id="backward-month" class="button is-compact is-switched" aria-label="Backward Month">
-                        <i class="icon-chevronLeft" aria-hidden="true"></i> 
-                    </button>
-                </div>
-                <div>
-                    <button id="forward-month" class="button is-compact is-switched" aria-label="Forward Month">
-                        <i class="icon-chevronRight" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="miniCalendar"></div>
-            </aside>
-        </div><table></table>
-        <main class="calendar">
-            <div class="currentTime"></div>
-            <div class="calendar-week">
-                <span class="dayCell"></span>
-                <h2 class="calendarDay">
-                    <div>
-                        <span>CHỦ NHẬT</span>
                     </div>
-                </h2>
-                <h2 class="calendarDay">
-                        <div>
-                            <span>THỨ 2</span>
-                        </div>
-                </h2>
-                <h2 class="calendarDay">
-                        <div>
-                            <span>THỨ 3</span> 
-                        </div>
-                </h2>
-                <h2 class="calendarDay">
-                        <div>
-                            <span>THỨ 4</span>
-                        </div>
-                </h2>
-                <h2 class="calendarDay">
-                        <div>
-                            <span>THỨ 5</span> 
-                        </div>
-                </h2>
-                <h2 class="calendarDay">
-                        <div>
-                            <span>THỨ 6</span>
-                        </div>
-                </h2>
-                <h2 class="calendarDay">
-                        <div>
-                            <span>THỨ 7</span>
-                        </div>
-                </h2>
-                <span class="dayCell"></span>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <span class="dayCell"></span>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <span class="dayCell"></span>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <span class="dayCell"></span>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <span class="dayCell"></span>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <span class="dayCell"></span>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
-                <div class="taskCell"></div>
+                </div>
+                <div id="miniCalendar"></div>
             </div>
-        </main>
-            
+            <table></table>
+            <main class="calendar">
+                <div class="calendar-week">
+                    <span class="dayCell"></span>
+                    <h2 class="calendarDay">
+                        <div>
+                            <span>Sunday</span>
+                        </div>
+                    </h2>
+                    <h2 class="calendarDay">
+                        <div>
+                            <span>Monday</span>
+                        </div>
+                    </h2>
+                    <h2 class="calendarDay">
+                        <div>
+                            <span>Tuesday</span>
+                        </div>
+                    </h2>
+                    <h2 class="calendarDay">
+                        <div>
+                            <span>Wednesday</span>
+                        </div>
+                    </h2>
+                    <h2 class="calendarDay">
+                        <div>
+                            <span>Thursday</span>
+                        </div>
+                    </h2>
+                    <h2 class="calendarDay">
+                        <div>
+                            <span>Friday</span>
+                        </div>
+                    </h2>
+                    <h2 class="calendarDay">
+                        <div>
+                            <span>Saturday</span>
+                        </div>
+                    </h2>
+                    <span class="dayCell"></span>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <span class="dayCell"></span>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <span class="dayCell"></span>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <span class="dayCell"></span>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <span class="dayCell"></span>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <span class="dayCell"></span>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                    <div class="taskCell"></div>
+                </div>
+            </main>
+        </div>
 
-    </div>
-
-    <script src="./js/calendarize.js"></script>
-</body>
-
+        <script src="./js/calendarize.js"></script>
+    </body>
 </html>

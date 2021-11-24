@@ -21,11 +21,11 @@
 .input textarea {
     flex: 1;
     font: var(--body1-regular);
-    padding-block: .625rem;
-    padding-inline: .75rem;
+    padding-block: 0.625rem;
+    padding-inline: 0.75rem;
     border: none;
     outline: none;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
 }
 
 .input input:focus,
@@ -35,7 +35,7 @@
     background-color: var(--gray10);
 }
 
-.input input:focus, 
+.input input:focus,
 .input textarea:focus {
     box-shadow: 0 2px 0 var(--blue10);
 }

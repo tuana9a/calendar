@@ -17,14 +17,14 @@
     text-align: center;
     font: var(--body3-regular);
     line-height: var(--cellSize);
-    margin-block-end: .5rem;
+    margin-block-end: 0.5rem;
 }
 
 .miniCalendar-status {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-inline-start: .25rem;
+    padding-inline-start: 0.25rem;
 }
 
 .miniCalendar-month {

@@ -11,12 +11,10 @@
     /* background-image: url("../images/background.jpg"); */
 }
 
-.page .sidebar {  
-    grid-area: sidebar; 
-
+.page .sidebar {
+    grid-area: sidebar;
 }
 
 .page .calendar {
     grid-area: calendar;
 }
-

@@ -173,10 +173,8 @@ function Calendarize() {
                 $dayNode.classList.add("day");
                 $dayNode.setAttribute("data-date", c);
                 $dayNode.innerText = d + 1;
-                $mainDay[countMainDay].style.color = "";
-                $mainDay[countMainDay].innerText = "";
                 $mainDay[countMainDay].innerText = d + 1;
-                $mainDay[countMainDay].style.color = "blue";
+                $mainDay[countMainDay].style.backgroundColor = "blue";
                 countMainDay += 1;
 
                 var dow = new Date(c).getDay();
