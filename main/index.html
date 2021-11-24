@@ -4,49 +4,44 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="./images/halendar.svg" type="image/x-icon" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;1,100&family=Roboto:wght@400;500&display=swap"
-            rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap" rel="stylesheet" />
 
         <link rel="stylesheet" href="./css/index.css" />
-        <title>Calendar</title>
+        <title>Halendar</title>
     </head>
 
     <body>
         <div class="page">
             <header class="header">
-                <div class="header-primary">
+                <div class="header-left">
+                    <button id="button-menu" class="button is-compact">
+                        <i class="icon-hamburguerButton"></i>
+                    </button>
+                </div>
+                <div class="header-mid">
                     <div class="header-logo">
-                        <button id="button-menu" class="button is-compact">
-                            <i class="icon-hamburguerButton"></i>
-                        </button>
-                        <a href="/" aria-current="page" aria-label="Calendar" tabindex="-1">
-                            <img src="./images/logo.png" alt="" />
-                        </a>
+                        <img class="logo" src="https://avatars.dicebear.com/api/identicon/halendar.svg" />
+                        <img class="name" src="./images/halendar.png" alt="" />
                     </div>
                 </div>
-                <div class="header-secondary">
-                    <a href="#user">
-                        <img src="./images/user.png" alt="" />
-                    </a>
-                </div>
+                <div class="header-right"></div>
             </header>
             <div class="sidebar">
                 <div class="mini-calendar-buttons">
                     <div>
-                        <button id="backward-month" class="button is-compact is-switched" aria-label="Backward Month">
+                        <button id="backwardMonth" class="button is-compact is-switched" aria-label="Backward Month">
                             <i class="icon-chevronLeft" aria-hidden="true"></i>
                         </button>
                     </div>
                     <div>
-                        <button id="this-month" class="button is-secondary">Today</button>
+                        <button id="returnCurrentMonth" class="button is-secondary">Today</button>
                     </div>
                     <div>
-                        <button id="forward-month" class="button is-compact is-switched" aria-label="Forward Month">
+                        <button id="forwardMonth" class="button is-compact is-switched" aria-label="Forward Month">
                             <i class="icon-chevronRight" aria-hidden="true"></i>
                         </button>
                     </div>

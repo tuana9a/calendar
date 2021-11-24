@@ -6,7 +6,8 @@
     "scripts": {
         "start": "node main.js",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "parcel": "parcel main/index.html --no-hmr"
+        "parcel": "parcel main/index.html",
+        "parcel-test": "parcel main/index.html --no-hmr"
     },
     "repository": {
         "type": "git",

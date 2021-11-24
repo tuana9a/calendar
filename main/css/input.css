@@ -9,7 +9,7 @@
 }
 
 .input.is-outstanding input {
-    font: var(--subtitle-subtitle1);
+    font: var(--font400);
 }
 
 .input-body {
@@ -20,7 +20,7 @@
 .input input,
 .input textarea {
     flex: 1;
-    font: var(--body1-regular);
+    font: var(--font400);
     padding-block: 0.625rem;
     padding-inline: 0.75rem;
     border: none;

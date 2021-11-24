@@ -3,7 +3,7 @@
     padding-inline: 1rem;
     padding-block: 0.5rem;
     display: inline-block;
-    font: var(--button-button);
+    font: var(--font500);
     text-decoration: none;
     cursor: pointer;
     color: currentColor;
@@ -19,7 +19,7 @@
 
 .button.is-primary {
     background: var(--blue10);
-    color: var(--white);
+    color: var(--dark);
 }
 
 .button.is-secondary {

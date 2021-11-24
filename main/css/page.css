@@ -1,3 +1,7 @@
+body {
+    min-height: 101vh;
+}
+
 .page {
     display: grid;
     grid-template-columns: 16.25rem 1fr;

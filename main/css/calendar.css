@@ -1,7 +1,3 @@
-@import "./task-cell.css";
-@import "./calendar-day.css";
-@import "./current-time.css";
-
 .calendar {
     color: var(--gray20);
     padding-inline: 1.5rem;
@@ -18,4 +14,39 @@
     grid-template-columns: auto repeat(7, minmax(var(--minInlineSize), var(--maxInlineSize)));
     grid-template-rows: 7rem repeat(6, minmax(var(--minBlockSize), var(--maxBlockSize)));
     min-block-size: 700px;
+}
+
+.calendar-day {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+    /* position: sticky; */
+    inset-block-start: 0;
+    background: var(--dark);
+    /* border-block-end: 1px solid currentColor; */
+}
+
+.calendar-day span {
+    font-size: 20px;
+}
+
+.task-cell {
+    padding: 0.25rem;
+    text-align: center;
+}
+
+.task-cell.is-active::before {
+    content: "(Sin titulo)";
+    font-size: small;
+    background: #c6dafc;
+    padding: 0.25rem;
+    display: block;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.task-cell.is-current-month {
+    background-color: #535353;
 }
