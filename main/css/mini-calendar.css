@@ -1,9 +1,11 @@
-.button-miniCalendar {
+.mini-calendar-buttons {
     --cellSize: 1.75rem;
     max-inline-size: 12.25rem;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
+    margin: auto;
 }
 
 .miniCalendar-date {

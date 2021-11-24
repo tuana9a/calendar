@@ -118,7 +118,7 @@ function Calendarize() {
             var daysPrevMonth = _this.getDaysInMonth(prevM.getMonth(), prevM.getFullYear());
             var daysNextMonth = _this.getDaysInMonth(nextM.getMonth(), nextM.getFullYear());
             var $monthNode = document.createElement("div");
-            var $titleNode = document.createElement("h4");
+            var $titleNode = document.createElement("div");
             var skipLength = daysInMonth[0].getDay();
             var preLength = daysInMonth.length + skipLength;
             var postLength = function () {
@@ -140,6 +140,7 @@ function Calendarize() {
 
             // Add a Title to the month
             if (opts.showMonth) {
+                $titleNode.classList.add("month-title");
                 $titleNode.innerText = monthNames[monthNum] + (opts.showYear ? " " + year : "");
                 $monthNode.appendChild($titleNode);
             }

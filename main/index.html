@@ -28,20 +28,6 @@
                             <img src="./images/logo.png" alt="" />
                         </a>
                     </div>
-                    <div class="calendar-status">
-                        <button id="this-day" class="button is-secondary">Hôm nay</button>
-                        <span class="calendar-status-navigation">
-                            <button id="backward-day" class="button is-compact is-switched" aria-label="Backward Day">
-                                <i class="icon-chevronLeft" aria-hidden="true"></i>
-                            </button>
-                        </span>
-                        <span class="calendar-status-navigation">
-                            <button id="forward-day" class="button is-compact is-switched" aria-label="Forward Day">
-                                <i class="icon-chevronRight" aria-hidden="true"></i>
-                            </button>
-                        </span>
-                        <time id="this-fullday" class="calendar-status-date">16 tháng 11 năm 2021</time>
-                    </div>
                 </div>
                 <div class="header-secondary">
                     <a href="#user">
@@ -50,18 +36,14 @@
                 </div>
             </header>
             <div class="sidebar">
-                <button id="create-event" class="button is-rounded is-shadowed">
-                    <i class="icon-plus" aria-hidden="true"></i>
-                    <span>Tạo</span>
-                </button>
-                <div class="button-miniCalendar">
-                    <div>
-                        <button id="this-month" class="button is-secondary">Today</button>
-                    </div>
+                <div class="mini-calendar-buttons">
                     <div>
                         <button id="backward-month" class="button is-compact is-switched" aria-label="Backward Month">
                             <i class="icon-chevronLeft" aria-hidden="true"></i>
                         </button>
+                    </div>
+                    <div>
+                        <button id="this-month" class="button is-secondary">Today</button>
                     </div>
                     <div>
                         <button id="forward-month" class="button is-compact is-switched" aria-label="Forward Month">
@@ -71,9 +53,8 @@
                 </div>
                 <div id="miniCalendar"></div>
             </div>
-            <!-- <table></table> -->
             <main class="calendar">
-                <div class="calendar-week">
+                <div class="main-calendar-month">
                     <span class="day-cell"></span>
                     <div class="calendar-day">
                         <span>Sunday</span>

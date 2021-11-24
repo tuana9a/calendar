@@ -5,18 +5,18 @@ html, body {
 } */
 
 .month {
-    width: 200px;
-    padding: 20px 0px 20px 0px;
+    /* width: 200px; */
+    /* padding: 20px 0px 20px 0px; */
     background: #fff;
-    position: relative;
-    overflow: hidden;
-    float: left;
-    margin: 20px;
-    height: 220px;
+    /* position: relative; */
+    /* overflow: hidden; */
+    /* float: left; */
+    margin: 20px 0;
+    /* height: 220px; */
 }
-.month h4 {
+.month .month-title {
     text-align: center;
-    margin: -20px -20px 30px -20px;
+    /* margin: -20px -20px 30px -20px; */
     padding: 20px 0;
     background: var(--blue10);
     color: #e7e7e7;
@@ -31,10 +31,18 @@ html, body {
     text-align: center;
     margin-right: 1.5%;
 }
+.day,
+.dummy-day {
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 1.5%;
+    background: #fff;
+}
 
 .dow {
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 3%;
+    color: #333;
 }
 
 .day {
@@ -47,14 +55,6 @@ html, body {
 }
 .day:hover {
     background: var(--blue10);
-}
-
-.day,
-.dummy-day {
-    height: 20px;
-    line-height: 20px;
-    margin-bottom: 1.5%;
-    background: #fff;
 }
 
 .dummy-day {

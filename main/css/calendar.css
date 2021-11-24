@@ -13,7 +13,7 @@
     position: relative;
 }
 
-.calendar-week {
+.main-calendar-month {
     display: grid;
     grid-template-columns: auto repeat(7, minmax(var(--minInlineSize), var(--maxInlineSize)));
     grid-template-rows: 7rem repeat(6, minmax(var(--minBlockSize), var(--maxBlockSize)));
