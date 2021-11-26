@@ -5,8 +5,8 @@
     "main": "main.js",
     "scripts": {
         "start": "node main.js",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "parcel": "parcel webapp/index.html"
+        "parcel-watch": "parcel watch webapp/*.html",
+        "parcel-build": "parcel build webapp/*.html"
     },
     "repository": {
         "type": "git",

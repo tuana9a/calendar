@@ -193,14 +193,14 @@ class Calendarize {
             $dayNode.innerText = j + 1;
             $monthElement.appendChild($dayNode);
             $mainDays[countMainDay].innerText = j + 1;
-            $mainDays[countMainDay].style.backgroundColor = "";
+            $mainDays[countMainDay].classList.remove("is-current-month");
             countMainDay += 1;
         }
 
         if (countMainDay == 35) {
             for (let i = 0; i < 7; i++) {
-                $mainDays[countMainDay + i].style.backgroundColor = "";
                 $mainDays[countMainDay + i].innerText = "";
+                $mainDays[countMainDay + i].classList.remove("is-current-month");
             }
         }
 
