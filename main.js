@@ -10,7 +10,7 @@ const { MongoDBClient } = require("./database/MongoDBClient");
 async function main() {
     const server = express();
     server.use(express.json());
-    server.use(express.static("./webapp"));
+    server.use(express.static("./dist"));
 
     if (AppConfig.security.cors) {
         server.use(cors());

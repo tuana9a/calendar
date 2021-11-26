@@ -1,16 +1,4 @@
-const $miniCalendar = document.getElementById("miniCalendar");
-const $mainCalendar = document.getElementById("mainCalendar");
-
-const $returnCurrentMonth = document.getElementById("returnCurrentMonth");
-const $backwardMonth = document.getElementById("backwardMonth");
-const $forwardMonth = document.getElementById("forwardMonth");
-
-let currentYear = new Date().getFullYear();
-let currentMonth = new Date().getMonth();
-let changeMonth = currentMonth;
-let changeYear = currentYear;
-
-const monthNames = [
+const MONTH_NAMES = [
     "January",
     "February",
     "March",
@@ -24,9 +12,13 @@ const monthNames = [
     "November",
     "December",
 ];
-const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 class Calendarize {
+    static INSTANCE = new Calendarize();
+    static getInstance() {
+        return this.INSTANCE;
+    }
     // Return the days in a month - given a year and the month number
     getDaysInMonth(month, year) {
         let date = new Date(year, month, 1);
@@ -103,16 +95,16 @@ class Calendarize {
         // Add a Title to the month
         if (opts.showMonth) {
             $titleElement.classList.add("month-title");
-            $titleElement.innerText = monthNames[monthNum] + (opts.showYear ? " " + year : "");
+            $titleElement.innerText = MONTH_NAMES[monthNum] + (opts.showYear ? " " + year : "");
             $monthElement.appendChild($titleElement);
         }
 
         // Add Days of week to the top row
         if (opts.showDaysOfWeek) {
-            dayNames.forEach(function (name, index) {
+            DAY_NAMES.forEach(function (name, index) {
                 let $dayNode = document.createElement("div");
                 $dayNode.classList.add("dow");
-                $dayNode.innerText = dayNames[index];
+                $dayNode.innerText = DAY_NAMES[index];
                 $monthElement.appendChild($dayNode);
             });
         }
@@ -208,38 +200,63 @@ class Calendarize {
     }
 }
 
-const calendarize = new Calendarize();
-calendarize.buildMonthCalendar($miniCalendar, currentMonth, currentYear);
+function main() {
+    const TIME_OPTS = {
+        currentYear: 0,
+        currentMonth: 0,
+        changeMonth: -1,
+        changeYear: -1,
+    };
 
-$returnCurrentMonth.addEventListener("click", () => {
-    while ($miniCalendar.firstChild) {
-        $miniCalendar.removeChild($miniCalendar.lastChild);
-    }
-    changeMonth = currentMonth;
-    changeYear = currentYear;
-    calendarize.buildMonthCalendar($miniCalendar, changeMonth, changeYear);
-});
+    TIME_OPTS.currentYear = new Date().getFullYear();
+    TIME_OPTS.currentMonth = new Date().getMonth();
+    TIME_OPTS.changeMonth = TIME_OPTS.currentMonth;
+    TIME_OPTS.changeYear = TIME_OPTS.currentYear;
 
-$backwardMonth.addEventListener("click", () => {
-    while ($miniCalendar.firstChild) {
-        $miniCalendar.removeChild($miniCalendar.lastChild);
-    }
-    changeMonth -= 1;
-    if (changeMonth == -1) {
-        changeMonth = 11;
-        changeYear -= 1;
-    }
-    calendarize.buildMonthCalendar($miniCalendar, changeMonth, changeYear);
-});
+    const $miniCalendar = document.getElementById("miniCalendar");
+    const $mainCalendar = document.getElementById("mainCalendar");
+    const $returnCurrentMonth = document.getElementById("returnCurrentMonth");
+    const $backwardMonth = document.getElementById("backwardMonth");
+    const $forwardMonth = document.getElementById("forwardMonth");
 
-$forwardMonth.addEventListener("click", () => {
-    while ($miniCalendar.firstChild) {
-        $miniCalendar.removeChild($miniCalendar.lastChild);
-    }
-    changeMonth += 1;
-    if (changeMonth == 12) {
-        changeMonth = 0;
-        changeYear += 1;
-    }
-    calendarize.buildMonthCalendar($miniCalendar, changeMonth, changeYear);
-});
+    const calendarize = Calendarize.getInstance();
+    calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.currentMonth, TIME_OPTS.currentYear);
+
+    $returnCurrentMonth.addEventListener("click", () => {
+        const calendarize = Calendarize.getInstance();
+        while ($miniCalendar.firstChild) {
+            $miniCalendar.removeChild($miniCalendar.lastChild);
+        }
+        TIME_OPTS.changeMonth = TIME_OPTS.currentMonth;
+        TIME_OPTS.changeYear = TIME_OPTS.currentYear;
+        calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.changeMonth, TIME_OPTS.changeYear);
+    });
+
+    $backwardMonth.addEventListener("click", () => {
+        const calendarize = Calendarize.getInstance();
+        while ($miniCalendar.firstChild) {
+            $miniCalendar.removeChild($miniCalendar.lastChild);
+        }
+        TIME_OPTS.changeMonth -= 1;
+        if (TIME_OPTS.changeMonth == -1) {
+            TIME_OPTS.changeMonth = 11;
+            TIME_OPTS.changeYear -= 1;
+        }
+        calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.changeMonth, TIME_OPTS.changeYear);
+    });
+
+    $forwardMonth.addEventListener("click", () => {
+        const calendarize = Calendarize.getInstance();
+        while ($miniCalendar.firstChild) {
+            $miniCalendar.removeChild($miniCalendar.lastChild);
+        }
+        TIME_OPTS.changeMonth += 1;
+        if (TIME_OPTS.changeMonth == 12) {
+            TIME_OPTS.changeMonth = 0;
+            TIME_OPTS.changeYear += 1;
+        }
+        calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.changeMonth, TIME_OPTS.changeYear);
+    });
+}
+
+main();
