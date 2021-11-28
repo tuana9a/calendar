@@ -5,52 +5,49 @@ const { TestController } = require("./controllers/TestController");
 const { AppUserController } = require("./controllers/AppUserController");
 const { ValidationError } = require("./exceptions");
 const jwt = require("jsonwebtoken");
-const { MongoDBClient } = require("../database/MongoDBClient");
-require("dotenv").config();
+const { MongoDBClient } = require("./database/MongoDBClient");
+const { AppConfig } = require("./configs");
 
 function wrapExpressHandler(handler = async () => {}) {
-  return async function (req, resp) {
-    try {
-      await handler(req, resp);
-    } catch (err) {
-      resp.setHeader("Content-Type", "application/json; charset=utf-8");
-      resp.send(ResponseEntity.builder().code(0).message(err.message).build());
-      if (err instanceof ValidationError) {
-        // do nothing safe catch :V
-      } else {
-        LOGGER.error(err);
-      }
-    } finally {
-      //what ever error just end the connection
-      resp.end();
-    }
-  };
+    return async function (req, resp) {
+        try {
+            await handler(req, resp);
+        } catch (err) {
+            resp.setHeader("Content-Type", "application/json; charset=utf-8");
+            resp.send(ResponseEntity.builder().code(0).message(err.message).build());
+            if (err instanceof ValidationError) {
+                // do nothing safe catch :V
+            } else {
+                LOGGER.error(err);
+            }
+        } finally {
+            //what ever error just end the connection
+            resp.end();
+        }
+    };
 }
 
 const verifyToken = async (req, res, next) => {
-  const token = req.header("access-token");
-  if (!token) throw "Access denied";
-  try {
-    const verified = jwt.verify(token, process.env.TKN_SRC);
-
-    const uid = verified._id;
-    let user = {};
+    const token = req.cookies.access_token;
+    if (!token) throw "Access denied";
     try {
-      user = await MongoDBClient.getInstance()
-        .db("calendar")
-        .collection("user")
-        .findById(uid);
-      if (!user) {
-        throw "User not found";
-      }
+        const verified = jwt.verify(token, AppConfig.tokenSecret);
+
+        const uid = verified._id;
+        let user = {};
+        try {
+            user = await MongoDBClient.getInstance().db("calendar").collection("user").findById(uid);
+            if (!user) {
+                throw "User not found";
+            }
+        } catch (error) {
+            throw error?.message;
+        }
+        req.user = user; //add user to req to process in the next function
     } catch (error) {
-      throw error?.message;
+        throw "Invalid token";
     }
-    req.user = user; //add user to req to process in the next function
-  } catch (error) {
-    throw "Invalid token";
-  }
-  next();
+    next();
 };
 
 // async function testGet(req, resp) {
@@ -100,25 +97,21 @@ const verifyToken = async (req, res, next) => {
 
 //authentication
 async function register(req, resp) {
-  let data = req.body;
-  validations.checkAuthentication(data);
-  let result = await AppUserController.getInstance().register(data);
+    let data = req.body;
+    validations.checkAuthentication(data);
+    let result = await AppUserController.getInstance().register(data);
 
-  resp.setHeader("Content-Type", "application/json; charset=utf-8");
-  resp.send(
-    ResponseEntity.builder().code(1).message("success").data(result).build()
-  );
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
 }
 
 async function login(req, resp) {
-  let data = req.body;
-  validations.checkAuthentication(data);
-  let result = await AppUserController.getInstance().login(data);
+    let data = req.body;
+    validations.checkAuthentication(data);
+    let accessToken = await AppUserController.getInstance().login(data);
 
-  resp.setHeader("Content-Type", "application/json; charset=utf-8");
-  resp.send(
-    ResponseEntity.builder().code(1).message("success").data(result).build()
-  );
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.cookie("access_token", accessToken).send(ResponseEntity.builder().code(1).message("success").data().build());
 }
 
 //with apis that need authentication
@@ -131,14 +124,14 @@ async function login(req, resp) {
 // }
 
 const apis = {
-  //   testGet: wrapExpressHandler(testGet),
-  //   testPost: wrapExpressHandler(testPost),
-  //   insertTest: wrapExpressHandler(insertTest),
+    //   testGet: wrapExpressHandler(testGet),
+    //   testPost: wrapExpressHandler(testPost),
+    //   insertTest: wrapExpressHandler(insertTest),
 
-  register: wrapExpressHandler(register),
-  login: wrapExpressHandler(login),
+    register: wrapExpressHandler(register),
+    login: wrapExpressHandler(login),
 };
 
 module.exports = {
-  apis: apis,
+    apis: apis,
 };
