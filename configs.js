@@ -22,8 +22,14 @@ let appConfig = {
         read_limit: 1,
         batch_size: 1,
     },
+    tokenSecret: "",
 };
-appConfig = JSON.parse(fs.readFileSync(HardCodeConfig.app_config_path, { flag: "r", encoding: "utf-8" }));
+appConfig = JSON.parse(
+    fs.readFileSync(HardCodeConfig.app_config_path, {
+        flag: "r",
+        encoding: "utf-8",
+    }),
+);
 const AppConfig = appConfig;
 
 module.exports = {

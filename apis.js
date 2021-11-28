@@ -2,7 +2,11 @@ const { LOGGER } = require("./logger");
 const { validations } = require("./validations");
 const { ResponseEntity } = require("./models/ResponseEntity");
 const { TestController } = require("./controllers/TestController");
+const { AppUserController } = require("./controllers/AppUserController");
 const { ValidationError } = require("./exceptions");
+const jwt = require("jsonwebtoken");
+const { MongoDBClient } = require("./database/MongoDBClient");
+const { AppConfig } = require("./configs");
 
 function wrapExpressHandler(handler = async () => {}) {
     return async function (req, resp) {
@@ -23,45 +27,109 @@ function wrapExpressHandler(handler = async () => {}) {
     };
 }
 
-async function testGet(req, resp) {
-    // VD: url = http://localhost/test/get?q=tuan&e=me
-    // thì data = {q: "tuan", e: "me"};
+const verifyToken = async (req, res, next) => {
+    const token = req.cookies.access_token;
+    if (!token) throw "Access denied";
+    try {
+        const verified = jwt.verify(token, AppConfig.tokenSecret);
 
-    let data = {};
-    for (let q in req.query) {
-        data[q] = req.query[q];
+        const uid = verified._id;
+        let user = {};
+        try {
+            user = await MongoDBClient.getInstance().db("calendar").collection("user").findById(uid);
+            if (!user) {
+                throw "User not found";
+            }
+        } catch (error) {
+            throw error?.message;
+        }
+        req.user = user; //add user to req to process in the next function
+    } catch (error) {
+        throw "Invalid token";
     }
+    next();
+};
 
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("all query in your url is").data(data).build());
-}
+// async function testGet(req, resp) {
+//   // VD: url = http://localhost/test/get?q=tuan&e=me
+//   // thì data = {q: "tuan", e: "me"};
 
-async function testPost(req, resp) {
-    // VD: post với body là {name:"tuan"}
-    // thì body = {name: "tuan"};
-    // lưu ý với get thì không có body
-    let body = req.body;
+//   let data = {};
+//   for (let q in req.query) {
+//     data[q] = req.query[q];
+//   }
 
-    let data = { body: body };
+//   resp.setHeader("Content-Type", "application/json; charset=utf-8");
+//   resp.send(
+//     ResponseEntity.builder()
+//       .code(1)
+//       .message("all query in your url is")
+//       .data(data)
+//       .build()
+//   );
+// }
 
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(data).build());
-}
+// async function testPost(req, resp) {
+//   // VD: post với body là {name:"tuan"}
+//   // thì body = {name: "tuan"};
+//   // lưu ý với get thì không có body
+//   let body = req.body;
 
-async function insertTest(req, resp) {
-    let test = req.body;
+//   let data = { body: body };
 
-    validations.checkTest(test);
-    let result = await TestController.getInstance().insert(test);
+//   resp.setHeader("Content-Type", "application/json; charset=utf-8");
+//   resp.send(
+//     ResponseEntity.builder().code(1).message("success").data(data).build()
+//   );
+// }
+
+// async function insertTest(req, resp) {
+//   let test = req.body;
+
+//   validations.checkTest(test);
+//   let result = await TestController.getInstance().insert(test);
+
+//   resp.setHeader("Content-Type", "application/json; charset=utf-8");
+//   resp.send(
+//     ResponseEntity.builder().code(1).message("success").data(result).build()
+//   );
+// }
+
+//authentication
+async function register(req, resp) {
+    let data = req.body;
+    validations.checkAuthentication(data);
+    let result = await AppUserController.getInstance().register(data);
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
     resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
 }
 
+async function login(req, resp) {
+    let data = req.body;
+    validations.checkAuthentication(data);
+    let accessToken = await AppUserController.getInstance().login(data);
+
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.cookie("access_token", accessToken).send(ResponseEntity.builder().code(1).message("success").data().build());
+}
+
+//with apis that need authentication
+//ex:
+// function needAuth(req, resp) {
+//   const callApi = async () => {
+//     //...
+//   };
+//   verifyToken(req, resp, callApi);
+// }
+
 const apis = {
-    testGet: wrapExpressHandler(testGet),
-    testPost: wrapExpressHandler(testPost),
-    insertTest: wrapExpressHandler(insertTest),
+    //   testGet: wrapExpressHandler(testGet),
+    //   testPost: wrapExpressHandler(testPost),
+    //   insertTest: wrapExpressHandler(insertTest),
+
+    register: wrapExpressHandler(register),
+    login: wrapExpressHandler(login),
 };
 
 module.exports = {
