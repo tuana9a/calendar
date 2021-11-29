@@ -14,49 +14,52 @@ function main() {
     changeMonth = currentMonth;
     changeYear = currentYear;
 
-    const $miniCalendar = document.getElementById("miniCalendar");
-    const $mainCalendar = document.getElementById("mainCalendar");
-    const $returnCurrentMonth = document.getElementById("returnCurrentMonth");
-    const $backwardMonth = document.getElementById("backwardMonth");
-    const $forwardMonth = document.getElementById("forwardMonth");
+    const miniCalendarElement = document.getElementById("miniCalendar");
+    const mainCalendarElement = document.getElementById("mainCalendar");
+    const returnCurrentMonthButton = document.getElementById("returnCurrentMonth");
+    const backwardMonthButton = document.getElementById("backwardMonth");
+    const forwardMonthButton = document.getElementById("forwardMonth");
 
     const calendarize = Calendarize.getInstance();
-    calendarize.buildMonthCalendar($miniCalendar, currentYear, currentMonth);
+    const miniOpts = {
+        showYearOnTitle: true,
+        fullOrShort: "short",
+    };
+    const mainOpts = {
+        showYearOnTitle: true,
+        fullOrShort: "full",
+    };
+    calendarize.write(mainCalendarElement, currentYear, currentMonth, currentDate, mainOpts);
+    calendarize.write(miniCalendarElement, currentYear, currentMonth, currentDate, miniOpts);
 
-    $returnCurrentMonth.addEventListener("click", () => {
+    returnCurrentMonthButton.addEventListener("click", () => {
         const calendarize = Calendarize.getInstance();
-        while ($miniCalendar.firstChild) {
-            $miniCalendar.removeChild($miniCalendar.lastChild);
-        }
         changeMonth = currentMonth;
         changeYear = currentYear;
-        calendarize.buildMonthCalendar($miniCalendar, changeYear, changeMonth);
+        calendarize.write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
+        calendarize.write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
     });
 
-    $backwardMonth.addEventListener("click", () => {
+    backwardMonthButton.addEventListener("click", () => {
         const calendarize = Calendarize.getInstance();
-        while ($miniCalendar.firstChild) {
-            $miniCalendar.removeChild($miniCalendar.lastChild);
-        }
         changeMonth -= 1;
         if (changeMonth == -1) {
             changeMonth = 11;
             changeYear -= 1;
         }
-        calendarize.buildMonthCalendar($miniCalendar, changeYear, changeMonth);
+        calendarize.write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
+        calendarize.write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
     });
 
-    $forwardMonth.addEventListener("click", () => {
+    forwardMonthButton.addEventListener("click", () => {
         const calendarize = Calendarize.getInstance();
-        while ($miniCalendar.firstChild) {
-            $miniCalendar.removeChild($miniCalendar.lastChild);
-        }
         changeMonth += 1;
         if (changeMonth == 12) {
             changeMonth = 0;
             changeYear += 1;
         }
-        calendarize.buildMonthCalendar($miniCalendar, changeYear, changeMonth);
+        calendarize.write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
+        calendarize.write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
     });
 }
 
