@@ -143,12 +143,10 @@ export class Calendarize {
                 }
             }
         } else {
-            if (preLength % 7 !== 0) {
-                if (preLength < 42) {
-                    postLength = 42 - preLength; // 7*6=42
-                } else {
-                    postLength = 49 - preLength; // 7*7=49
-                }
+            if (preLength < 42) {
+                postLength = 42 - preLength; // 7*6=42
+            } else {
+                postLength = 49 - preLength; // 7*7=49
             }
         }
 
