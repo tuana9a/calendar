@@ -17,6 +17,33 @@ const MONTH_NAMES = [
 ];
 const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
+function setDateDummy() {}
+
+class DateElementStateUtils {
+    static INSTANCE = new DateElementStateUtils();
+    static getInstance() {
+        return this.INSTANCE;
+    }
+    makeDummy(element) {
+        element.classList.add("dummy");
+    }
+    removeDummy(element) {
+        element.classList.remove("dummy");
+    }
+    makeWeekend(element) {
+        element.classList.add("weekend");
+    }
+    removeWeekend(element) {
+        element.classList.remove("weekend");
+    }
+    makeHide(element) {
+        element.classList.add("hide");
+    }
+    removeHide(element) {
+        element.classList.remove("hide");
+    }
+}
+
 export class Calendarize {
     static INSTANCE = new Calendarize();
     static getInstance() {
@@ -60,19 +87,17 @@ export class Calendarize {
 
         let $monthElement = document.createElement("div");
         let $titleElement = document.createElement("div");
+
         let skipLength = daysInMonth[0].getDay();
         let preLength = daysInMonth.length + skipLength;
-        let postLength = function () {
-            if (preLength % 7 === 0) {
-                return 0;
+        let postLength = 0; // if (length % 7 == 0) so no need to add dummy day at end
+        if (preLength % 7 !== 0) {
+            if (preLength < 35) {
+                postLength = 35 - preLength;
             } else {
-                if (preLength < 35) {
-                    return 35 - preLength;
-                } else {
-                    return 42 - preLength;
-                }
+                postLength = 42 - preLength;
             }
-        };
+        }
 
         let $mainDays = document.getElementsByClassName("task-cell");
         let countMainDay = 0;
@@ -172,7 +197,7 @@ export class Calendarize {
         });
 
         // Add in the dummy filler days to make an even block
-        for (let dateNum = 1; dateNum <= postLength(); dateNum++) {
+        for (let dateNum = 1; dateNum <= postLength; dateNum++) {
             let $dayNode = document.createElement("div");
             $dayNode.classList.add("dummy-day");
             $dayNode.innerText = dateNum;
