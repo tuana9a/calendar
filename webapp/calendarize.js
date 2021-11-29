@@ -33,7 +33,7 @@ export class Calendarize {
     createMonthElement(
         monthNum,
         yearNum,
-        dateNum,
+        dateNum, // hiện tại dateNum hơi vô dụng do build chỉ cần năm và tháng
         opts = {
             showMonth: true,
             showDaysOfWeek: true,
@@ -98,11 +98,14 @@ export class Calendarize {
 
         // Add blank days to fill in before first day
         for (let i = 0; i < skipLength; i++) {
+            let dummyDateNum = daysPrevMonth.length - (skipLength - (i + 1));
+
             let $dayNode = document.createElement("div");
             $dayNode.classList.add("dummy-day");
-            $dayNode.innerText = daysPrevMonth.length - (skipLength - (i + 1));
+            $dayNode.innerText = dummyDateNum;
             $monthElement.appendChild($dayNode);
-            $mainDays[countMainDay].innerText = daysPrevMonth.length - (skipLength - (i + 1));
+
+            $mainDays[countMainDay].innerText = dummyDateNum;
             $mainDays[countMainDay].classList.remove("is-current-month");
             countMainDay += 1;
         }
@@ -169,12 +172,12 @@ export class Calendarize {
         });
 
         // Add in the dummy filler days to make an even block
-        for (let j = 0; j < postLength(); j++) {
+        for (let dateNum = 1; dateNum <= postLength(); dateNum++) {
             let $dayNode = document.createElement("div");
             $dayNode.classList.add("dummy-day");
-            $dayNode.innerText = j + 1;
+            $dayNode.innerText = dateNum;
             $monthElement.appendChild($dayNode);
-            $mainDays[countMainDay].innerText = j + 1;
+            $mainDays[countMainDay].innerText = dateNum;
             $mainDays[countMainDay].classList.remove("is-current-month");
             countMainDay += 1;
         }
