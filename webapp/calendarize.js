@@ -23,37 +23,38 @@ export class Calendarize {
         return this.INSTANCE;
     }
     // Create only 1 month calendar
-    buildMonthCalendar(element, month, year) {
-        const dateUtils = DateUtils.getInstance();
-
+    buildMonthCalendar(element, year, month, date = 1) {
         let _this = this;
-        let months = dateUtils.getMonthsInYear(year);
-
-        let opts = {
-            showMonth: true,
-            showDaysOfWeek: true,
-            showYear: true,
-            clickHandler: function (e) {
-                let day = e.target.getAttribute("data-date");
-                //alert(day);
-            },
-        };
-
-        let $monthNode = _this.createMonthElement(month, year, opts);
+        let $monthNode = _this.createMonthElement(month, year, date);
         element.appendChild($monthNode);
     }
     // Add days and place fillers for a given month
     // This function and the one above needs consolidated
-    createMonthElement(monthNum, year, opts) {
+    createMonthElement(
+        monthNum,
+        yearNum,
+        dateNum,
+        opts = {
+            showMonth: true,
+            showDaysOfWeek: true,
+            showYear: true,
+            onlyCurrent: false,
+            limitDate: undefined, // unknown
+            filterDayOfWeek: undefined, // unknown
+            clickHandler: function (e) {
+                let day = e.target.getAttribute("data-date");
+                console.log(day);
+            },
+        },
+    ) {
         //if (monthNum === undefined || year === undefined) return "something is missing";
         const dateUtils = DateUtils.getInstance();
 
-        let date = new Date(year, monthNum, 1);
-        let month = date.getMonth();
-        let prevMonth = new Date(date.setMonth(month - 1));
-        let nextMonth = new Date(date.setMonth(month + 1));
+        let date = new Date(yearNum, monthNum, dateNum);
+        let prevMonth = new Date(date.setMonth(monthNum - 1));
+        let nextMonth = new Date(date.setMonth(monthNum + 1));
 
-        let daysInMonth = dateUtils.getDaysInMonth(monthNum, year);
+        let daysInMonth = dateUtils.getDaysInMonth(monthNum, yearNum);
         let daysPrevMonth = dateUtils.getDaysInMonth(prevMonth.getMonth(), prevMonth.getFullYear());
         let daysNextMonth = dateUtils.getDaysInMonth(nextMonth.getMonth(), nextMonth.getFullYear());
 
@@ -81,7 +82,7 @@ export class Calendarize {
         // Add a Title to the month
         if (opts.showMonth) {
             $titleElement.classList.add("month-title");
-            $titleElement.innerText = MONTH_NAMES[monthNum] + (opts.showYear ? " " + year : "");
+            $titleElement.innerText = MONTH_NAMES[monthNum] + (opts.showYear ? " " + yearNum : "");
             $monthElement.appendChild($titleElement);
         }
 
@@ -107,28 +108,38 @@ export class Calendarize {
         }
 
         // Place a day for each day of the month
-        daysInMonth.forEach(function (c, d) {
+        daysInMonth.forEach(function (date, dayNum) {
             let today = new Date(new Date().setHours(0, 0, 0, 0));
             let $dayNode = document.createElement("div");
             $dayNode.classList.add("day");
-            $dayNode.setAttribute("data-date", c);
-            $dayNode.innerText = d + 1;
-            $mainDays[countMainDay].innerText = d + 1;
+            $dayNode.setAttribute("data-date", date);
+            $dayNode.innerText = dayNum + 1;
+            $mainDays[countMainDay].innerText = dayNum + 1;
             $mainDays[countMainDay].classList.add("is-current-month");
             countMainDay += 1;
 
-            let dow = new Date(c).getDay();
-            let dateParsed = Date.parse(c);
+            let dow = new Date(date).getDay();
+            let dateParsed = Date.parse(date);
             let todayParsed = Date.parse(today);
 
-            if (dateParsed === todayParsed) $dayNode.classList.add("today");
-            if (dateParsed > todayParsed) $dayNode.classList.add("future");
-            if (dateParsed < todayParsed) $dayNode.classList.add("past");
+            if (dateParsed === todayParsed) {
+                $dayNode.classList.add("today");
+            } else if (dateParsed > todayParsed) {
+                $dayNode.classList.add("future");
+            } else if (dateParsed < todayParsed) {
+                $dayNode.classList.add("past");
+            }
 
-            if (dow === 0 || dow === 6) $dayNode.classList.add("weekend");
-            if (opts.onlyCurrent && c < today) $dayNode.classList.add("dummy-day");
+            if (dow === 0 || dow === 6) {
+                $dayNode.classList.add("weekend");
+            }
+
+            if (opts.onlyCurrent && date < today) {
+                $dayNode.classList.add("dummy-day");
+            }
+
             if (opts.limitDate) {
-                if (c > opts.limitDate) {
+                if (date > opts.limitDate) {
                     $dayNode.classList.add("dummy-day");
                 }
             }
@@ -136,7 +147,7 @@ export class Calendarize {
             if (opts.filterDayOfWeek) {
                 let valid = false;
                 for (let i = 0; i < opts.filterDayOfWeek.length; i++) {
-                    if (c.getDay() == opts.filterDayOfWeek[i]) {
+                    if (date.getDay() == opts.filterDayOfWeek[i]) {
                         valid = true;
                     }
                 }
@@ -144,23 +155,16 @@ export class Calendarize {
                     $dayNode.classList.add("dummy-day");
                 }
             }
+
             if (opts.clickHandler && !$dayNode.classList.contains("dummy-day")) {
-                function handleEvent(e) {
+                $dayNode.addEventListener("mousedown", function (e) {
                     e = e || window.event;
                     e.preventDefault();
                     e.stopPropagation();
-                    let touches = false;
-                    if (!touches) {
-                        touches = true;
-                        setTimeout(() => {
-                            touches = false;
-                        }, 300);
-                        opts.clickHandler(e);
-                    }
-                }
-                $dayNode.addEventListener("touchstart", handleEvent);
-                $dayNode.addEventListener("mousedown", handleEvent);
+                    opts.clickHandler(e);
+                });
             }
+
             $monthElement.appendChild($dayNode);
         });
 

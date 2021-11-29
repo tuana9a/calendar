@@ -21,7 +21,7 @@ function main() {
     const $forwardMonth = document.getElementById("forwardMonth");
 
     const calendarize = Calendarize.getInstance();
-    calendarize.buildMonthCalendar($miniCalendar, currentMonth, currentYear);
+    calendarize.buildMonthCalendar($miniCalendar, currentYear, currentMonth);
 
     $returnCurrentMonth.addEventListener("click", () => {
         const calendarize = Calendarize.getInstance();
@@ -30,7 +30,7 @@ function main() {
         }
         changeMonth = currentMonth;
         changeYear = currentYear;
-        calendarize.buildMonthCalendar($miniCalendar, changeMonth, changeYear);
+        calendarize.buildMonthCalendar($miniCalendar, changeYear, changeMonth);
     });
 
     $backwardMonth.addEventListener("click", () => {
@@ -43,7 +43,7 @@ function main() {
             changeMonth = 11;
             changeYear -= 1;
         }
-        calendarize.buildMonthCalendar($miniCalendar, changeMonth, changeYear);
+        calendarize.buildMonthCalendar($miniCalendar, changeYear, changeMonth);
     });
 
     $forwardMonth.addEventListener("click", () => {
@@ -56,7 +56,7 @@ function main() {
             changeMonth = 0;
             changeYear += 1;
         }
-        calendarize.buildMonthCalendar($miniCalendar, changeMonth, changeYear);
+        calendarize.buildMonthCalendar($miniCalendar, changeYear, changeMonth);
     });
 }
 
