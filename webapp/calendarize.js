@@ -1,4 +1,5 @@
 import { apis } from "./apis.js";
+import { DateUtils } from "./utils.js";
 
 const MONTH_NAMES = [
     "January",
@@ -16,37 +17,17 @@ const MONTH_NAMES = [
 ];
 const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
-class Calendarize {
+export class Calendarize {
     static INSTANCE = new Calendarize();
     static getInstance() {
         return this.INSTANCE;
     }
-    // Return the days in a month - given a year and the month number
-    getDaysInMonth(month, year) {
-        let date = new Date(year, month, 1);
-        let days = [];
-        while (date.getMonth() === month) {
-            days.push(new Date(date));
-            date.setDate(date.getDate() + 1);
-        }
-        return days;
-    }
-    // return an array of the first day of each month for a given year
-    getMonthsInYear(year) {
-        let date = new Date(year, 0, 1);
-        let months = [];
-        let monthCount = 0;
-        while (monthCount < 12) {
-            months.push(new Date(date));
-            date.setMonth(date.getMonth() + 1);
-            monthCount++;
-        }
-        return months;
-    }
     // Create only 1 month calendar
     buildMonthCalendar(element, month, year) {
+        const dateUtils = DateUtils.getInstance();
+
         let _this = this;
-        let months = _this.getMonthsInYear(year);
+        let months = dateUtils.getMonthsInYear(year);
 
         let opts = {
             showMonth: true,
@@ -58,21 +39,24 @@ class Calendarize {
             },
         };
 
-        let $monthNode = _this.buildMonth(month, year, opts);
+        let $monthNode = _this.createMonthElement(month, year, opts);
         element.appendChild($monthNode);
     }
     // Add days and place fillers for a given month
     // This function and the one above needs consolidated
-    buildMonth(monthNum, year, opts) {
+    createMonthElement(monthNum, year, opts) {
         //if (monthNum === undefined || year === undefined) return "something is missing";
-        let _this = this;
+        const dateUtils = DateUtils.getInstance();
+
         let date = new Date(year, monthNum, 1);
         let month = date.getMonth();
         let prevMonth = new Date(date.setMonth(month - 1));
         let nextMonth = new Date(date.setMonth(month + 1));
-        let daysInMonth = _this.getDaysInMonth(monthNum, year);
-        let daysPrevMonth = _this.getDaysInMonth(prevMonth.getMonth(), prevMonth.getFullYear());
-        let daysNextMonth = _this.getDaysInMonth(nextMonth.getMonth(), nextMonth.getFullYear());
+
+        let daysInMonth = dateUtils.getDaysInMonth(monthNum, year);
+        let daysPrevMonth = dateUtils.getDaysInMonth(prevMonth.getMonth(), prevMonth.getFullYear());
+        let daysNextMonth = dateUtils.getDaysInMonth(nextMonth.getMonth(), nextMonth.getFullYear());
+
         let $monthElement = document.createElement("div");
         let $titleElement = document.createElement("div");
         let skipLength = daysInMonth[0].getDay();
@@ -168,7 +152,7 @@ class Calendarize {
                     let touches = false;
                     if (!touches) {
                         touches = true;
-                        setTimeout(function () {
+                        setTimeout(() => {
                             touches = false;
                         }, 300);
                         opts.clickHandler(e);
@@ -201,64 +185,3 @@ class Calendarize {
         return $monthElement;
     }
 }
-
-function main() {
-    const TIME_OPTS = {
-        currentYear: 0,
-        currentMonth: 0,
-        changeMonth: -1,
-        changeYear: -1,
-    };
-
-    TIME_OPTS.currentYear = new Date().getFullYear();
-    TIME_OPTS.currentMonth = new Date().getMonth();
-    TIME_OPTS.changeMonth = TIME_OPTS.currentMonth;
-    TIME_OPTS.changeYear = TIME_OPTS.currentYear;
-
-    const $miniCalendar = document.getElementById("miniCalendar");
-    const $mainCalendar = document.getElementById("mainCalendar");
-    const $returnCurrentMonth = document.getElementById("returnCurrentMonth");
-    const $backwardMonth = document.getElementById("backwardMonth");
-    const $forwardMonth = document.getElementById("forwardMonth");
-
-    const calendarize = Calendarize.getInstance();
-    calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.currentMonth, TIME_OPTS.currentYear);
-
-    $returnCurrentMonth.addEventListener("click", () => {
-        const calendarize = Calendarize.getInstance();
-        while ($miniCalendar.firstChild) {
-            $miniCalendar.removeChild($miniCalendar.lastChild);
-        }
-        TIME_OPTS.changeMonth = TIME_OPTS.currentMonth;
-        TIME_OPTS.changeYear = TIME_OPTS.currentYear;
-        calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.changeMonth, TIME_OPTS.changeYear);
-    });
-
-    $backwardMonth.addEventListener("click", () => {
-        const calendarize = Calendarize.getInstance();
-        while ($miniCalendar.firstChild) {
-            $miniCalendar.removeChild($miniCalendar.lastChild);
-        }
-        TIME_OPTS.changeMonth -= 1;
-        if (TIME_OPTS.changeMonth == -1) {
-            TIME_OPTS.changeMonth = 11;
-            TIME_OPTS.changeYear -= 1;
-        }
-        calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.changeMonth, TIME_OPTS.changeYear);
-    });
-
-    $forwardMonth.addEventListener("click", () => {
-        const calendarize = Calendarize.getInstance();
-        while ($miniCalendar.firstChild) {
-            $miniCalendar.removeChild($miniCalendar.lastChild);
-        }
-        TIME_OPTS.changeMonth += 1;
-        if (TIME_OPTS.changeMonth == 12) {
-            TIME_OPTS.changeMonth = 0;
-            TIME_OPTS.changeYear += 1;
-        }
-        calendarize.buildMonthCalendar($miniCalendar, TIME_OPTS.changeMonth, TIME_OPTS.changeYear);
-    });
-}
-
-main();

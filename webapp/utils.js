@@ -102,6 +102,28 @@ export class DateUtils {
         let weeks = Math.floor(DateUtils.getInstance().daysBetween(start, new Date()) / DAYWEEK_COUNT);
         return weeks + 1; //EXPLAIN: vd chia đc 0.5 thì là tuần 1, chia đc 1.2 là tuần 2
     }
+    // Return the days in a month - given a year and the month number
+    getDaysInMonth(month, year) {
+        let date = new Date(year, month, 1);
+        let days = [];
+        while (date.getMonth() === month) {
+            days.push(new Date(date));
+            date.setDate(date.getDate() + 1);
+        }
+        return days;
+    }
+    // return an array of the first day of each month for a given year
+    getMonthsInYear(year) {
+        let date = new Date(year, 0, 1);
+        let months = [];
+        let monthCount = 0;
+        while (monthCount < 12) {
+            months.push(new Date(date));
+            date.setMonth(date.getMonth() + 1);
+            monthCount++;
+        }
+        return months;
+    }
 }
 
 export class RandomUtils {
