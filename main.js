@@ -20,6 +20,9 @@ async function main() {
 
     server.post("/auth/login", apis.login);
     server.post("/auth/register", apis.register);
+    server.put("/auth/user", apis.updateUser);
+    server.delete("/auth/user", apis.deleteUser);
+    server.get("/auth/user", apis.findUserById);
 
     await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);

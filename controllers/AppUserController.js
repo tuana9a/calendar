@@ -32,16 +32,25 @@ class AppUserController {
         //Create token
         return { accessToken: jwt.sign({ _id: user._id }, AppConfig.tokenSecret, { expiresIn: "24h" }) };
     }
-    update(user) {
-        //TODO
-        // update phải check tồn tại sau đó mới update
+    async update({ username, password }) {
+        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
+        if (!user) return "user not exist";
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        let updatedUser = await collection.updateOne({ username: username }, { $set: { password: hashedPassword } });
+        return { userId: updatedUser.upsertedId }
     }
-    delete(user) {
-        //TODO
-        //
+    async delete({ username }) {
+        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
+        if (!user) return "user not exist";
+        let deleted = await collection.deleteOne({ username: username });
+        return user._id;
     }
-    findById(id) {
-        //TODO
+    async findById(id) {
+        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ _id: id });
+        if (!user) return "user not exist";
+        return user
     }
 }
 const instance = new AppUserController();
