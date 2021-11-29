@@ -21,45 +21,56 @@ function main() {
     const forwardMonthButton = document.getElementById("forwardMonth");
 
     const calendarize = Calendarize.getInstance();
+
     const miniOpts = {
         showYearOnTitle: true,
         fullOrShort: "short",
     };
+    function updateMiniCalendar() {
+        calendarize.write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
+    }
+
     const mainOpts = {
         showYearOnTitle: true,
         fullOrShort: "full",
+        clickHandler: function (e) {
+            let dateTimeMilisecs = e.target.getAttribute("data-date");
+            let date = new Date(parseInt(dateTimeMilisecs));
+            console.log(date);
+        },
     };
-    calendarize.write(mainCalendarElement, currentYear, currentMonth, currentDate, mainOpts);
-    calendarize.write(miniCalendarElement, currentYear, currentMonth, currentDate, miniOpts);
+    function updateMainCalendar() {
+        calendarize.write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
+    }
+
+    updateMiniCalendar();
+    updateMainCalendar();
 
     returnCurrentMonthButton.addEventListener("click", () => {
-        const calendarize = Calendarize.getInstance();
         changeMonth = currentMonth;
         changeYear = currentYear;
-        calendarize.write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
-        calendarize.write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
+        updateMainCalendar();
+        updateMiniCalendar();
     });
 
     backwardMonthButton.addEventListener("click", () => {
-        const calendarize = Calendarize.getInstance();
         changeMonth -= 1;
         if (changeMonth == -1) {
             changeMonth = 11;
             changeYear -= 1;
         }
-        calendarize.write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
-        calendarize.write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
+        updateMainCalendar();
+        updateMiniCalendar();
     });
 
     forwardMonthButton.addEventListener("click", () => {
-        const calendarize = Calendarize.getInstance();
         changeMonth += 1;
         if (changeMonth == 12) {
             changeMonth = 0;
             changeYear += 1;
         }
-        calendarize.write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
-        calendarize.write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
+        updateMainCalendar();
+        updateMiniCalendar();
     });
 }
 

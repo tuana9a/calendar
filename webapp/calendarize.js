@@ -112,6 +112,7 @@ export class Calendarize {
             showYearOnTitle: false,
             fullOrShort: "full",
             dropDayOfWeek: undefined, // drop ngày trong tuần
+            isMinimal: false,
             clickHandler: function (e) {
                 let day = e.target.getAttribute("data-date");
                 console.log(day);
@@ -133,11 +134,21 @@ export class Calendarize {
         let preLength = daysInMonth.length + skipLength;
 
         let postLength = 0; // if (length % 7 == 0) so no need to add dummy day at end
-        if (preLength % 7 !== 0) {
-            if (preLength < 42) {
-                postLength = 42 - preLength; // 7*6=42
-            } else {
-                postLength = 49 - preLength; // 7*7=49
+        if (opts.isMinimal) {
+            if (preLength % 7 !== 0) {
+                if (preLength < 35) {
+                    postLength = 35 - preLength; // 7*5=35
+                } else {
+                    postLength = 42 - preLength; // 7*6=42
+                }
+            }
+        } else {
+            if (preLength % 7 !== 0) {
+                if (preLength < 42) {
+                    postLength = 42 - preLength; // 7*6=42
+                } else {
+                    postLength = 49 - preLength; // 7*7=49
+                }
             }
         }
 
@@ -162,6 +173,7 @@ export class Calendarize {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dummyDateNum;
             dayElement.classList.remove(DAY_CURRENT_MONTH_CLASS_NAME);
+            dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
             countMainDay += 1;
         }
 
@@ -170,6 +182,7 @@ export class Calendarize {
             let today = new Date(new Date().setHours(0, 0, 0, 0));
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dayNum + 1;
+            dayElement.classList.remove(DAY_DUMMY_CLASS_NAME);
             dayElement.classList.add(DAY_CURRENT_MONTH_CLASS_NAME);
             dayElement.setAttribute("data-date", date.getTime());
             countMainDay += 1;
@@ -213,7 +226,8 @@ export class Calendarize {
         });
 
         // Add in the dummy filler days to make an even block
-        for (let dateNum = 1; dateNum <= postLength; dateNum++) {
+        for (let i = 0; i < postLength; i++) {
+            let dateNum = i + 1;
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dateNum;
             dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
@@ -226,6 +240,7 @@ export class Calendarize {
             for (let i = 0; i < 7; i++) {
                 const dayElement = dayElements[countMainDay + i];
                 dayElement.innerText = "";
+                dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
                 dayElement.classList.remove(DAY_CURRENT_MONTH_CLASS_NAME);
             }
         }
