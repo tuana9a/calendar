@@ -8,8 +8,8 @@ const jwt = require("jsonwebtoken");
 const { MongoDBClient } = require("./database/MongoDBClient");
 const { AppConfig } = require("./configs");
 
-function wrapExpressHandler(handler = async () => {}) {
-    return async function (req, resp) {
+function wrapExpressHandler(handler = async() => {}) {
+    return async function(req, resp) {
         try {
             await handler(req, resp);
         } catch (err) {
@@ -27,7 +27,7 @@ function wrapExpressHandler(handler = async () => {}) {
     };
 }
 
-const verifyToken = async (req, res, next) => {
+const verifyToken = async(req, res, next) => {
     const token = req.cookies.access_token;
     if (!token) throw "Access denied";
     try {
@@ -41,7 +41,7 @@ const verifyToken = async (req, res, next) => {
                 throw "User not found";
             }
         } catch (error) {
-            throw error?.message;
+            throw error ? .message;
         }
         req.user = user; //add user to req to process in the next function
     } catch (error) {
@@ -114,6 +114,37 @@ async function login(req, resp) {
     resp.cookie("access_token", accessToken).send(ResponseEntity.builder().code(1).message("success").data().build());
 }
 
+
+async function updateUser(req, resp) {
+    let data = req.body;
+    validations.checkAuthentication(data);
+    let result;
+    const updateApi = async() => {
+        result = await AppUserController.getInstance().update(data);
+    }
+
+    verifyToken(req, resp, updateApi);
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+}
+
+async function deleteUser(req, resp) {
+    let data = req.body;
+    let result;
+    const deleteApi = async() => {
+        result = await AppUserController.getInstance().delete(data);
+    }
+    verifyToken(req, resp, deleteApi);
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+}
+
+async function findUserById(req, resp) {
+    let id = req.query.userId;
+    let result = await AppUserController.getInstance().findById(id);
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+}
 //with apis that need authentication
 //ex:
 // function needAuth(req, resp) {
@@ -130,6 +161,9 @@ const apis = {
 
     register: wrapExpressHandler(register),
     login: wrapExpressHandler(login),
+    updateUser: wrapExpressHandler(updateUser),
+    deleteUser: wrapExpressHandler(deleteUser),
+    findUserById: wrapExpressHandler(findUserById)
 };
 
 module.exports = {
