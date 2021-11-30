@@ -176,8 +176,10 @@ export class Calendarize {
         }
 
         // Place a day for each day of the month
+        let today = new Date(new Date().setHours(0, 0, 0, 0));
+        let todayParsed = Date.parse(today);
+
         daysInMonth.forEach(function (date, dayNum) {
-            let today = new Date(new Date().setHours(0, 0, 0, 0));
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dayNum + 1;
             dayElement.classList.remove(DAY_DUMMY_CLASS_NAME);
@@ -187,14 +189,19 @@ export class Calendarize {
 
             let dow = new Date(date).getDay();
             let dateParsed = Date.parse(date);
-            let todayParsed = Date.parse(today);
 
             if (dateParsed === todayParsed) {
                 dayElement.classList.add(DAY_TODAY_CLASS_NAME);
+                dayElement.classList.remove(DAY_FUTURE_CLASS_NAME);
+                dayElement.classList.remove(DAY_PAST_CLASS_NAME);
             } else if (dateParsed > todayParsed) {
                 dayElement.classList.add(DAY_FUTURE_CLASS_NAME);
+                dayElement.classList.remove(DAY_TODAY_CLASS_NAME);
+                dayElement.classList.remove(DAY_PAST_CLASS_NAME);
             } else if (dateParsed < todayParsed) {
                 dayElement.classList.add(DAY_PAST_CLASS_NAME);
+                dayElement.classList.remove(DAY_TODAY_CLASS_NAME);
+                dayElement.classList.remove(DAY_FUTURE_CLASS_NAME);
             }
 
             if (dow === 0 || dow === 6) {

@@ -51,6 +51,10 @@
     margin: 7px;
 }
 
+#miniCalendar .calendar-date-title {
+    padding: 5px 0;
+}
+
 #mainCalendar {
     margin: 30px;
 }
