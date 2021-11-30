@@ -113,6 +113,7 @@ export class Calendarize {
             fullOrShort: "full",
             dropDayOfWeek: undefined, // drop ngày trong tuần
             isMinimal: false,
+            skipClickHandler: false,
             clickHandler: function (e) {
                 let day = e.target.getAttribute("data-date");
                 console.log(day);
@@ -184,7 +185,8 @@ export class Calendarize {
             dayElement.innerText = dayNum + 1;
             dayElement.classList.remove(DAY_DUMMY_CLASS_NAME);
             dayElement.classList.add(DAY_CURRENT_MONTH_CLASS_NAME);
-            dayElement.setAttribute("data-date", date.getTime());
+            let dataDate = `${yearNum}-${monthNum}-${dayNum}`;
+            dayElement.setAttribute("data-date", dataDate);
             countMainDay += 1;
 
             let dow = new Date(date).getDay();
@@ -220,7 +222,7 @@ export class Calendarize {
                 }
             }
 
-            if (opts.clickHandler && !dayElement.classList.contains(DAY_DUMMY_CLASS_NAME)) {
+            if (!opts.skipClickHandler && opts.clickHandler && !dayElement.classList.contains(DAY_DUMMY_CLASS_NAME)) {
                 dayElement.addEventListener("mousedown", function (e) {
                     e = e || window.event;
                     e.preventDefault();

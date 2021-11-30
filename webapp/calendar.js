@@ -33,10 +33,10 @@ function main() {
     const mainOpts = {
         showYearOnTitle: true,
         fullOrShort: "full",
+        skipClickHandler: false,
         clickHandler: function (e) {
-            let dateTimeMilisecs = e.target.getAttribute("data-date");
-            let date = new Date(parseInt(dateTimeMilisecs));
-            console.log(date);
+            let dataDate = e.target.getAttribute("data-date");
+            console.log(dataDate);
         },
     };
     function updateMainCalendar() {
@@ -45,6 +45,7 @@ function main() {
 
     updateMiniCalendar();
     updateMainCalendar();
+    mainOpts.skipClickHandler = true; // after first time add event handler then skip it
 
     returnCurrentMonthButton.addEventListener("click", () => {
         changeMonth = currentMonth;
