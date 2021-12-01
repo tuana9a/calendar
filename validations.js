@@ -1,19 +1,27 @@
-const { Test } = require("./models/Test");
 const { ValidationError } = require("./exceptions");
+const { MongoDBClient } = require("./database/MongoDBClient");
 
 class Validations {
-    checkTest(entry = new Test()) {
-        if (!entry.name || entry.name.length < 8) throw new ValidationError("name missing");
-        if (!entry.age || entry.age < 0) throw new ValidationError("age illegal");
+    static INSTANCE = new Validations();
+    static getInstance() {
+        return this.INSTANCE;
     }
-    checkAuthentication(entry = new Test()) {
+    checkAuthentication(entry) {
         if (entry?.username?.length < 1) throw new ValidationError("invalid username");
         if (entry?.password?.length < 1) throw new ValidationError("invalid password");
     }
+    checkToken(token) {
+        if (!token) throw new ValidationError("Access denied");
+
+        const verified = jwt.verify(token, AppConfig.tokenSecret);
+        const uid = verified._id;
+        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findById(uid);
+        if (!user) throw new ValidationError("User not found");
+
+        return user;
+    }
 }
 
-const validations = new Validations();
-
 module.exports = {
-    validations: validations,
+    Validations: Validations,
 };
