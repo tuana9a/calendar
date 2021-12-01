@@ -10,7 +10,7 @@ class Validations {
         if (entry?.username?.length < 1) throw new ValidationError("invalid username");
         if (entry?.password?.length < 1) throw new ValidationError("invalid password");
     }
-    checkToken(token) {
+    async checkToken(token) {
         if (!token) throw new ValidationError("Access denied");
 
         const verified = jwt.verify(token, AppConfig.tokenSecret);

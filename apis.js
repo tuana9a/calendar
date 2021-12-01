@@ -37,7 +37,7 @@ function wrapExpressHandler(handler = async () => {}) {
 async function verifyToken(req, resp, next) {
     const token = req.cookies.access_token;
     const validations = Validations.getInstance();
-    const user = validations.checkToken(token); // return user if success or throw error if fail
+    const user = await validations.checkToken(token); // return user if success or throw error if fail
     req.user = user; //add user to req to process in the next function
     next();
 }
