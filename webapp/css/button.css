@@ -31,15 +31,10 @@
     background: var(--blue30);
 }
 
-.button:hover,
-.button:focus,
-.button.is-secondary:hover,
-.button.is-secondary:focus,
-.button.is-rounded:focus,
-.button.is-rounded:hover,
-.button.is-compact:hover .button.is-compact:focus {
+.button:hover {
     outline: none;
     background: var(--gray10);
+    color: var(--dark);
 }
 
 .button.is-rounded {

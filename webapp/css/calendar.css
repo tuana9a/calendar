@@ -1,52 +1,75 @@
 .calendar {
     color: var(--gray20);
-    padding-inline: 1.5rem;
-    --minBlockSize: 4rem;
-    --maxBlockSize: auto;
-
-    --minInlineSize: 5rem;
-    --maxInlineSize: 1fr;
+    /* padding-inline: 1.5rem; */
     position: relative;
 }
 
-.main-calendar-month {
+.calendar-grid {
     display: grid;
-    grid-template-columns: auto repeat(7, minmax(var(--minInlineSize), var(--maxInlineSize)));
-    grid-template-rows: 7rem repeat(6, minmax(var(--minBlockSize), var(--maxBlockSize)));
-    min-block-size: 700px;
+    grid-template-columns: repeat(7, auto);
+    grid-template-rows: repeat(7, auto);
 }
 
-.calendar-day {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.calendar-date-title {
     text-align: center;
-    margin: 0;
-    /* position: sticky; */
-    inset-block-start: 0;
-    background: var(--dark);
-    /* border-block-end: 1px solid currentColor; */
+    /* margin: -20px -20px 30px -20px; */
+    /* padding: 15px 0; */
+    background: #1a73e8;
+    color: #e7e7e7;
 }
 
-.calendar-day span {
-    font-size: 20px;
-}
-
-.task-cell {
-    padding: 0.25rem;
-    text-align: center;
-}
-
-.task-cell.is-active::before {
-    content: "(Sin titulo)";
-    font-size: small;
-    background: #c6dafc;
-    padding: 0.25rem;
+.day {
     display: block;
-    border-radius: 0.25rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    padding: 3px 0;
+}
+.day.dow {
+    display: block;
+}
+.day.dummy {
+    opacity: 0.5;
+}
+.day.month {
+    /* TODO */
+    background-color: #535353;
+}
+.day.hide {
+    display: none;
+}
+.day.today {
+    background-color: #4067e7;
+}
+.day.future {
+    /* TODO */
+}
+.day.past {
+    /* TODO */
 }
 
-.task-cell.is-current-month {
-    background-color: #535353;
+/* custom existing */
+#miniCalendar {
+    margin: 7px;
+}
+
+#miniCalendar .calendar-date-title {
+    padding: 5px 0;
+}
+
+#mainCalendar {
+    margin: 30px;
+}
+
+#mainCalendar .calendar-date-title {
+    padding: 15px 0;
+    font-size: 25px;
+}
+
+#mainCalendar .day {
+    padding: 15px 0;
+    /* font-size: 20px; */
+}
+
+#mainCalendar .day.dow {
+    font-size: 17px;
+    padding: 15px;
 }

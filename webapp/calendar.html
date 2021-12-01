@@ -4,34 +4,32 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="shortcut icon" href="./images/halendar.svg" type="image/x-icon" />
+        <title>Halendar</title>
 
+        <link rel="shortcut icon" href="./images/halendar.svg" type="image/x-icon" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap" rel="stylesheet" />
 
         <link rel="stylesheet" href="./css/index.css" />
-        <title>Halendar</title>
+        <link rel="stylesheet" href="./common.css" />
+
+        <script defer type="module" src="./calendar.js"></script>
     </head>
 
     <body>
         <div class="page">
             <header class="header">
-                <div class="header-left">
-                    <button id="button-menu" class="button is-compact">
-                        <i class="icon-hamburguerButton"></i>
-                    </button>
-                </div>
+                <div class="header-left"></div>
                 <div class="header-mid">
                     <div class="header-logo">
                         <img class="logo" src="./images/halendar.svg" />
-                        <img class="name" src="./images/halendar.png" />
                     </div>
                 </div>
                 <div class="header-right"></div>
             </header>
             <div class="sidebar">
-                <div class="mini-calendar-buttons">
+                <div class="display-flex justify-content-space-evenly align-items-center margin-auto">
                     <div>
                         <button id="backwardMonth" class="button is-compact is-switched" aria-label="Backward Month">
                             <i class="icon-chevronLeft" aria-hidden="true"></i>
@@ -46,84 +44,131 @@
                         </button>
                     </div>
                 </div>
-                <div id="miniCalendar"></div>
+                <div class="calendar" id="miniCalendar">
+                    <div class="calendar-date-title">&nbsp;</div>
+                    <div class="calendar-grid">
+                        <!-- split -->
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                    </div>
+                </div>
             </div>
-            <main class="calendar">
-                <div class="main-calendar-month">
-                    <span class="day-cell"></span>
-                    <div class="calendar-day">
-                        <span>Sunday</span>
+            <main class="main">
+                <div class="calendar" id="mainCalendar">
+                    <div class="calendar-date-title">&nbsp;</div>
+                    <div class="calendar-grid">
+                        <!-- split -->
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <div class="day dow"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <!-- split -->
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
+                        <div class="day dummy"></div>
                     </div>
-                    <div class="calendar-day">
-                        <span>Monday</span>
-                    </div>
-                    <div class="calendar-day">
-                        <span>Tuesday</span>
-                    </div>
-                    <div class="calendar-day">
-                        <span>Wednesday</span>
-                    </div>
-                    <div class="calendar-day">
-                        <span>Thursday</span>
-                    </div>
-                    <div class="calendar-day">
-                        <span>Friday</span>
-                    </div>
-                    <div class="calendar-day">
-                        <span>Saturday</span>
-                    </div>
-                    <span class="day-cell"></span>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <span class="day-cell"></span>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <span class="day-cell"></span>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <span class="day-cell"></span>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <span class="day-cell"></span>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <span class="day-cell"></span>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
-                    <div class="task-cell"></div>
                 </div>
             </main>
         </div>
-
-        <script src="./js/calendarize.js"></script>
     </body>
 </html>

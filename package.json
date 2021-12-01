@@ -4,15 +4,13 @@
     "description": "Bâi tập lớn Công nghệ web",
     "main": "main.js",
     "scripts": {
-        "start": "node main.js",
-        "parcel-watch": "parcel watch webapp/*.html",
-        "parcel-build": "parcel build webapp/*.html"
+        "start": "node main.js"
     },
     "repository": {
         "type": "git",
         "url": "git@gitlab.com:soict-it4409/20211/nhom23/calendar.git"
     },
-    "author": "Nhóm 23",
+    "author": "Nhom23",
     "license": "GPL-3.0",
     "dependencies": {
         "bcryptjs": "^2.4.3",
