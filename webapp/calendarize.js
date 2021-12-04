@@ -96,6 +96,15 @@ const DAY_PAST_CLASS_NAME = "past";
 const CALENDAR_GRID_CLASS_NAME = "calendar-grid";
 const CALENDAR_DATE_TITLE_CLASS_NAME = "calendar-date-title";
 
+function clearDayStateClassName(element) {
+    element.classList.remove(DAY_DUMMY_CLASS_NAME);
+    element.classList.remove(DAY_CURRENT_MONTH_CLASS_NAME);
+    element.classList.remove(DAY_WEEKEND_CLASS_NAME);
+    element.classList.remove(DAY_TODAY_CLASS_NAME);
+    element.classList.remove(DAY_FUTURE_CLASS_NAME);
+    element.classList.remove(DAY_PAST_CLASS_NAME);
+}
+
 export class Calendarize {
     static INSTANCE = new Calendarize();
     static getInstance() {
@@ -171,7 +180,7 @@ export class Calendarize {
             let dummyDateNum = daysPrevMonth.length - (skipLength - (i + 1));
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dummyDateNum;
-            dayElement.classList.remove(DAY_CURRENT_MONTH_CLASS_NAME);
+            clearDayStateClassName(dayElement);
             dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
             countMainDay += 1;
         }
@@ -183,7 +192,7 @@ export class Calendarize {
         daysInMonth.forEach(function (date, dayNum) {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dayNum + 1;
-            dayElement.classList.remove(DAY_DUMMY_CLASS_NAME);
+            clearDayStateClassName(dayElement);
             dayElement.classList.add(DAY_CURRENT_MONTH_CLASS_NAME);
             let dataDate = `${yearNum}-${monthNum}-${dayNum}`;
             dayElement.setAttribute("data-date", dataDate);
@@ -194,16 +203,10 @@ export class Calendarize {
 
             if (dateParsed === todayParsed) {
                 dayElement.classList.add(DAY_TODAY_CLASS_NAME);
-                dayElement.classList.remove(DAY_FUTURE_CLASS_NAME);
-                dayElement.classList.remove(DAY_PAST_CLASS_NAME);
             } else if (dateParsed > todayParsed) {
                 dayElement.classList.add(DAY_FUTURE_CLASS_NAME);
-                dayElement.classList.remove(DAY_TODAY_CLASS_NAME);
-                dayElement.classList.remove(DAY_PAST_CLASS_NAME);
             } else if (dateParsed < todayParsed) {
                 dayElement.classList.add(DAY_PAST_CLASS_NAME);
-                dayElement.classList.remove(DAY_TODAY_CLASS_NAME);
-                dayElement.classList.remove(DAY_FUTURE_CLASS_NAME);
             }
 
             if (dow === 0 || dow === 6) {
@@ -237,8 +240,8 @@ export class Calendarize {
             let dateNum = i + 1;
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dateNum;
+            clearDayStateClassName(dayElement);
             dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
-            dayElement.classList.remove(DAY_CURRENT_MONTH_CLASS_NAME);
             countMainDay += 1;
         }
 
@@ -247,8 +250,8 @@ export class Calendarize {
             for (let i = 0; i < 7; i++) {
                 const dayElement = dayElements[countMainDay + i];
                 dayElement.innerText = "";
+                clearDayStateClassName(dayElement);
                 dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
-                dayElement.classList.remove(DAY_CURRENT_MONTH_CLASS_NAME);
             }
         }
 
