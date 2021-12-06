@@ -29,29 +29,29 @@
 
 <body>
 
-    <form>
-        <div class="background-color-white padding-16px">
-            <h1>Sign In</h1>
-            <p>Please fill in this form to sign in.</p>
-            <hr class="register-hr-box">
 
-            <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Your Username" name="username" id="username" required>
+    <div class="background-color-white padding-16px">
+        <h1>Sign In</h1>
+        <p>Please fill in this form to sign in.</p>
+        <hr class="register-hr-box">
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Your Username" name="username" id="username" required>
 
-            <hr>
-            <button type="submit" class="full-width-btn btn-green">Sign In</button>
-        </div>
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
-        <div class="container text-align-center background-color-white-dark">
-            <p>Didn't have an account? <a class="dodgerblue" href="#">Register</a>.</p>
-            <a class="dodgerblue" href="#">Forgot your password</a>
-        </div>
-    </form>
+        <hr>
+        <button type="submit" class="full-width-btn btn-green" id="signInBtn">Sign In</button>
+    </div>
 
-    <script src="./js/login.js"></script>
+    <div class="container text-align-center background-color-white-dark">
+        <p>Didn't have an account? <a class="dodgerblue" href="/webapp/register.html">Register</a>.</p>
+        <a class="dodgerblue" href="#">Forgot your password</a>
+    </div>
+
+
+    <script type="module" src="./js/login.js"></script>
 </body>
 
 </html>
