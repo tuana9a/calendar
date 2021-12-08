@@ -1,7 +1,7 @@
-const $updateAccBtn = document.getElementById("updateAccBtn");
+const $saveAccBtn = document.getElementById("saveAccBtn");
 const $deleteAccBtn = document.getElementById("deleteAccBtn");
 const $discardBtn = document.getElementById("discardBtn");
-
+const $updateBtn = document.getElementById("updateBtn");
 
 const $usernameText = document.getElementById("username");
 const $pswText = document.getElementById("psw");
@@ -25,9 +25,33 @@ const handleUpdateAccount = async() => {
 
 }
 
+const handleOpenUpdateMode = () => {
+    $usernameText.removeAttribute("readonly");
+    $pswText.removeAttribute("readonly");
+    $repeatPswText.removeAttribute("readonly");
+
+    $discardBtn.classList.remove("display-none");
+    $saveAccBtn.classList.remove("display-none");
+    $updateBtn.classList.add("display-none");
+}
+
+const handleCloseUpdateMode = () => {
+
+    $usernameText.setAttribute("readonly", "readonly");
+    $pswText.setAttribute("readonly", "readonly");
+    $repeatPswText.setAttribute("readonly", "readonly");
+
+    $discardBtn.classList.add("display-none");
+    $saveAccBtn.classList.add("display-none");
+    $updateBtn.classList.remove("display-none");
+}
+
+
 const handleDeleteAccount = async() => {
     const result = await apis.app_user.delete();
 }
 
 $deleteAccBtn.onclick = handleDeleteAccount;
-$updateAccBtn.onclick = handleUpdateAccount;
+$saveAccBtn.onclick = handleUpdateAccount;
+$discardBtn.onclick = handleCloseUpdateMode;
+$updateBtn.onclick = handleOpenUpdateMode;
