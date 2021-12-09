@@ -3,66 +3,72 @@ const jwt = require("jsonwebtoken");
 
 const { MongoDBClient } = require("./database");
 const { AppConfig } = require("./configs");
+const { ValidationError } = require("./exceptions");
 
 /*
 trước khi vào controller thì tầng apis.js phải qua các validates.js
  */
-class AppUserController {
-    static INSTANCE = new AppUserController();
+class UserController {
+    static INSTANCE = new UserController();
     static getInstance() {
         return this.INSTANCE;
     }
+    collection() {
+        const client = MongoDBClient.getInstance();
+        const collection = client.db("calendar").collection("user");
+        return collection;
+    }
     async register({ username, password }) {
-        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
-        if (user) return "user existed";
+        let user = await this.collection().findOne({ username: username });
+        if (user) throw new ValidationError("user existed");
         //hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = {
-            username,
-            password: hashedPassword,
-        };
-        let insertResult = await MongoDBClient.getInstance().db("calendar").collection("user").insertOne(newUser);
+        const newUser = { username: username, password: hashedPassword };
+        let insertResult = await this.collection().insertOne(newUser);
         return { userId: insertResult.insertedId };
     }
     async login({ username, password }) {
-        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
-        if (!user) return "user not exist";
+        let user = await this.collection().findOne({ username: username });
+        if (!user) throw new ValidationError("user not exist");
         const validPass = await bcrypt.compare(password, user.password);
-        if (!validPass) return "wrong password";
-        //Create token
-        return { accessToken: jwt.sign({ _id: user._id }, AppConfig.tokenSecret, { expiresIn: "24h" }) };
+        if (!validPass) throw new ValidationError("wrong password");
+        //create token
+        const token = jwt.sign({ _id: user._id }, AppConfig.tokenSecret, { expiresIn: "24h" });
+        return token;
     }
     async update({ username, password }) {
-        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
-        if (!user) return "user not exist";
+        let user = await this.collection().findOne({ username: username });
+        if (!user) throw new ValidationError("user not exist");
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-
-        let updatedUser = await collection.updateOne({ username: username }, { $set: { password: hashedPassword } });
+        let updatedUser = await this.collection().updateOne(
+            { username: username },
+            { $set: { password: hashedPassword } },
+        );
         return { userId: updatedUser.upsertedId };
     }
     async delete({ username }) {
-        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
-        if (!user) return "user not exist";
-        let deleted = await collection.deleteOne({ username: username });
-        return user._id;
+        let user = await this.collection().findOne({ username: username });
+        if (!user) throw new ValidationError("user not exist");
+        let deleted = await this.collection().deleteOne({ username: username });
+        return deleted.deletedCount;
     }
     async findById(id) {
-        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ _id: id });
-        if (!user) return "user not exist";
+        let user = await this.collection().findOne({ _id: id });
+        if (!user) throw new ValidationError("user not exist");
         return user;
     }
 }
 
-class UserEventController {
-    static INSTANCE = new UserEventController();
+class EventController {
+    static INSTANCE = new EventController();
     static getInstance() {
         return this.INSTANCE;
     }
 }
 
 module.exports = {
-    AppUserController: AppUserController,
-    UserEventController: UserEventController,
+    AppUserController: UserController,
+    UserEventController: EventController,
 };

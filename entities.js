@@ -1,8 +1,8 @@
 /*
 hiện tại mình làm chức năng người dùng đơn giản
-TODO: sau này rảnh có thể làm đăng nhập với google
+sau này rảnh có thể làm đăng nhập với google
 */
-class AppUser {
+class User {
     username;
     password;
 }
@@ -80,7 +80,7 @@ class UserEvent {
 }
 
 module.exports = {
-    AppUser: AppUser,
+    AppUser: User,
     UserEvent: UserEvent,
     LogOption: LogOption,
     ResponseEntity: ResponseEntity,
