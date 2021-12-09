@@ -23,12 +23,6 @@ function wrapExpressHandler(handler = async () => {}) {
     };
 }
 
-async function checkToken(req) {
-    const validations = TokenValidations.getInstance();
-    let user = await validations.checkToken(token); // throw error if fail, return user if success
-    return user;
-}
-
 function userController() {
     return UserController.getInstance();
 }
@@ -41,23 +35,22 @@ function tokenValidations() {
     return TokenValidations.getInstance();
 }
 
-//authentication
-async function register(req, resp) {
-    let data = req.body;
-
-    userValidations().checkUser(data);
-    let result = await userController().register(data);
-
+function sendResponse(resp, code = 1, message = "", data = {}) {
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    resp.send(ResponseEntity.builder().code(code).message(message).data(data).build());
+}
+
+async function register(req, resp) {
+    let user = req.body;
+    userValidations().checkUser(user);
+    let result = await userController().register(user);
+    sendResponse(resp, 1, "success", result);
 }
 
 async function login(req, resp) {
     let user = req.body;
-
     userValidations().checkUser(user);
     let accessToken = await userController().login(user);
-
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
     resp.cookie("access_token", accessToken).send(ResponseEntity.builder().code(1).message("success").data().build());
 }
@@ -65,42 +58,34 @@ async function login(req, resp) {
 async function updateUser(req, resp) {
     let user = req.body;
     let token = req.cookies.access_token;
-
     let _user = await tokenValidations().checkToken(token);
     user.username = _user.username;
     userValidations().checkUser(user);
     let result = await userController().update(user);
-
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    sendResponse(resp, 1, "success", result);
 }
 
 async function deleteUser(req, resp) {
     let user = req.body;
     let token = req.cookies.access_token;
-
     let _user = await tokenValidations().checkToken(token);
     user.username = _user.username;
     let result = await userController().delete(user);
-
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    sendResponse(resp, 1, "success", result);
 }
 
 async function findUserById(req, resp) {
     let id = req.params.id;
     let user = await userController().findById(id);
     delete user.password;
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(user).build());
+    sendResponse(resp, 1, "success", user);
 }
 
 async function userInfo(req, resp) {
     let token = req.cookies.access_token;
     let user = await tokenValidations().checkToken(token);
     delete user.password;
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(user).build());
+    sendResponse(resp, 1, "success", user);
 }
 
 const apis = {

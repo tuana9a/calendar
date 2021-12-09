@@ -26,12 +26,7 @@ export const apis = {
             }).then((resp) => resp.json());
         },
         logout: async function () {
-            //TODO
-            let url = "/logout";
-            let requestInfo = {
-                method: "GET",
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+            document.cookie = "access_token=; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
         },
         info: async function () {
             let url = "/api/user";
