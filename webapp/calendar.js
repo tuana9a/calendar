@@ -73,6 +73,19 @@ function main() {
         updateMainCalendar();
         updateMiniCalendar();
     });
+
+    fetch("/api/user")
+        .then((resp) => resp.json())
+        .then((resp) => {
+            if (resp.code == 1) {
+                let user = resp.data;
+                let username = user.username;
+                document.getElementById("user-icon").src = `https://avatars.dicebear.com/api/identicon/${username}.svg`;
+            } else {
+                alert("not logined yet");
+                window.location.href = "/login.html";
+            }
+        });
 }
 
 main();

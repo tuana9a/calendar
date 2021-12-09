@@ -30,27 +30,26 @@
 <body>
     <div class="account-top ">
         <h1>Account Settings</h1>
-        <button class="deletebtn btn-red " id="deleteAccBtn">Delete</button>
     </div>
     <div class="background-color-white padding-16px">
 
         <hr class="register-hr-box">
 
         <label for="username"><b>Username</b></label>
-        <input type="text" placeholder="Enter Your Username" name="username" id="username" required>
+        <input type="text" placeholder="Enter Your Username" name="username" id="username" required readonly>
 
         <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required readonly>
 
         <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
+        <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required readonly>
         <hr>
 
-        <button type="submit" class="full-width-btn btn-green display-none" id="saveAccBtn">Save</button>
-
     </div>
-    <button type="" class="full-width-btn btn-red display-none" id="discardBtn">Discard</button>
-    <button type="" class="full-width-btn btn-green" id="updateBtn">Update</button>
+    <button class="full-width-btn btn-green" id="updateBtn">Update</button>
+    <button class="full-width-btn btn-green display-none" id="saveAccBtn">Save</button>
+    <button class="full-width-btn btn-red display-none" id="discardBtn">Discard</button>
+    <button class=" full-width-btn btn-red display-none" id="deleteAccBtn">Delete</button>
     <script type="module" src="./account.js"></script>
 </body>
 

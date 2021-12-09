@@ -32,3 +32,8 @@
     align-items: center;
     gap: 3rem;
 }
+
+#user-icon {
+    width: 30px;
+    height: 30px;
+}

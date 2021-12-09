@@ -16,6 +16,7 @@ const handleOpenUpdateMode = () => {
 
     $discardBtn.classList.remove("display-none");
     $saveAccBtn.classList.remove("display-none");
+    $deleteAccBtn.classList.remove("display-none");
     $updateBtn.classList.add("display-none");
 };
 
@@ -26,6 +27,7 @@ const handleCloseUpdateMode = () => {
 
     $discardBtn.classList.add("display-none");
     $saveAccBtn.classList.add("display-none");
+    $deleteAccBtn.classList.add("display-none");
     $updateBtn.classList.remove("display-none");
 };
 
