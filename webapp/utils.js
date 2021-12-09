@@ -72,7 +72,6 @@ export class DateUtils {
     }
     daysBetween(date1 = new Date(), date2 = new Date()) {
         let delta = date1.getTime() - date2.getTime();
-        // console.log(delta);
         return Math.abs(delta) / 86_400_000;
     }
     timeBetween_String(date1 = new Date(), date2 = new Date()) {
@@ -89,11 +88,9 @@ export class DateUtils {
     }
     //CAUTION: nếu lệch mất một tuần thì vào đây mà sửa
     weeksFromStartDay(dash = "", firstWeekDay = "") {
-        // console.log(dash, firstWeekDay);
         let date1 = this.fromStringToDate_VN(dash);
         let date2 = this.fromStringToDate_VN(firstWeekDay);
         let weeks = this.daysBetween(date1, date2) / 7;
-        // console.log(weeks);
         return Math.floor(weeks) + 1;
         //EXPLAIN: đéo biết giải thích thế nào cái cộng 1, thời gian mệt vlòn
     }

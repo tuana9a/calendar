@@ -4,24 +4,26 @@ với mọi api dạng update, chỉnh sửa thì đều cần có cookie
 người dùng này cập nhật user khác hoặc delete user khác
 */
 export const apis = {
-    app_user: {
-        register: async function (params = { user: {} }) {
-            //TODO
+    user: {
+        register: async function (user = { username: "", password: "" }) {
             let url = "/register";
-            let requestInfo = {
+            return fetch(url, {
                 method: "POST",
-                body: params.user,
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(user),
+            }).then((resp) => resp.json());
         },
-        login: async function (params = { user: {} }) {
-            //TODO
+        login: async function (user = { username: "", password: "" }) {
             let url = "/login";
-            let requestInfo = {
+            return fetch(url, {
                 method: "POST",
-                body: params.user,
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(user),
+            }).then((resp) => resp.json());
         },
         logout: async function (params = {}) {
             //TODO
@@ -39,25 +41,24 @@ export const apis = {
             };
             return fetch(url, requestInfo).then((resp) => resp.json());
         },
-        update: async function (params = { user: {} }) {
-            //TODO
+        update: async function (user = { username: "", password: "" }) {
             let url = "/api/user";
-            let requestInfo = {
+            return fetch(url, {
                 method: "PUT",
-                body: params.user,
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(user),
+            }).then((resp) => resp.json());
         },
-        delete: async function (params = {}) {
-            //TODO
+        delete: async function () {
             let url = "/api/user";
-            let requestInfo = {
+            return fetch(url, {
                 method: "DELETE",
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+            }).then((resp) => resp.json());
         },
     },
-    user_event: {
+    event: {
         add: async function (params = { user_event: {} }) {
             //TODO
             let url = "/api/user/event";
