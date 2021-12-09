@@ -4,6 +4,7 @@ const $saveAccBtn = document.getElementById("saveAccBtn");
 const $deleteAccBtn = document.getElementById("deleteAccBtn");
 const $discardBtn = document.getElementById("discardBtn");
 const $updateBtn = document.getElementById("updateBtn");
+const $logoutBtn = document.getElementById("logoutBtn");
 
 const $usernameText = document.getElementById("username");
 const $pswText = document.getElementById("psw");
@@ -62,10 +63,17 @@ const handleDeleteAccount = async () => {
     }
 };
 
+const handleLogout = () => {
+    apis.user.logout();
+    alert("logout success");
+    window.location.href = "/login.html";
+};
+
 $deleteAccBtn.onclick = handleDeleteAccount;
 $saveAccBtn.onclick = handleUpdateAccount;
 $discardBtn.onclick = handleCloseUpdateMode;
 $updateBtn.onclick = handleOpenUpdateMode;
+$logoutBtn.onclick= handleLogout;
 
 fetch("/api/user")
     .then((resp) => resp.json())

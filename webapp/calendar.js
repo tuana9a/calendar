@@ -80,7 +80,10 @@ function main() {
             if (resp.code == 1) {
                 let user = resp.data;
                 let username = user.username;
-                document.getElementById("user-icon").src = `https://avatars.dicebear.com/api/identicon/${username}.svg`;
+                let iconTypes = ["adventurer-neutral", "big-ears-neutral", "initials"];
+                let index = Math.floor(Math.random() * iconTypes.length);
+                let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
+                document.getElementById("user-icon").src = iconSrc;
             } else {
                 alert("not logined yet");
                 window.location.href = "/login.html";
