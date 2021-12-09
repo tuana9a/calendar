@@ -1,7 +1,7 @@
 const { LOGGER } = require("./logger");
 const { UserValidations, TokenValidations } = require("./validations");
 const { ResponseEntity } = require("./entities");
-const { AppUserController } = require("./controllers");
+const { UserController } = require("./controllers");
 const { ValidationError } = require("./exceptions");
 
 function wrapExpressHandler(handler = async () => {}) {
@@ -29,14 +29,24 @@ async function checkToken(req) {
     return user;
 }
 
+function userController() {
+    return UserController.getInstance();
+}
+
+function userValidations() {
+    return UserValidations.getInstance();
+}
+
+function tokenValidations() {
+    return TokenValidations.getInstance();
+}
+
 //authentication
 async function register(req, resp) {
     let data = req.body;
-    const validations = UserValidations.getInstance();
-    const controller = AppUserController.getInstance();
 
-    validations.checkUser(data);
-    let result = await controller.register(data);
+    userValidations().checkUser(data);
+    let result = await userController().register(data);
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
     resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
@@ -44,11 +54,9 @@ async function register(req, resp) {
 
 async function login(req, resp) {
     let user = req.body;
-    const validations = UserValidations.getInstance();
-    const controller = AppUserController.getInstance();
 
-    validations.checkUser(user);
-    let accessToken = await controller.login(user);
+    userValidations().checkUser(user);
+    let accessToken = await userController().login(user);
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
     resp.cookie("access_token", accessToken).send(ResponseEntity.builder().code(1).message("success").data().build());
@@ -57,14 +65,11 @@ async function login(req, resp) {
 async function updateUser(req, resp) {
     let user = req.body;
     let token = req.cookies.access_token;
-    const userValidations = UserValidations.getInstance();
-    const tokenValidations = TokenValidations.getInstance();
-    const controller = AppUserController.getInstance();
 
-    let _user = await tokenValidations.checkToken(token);
+    let _user = await tokenValidations().checkToken(token);
     user.username = _user.username;
-    userValidations.checkUser(user);
-    let result = await controller.update(user);
+    userValidations().checkUser(user);
+    let result = await userController().update(user);
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
     resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
@@ -73,23 +78,29 @@ async function updateUser(req, resp) {
 async function deleteUser(req, resp) {
     let user = req.body;
     let token = req.cookies.access_token;
-    const controller = AppUserController.getInstance();
-    const tokenValidations = TokenValidations.getInstance();
 
-    let _user = await tokenValidations.checkToken(token);
+    let _user = await tokenValidations().checkToken(token);
     user.username = _user.username;
-    let result = await controller.delete(user);
+    let result = await userController().delete(user);
 
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
     resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
 }
 
 async function findUserById(req, resp) {
-    let id = req.query.userId;
-    const controller = AppUserController.getInstance();
-    let result = await controller.findById(id);
+    let id = req.params.id;
+    let user = await userController().findById(id);
+    delete user.password;
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    resp.send(ResponseEntity.builder().code(1).message("success").data(user).build());
+}
+
+async function userInfo(req, resp) {
+    let token = req.cookies.access_token;
+    let user = await tokenValidations().checkToken(token);
+    delete user.password;
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.send(ResponseEntity.builder().code(1).message("success").data(user).build());
 }
 
 const apis = {
@@ -98,6 +109,7 @@ const apis = {
     updateUser: wrapExpressHandler(updateUser),
     deleteUser: wrapExpressHandler(deleteUser),
     findUserById: wrapExpressHandler(findUserById),
+    userInfo: wrapExpressHandler(userInfo),
 };
 
 module.exports = {

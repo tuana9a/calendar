@@ -69,6 +69,6 @@ class EventController {
 }
 
 module.exports = {
-    AppUserController: UserController,
-    UserEventController: EventController,
+    UserController: UserController,
+    EventController: EventController,
 };

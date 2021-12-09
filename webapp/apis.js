@@ -25,7 +25,7 @@ export const apis = {
                 body: JSON.stringify(user),
             }).then((resp) => resp.json());
         },
-        logout: async function (params = {}) {
+        logout: async function () {
             //TODO
             let url = "/logout";
             let requestInfo = {
@@ -33,13 +33,11 @@ export const apis = {
             };
             return fetch(url, requestInfo).then((resp) => resp.json());
         },
-        info: async function (params = { id: false }) {
-            //TODO
-            let url = "/api/user/" + params.id; // search by user id
-            let requestInfo = {
+        info: async function () {
+            let url = "/api/user";
+            return fetch(url, {
                 method: "GET",
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+            }).then((resp) => resp.json());
         },
         update: async function (user = { username: "", password: "" }) {
             let url = "/api/user";

@@ -20,7 +20,8 @@ async function main() {
 
     server.post("/login", apis.login);
     server.post("/register", apis.register);
-    server.get("/api/user", apis.findUserById);
+    server.get("/api/user/:id", apis.findUserById);
+    server.get("/api/user", apis.userInfo);
     server.put("/api/user", apis.updateUser);
     server.delete("/api/user", apis.deleteUser);
 

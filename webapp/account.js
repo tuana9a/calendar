@@ -53,6 +53,7 @@ const handleUpdateAccount = async () => {
 const handleDeleteAccount = async () => {
     const response = await apis.user.delete();
     if (response.code == 1) {
+        alert("delete success");
         window.location.href = "/login.html";
     } else {
         alert(response.message);
@@ -63,3 +64,14 @@ $deleteAccBtn.onclick = handleDeleteAccount;
 $saveAccBtn.onclick = handleUpdateAccount;
 $discardBtn.onclick = handleCloseUpdateMode;
 $updateBtn.onclick = handleOpenUpdateMode;
+
+fetch("/api/user")
+    .then((resp) => resp.json())
+    .then((response) => {
+        if (response.code == 1) {
+            let user = response.data;
+            $usernameText.value = user.username;
+        } else {
+            alert("you're not logined yet");
+        }
+    });
