@@ -42,6 +42,25 @@ function main() {
 
         // add new div contains title
         let newEvent = document.createElement("div");
+        newEvent.setAttribute("title", title.value);
+        newEvent.setAttribute("date", date.value);
+        newEvent.setAttribute("description", description.value);
+        newEvent.addEventListener("mouseover", function (e) {
+            console.log("mouse over", e.target.getAttribute("title"));
+            console.log(e.target.getAttribute("date"));
+            console.log(e.target.getAttribute("description"));
+        });
+        newEvent.addEventListener("mouseout", function (e) {
+            console.log("mouse out", e.target.getAttribute("title"));
+            console.log(e.target.getAttribute("date"));
+            console.log(e.target.getAttribute("description"));
+        });
+        newEvent.addEventListener("click", function (e) {
+            if (!e) var e = window.event;
+            e.cancelBubble = true;
+            if (e.stopPropagation) e.stopPropagation();
+            console.log("delete event");
+        });
         let newContent = document.createTextNode(title.value);
         newEvent.appendChild(newContent);
         allday.appendChild(newEvent);  
@@ -76,7 +95,6 @@ function main() {
             console.log("x", x);
             console.log("y", y);
             openModal(modal, x, y);
-            
         },
     };
 
