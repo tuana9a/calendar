@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 
 const { apis } = require("./apis");
 const { AppConfig } = require("./configs");
-const { MongoDBClient } = require("./database/MongoDBClient");
+const { MongoDBClient } = require("./database");
 
 async function main() {
     const server = express();

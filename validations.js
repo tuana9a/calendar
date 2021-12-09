@@ -1,5 +1,5 @@
 const { ValidationError } = require("./exceptions");
-const { MongoDBClient } = require("./database/MongoDBClient");
+const { MongoDBClient } = require("./database");
 
 class Validations {
     static INSTANCE = new Validations();
@@ -15,7 +15,8 @@ class Validations {
 
         const verified = jwt.verify(token, AppConfig.tokenSecret);
         const uid = verified._id;
-        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findById(uid);
+        const client = MongoDBClient.getInstance();
+        let user = await client.db("calendar").collection("user").findById(uid);
         if (!user) throw new ValidationError("User not found");
 
         return user;

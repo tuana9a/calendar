@@ -1,15 +1,16 @@
-const { MongoDBClient } = require("../database/MongoDBClient");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { AppUser } = require("../models/AppUser");
-const { AppConfig } = require("../configs");
+
+const { MongoDBClient } = require("./database");
+const { AppConfig } = require("./configs");
 
 /*
 trước khi vào controller thì tầng apis.js phải qua các validates.js
  */
 class AppUserController {
+    static INSTANCE = new AppUserController();
     static getInstance() {
-        return instance;
+        return this.INSTANCE;
     }
     async register({ username, password }) {
         let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
@@ -39,7 +40,7 @@ class AppUserController {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         let updatedUser = await collection.updateOne({ username: username }, { $set: { password: hashedPassword } });
-        return { userId: updatedUser.upsertedId }
+        return { userId: updatedUser.upsertedId };
     }
     async delete({ username }) {
         let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ username: username });
@@ -50,11 +51,18 @@ class AppUserController {
     async findById(id) {
         let user = await MongoDBClient.getInstance().db("calendar").collection("user").findOne({ _id: id });
         if (!user) return "user not exist";
-        return user
+        return user;
     }
 }
-const instance = new AppUserController();
+
+class UserEventController {
+    static INSTANCE = new UserEventController();
+    static getInstance() {
+        return this.INSTANCE;
+    }
+}
 
 module.exports = {
     AppUserController: AppUserController,
+    UserEventController: UserEventController,
 };
