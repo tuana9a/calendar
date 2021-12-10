@@ -226,7 +226,7 @@ export class Calendarize {
             }
 
             if (!opts.skipClickHandler && opts.clickHandler && !dayElement.classList.contains(DAY_DUMMY_CLASS_NAME)) {
-                dayElement.addEventListener("mousedown", function (e) {
+                dayElement.addEventListener("click", function (e) {
                     e = e || window.event;
                     e.preventDefault();
                     e.stopPropagation();
