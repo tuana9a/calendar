@@ -1,21 +1,34 @@
-const { ValidationError } = require("./exceptions");
-const { MongoDBClient } = require("./database/MongoDBClient");
+const jwt = require("jsonwebtoken");
+const mongodb = require("mongodb");
 
-class Validations {
-    static INSTANCE = new Validations();
+const { ValidationError } = require("./exceptions");
+const { MongoDBClient } = require("./database");
+const { AppConfig } = require("./configs");
+
+class UserValidations {
+    static INSTANCE = new UserValidations();
     static getInstance() {
         return this.INSTANCE;
     }
-    checkAuthentication(entry) {
-        if (entry?.username?.length < 1) throw new ValidationError("invalid username");
-        if (entry?.password?.length < 1) throw new ValidationError("invalid password");
+    checkUser(user) {
+        if (user?.username?.length < 1) throw new ValidationError("invalid username");
+        if (user?.password?.length < 1) throw new ValidationError("invalid password");
+    }
+}
+
+class TokenValidations {
+    static INSTANCE = new TokenValidations();
+    static getInstance() {
+        return this.INSTANCE;
     }
     async checkToken(token) {
         if (!token) throw new ValidationError("Access denied");
 
         const verified = jwt.verify(token, AppConfig.tokenSecret);
-        const uid = verified._id;
-        let user = await MongoDBClient.getInstance().db("calendar").collection("user").findById(uid);
+        const _id = new mongodb.ObjectId(verified._id);
+        const client = MongoDBClient.getInstance();
+
+        let user = await client.db("calendar").collection("user").findOne({ _id: _id });
         if (!user) throw new ValidationError("User not found");
 
         return user;
@@ -23,5 +36,6 @@ class Validations {
 }
 
 module.exports = {
-    Validations: Validations,
+    UserValidations: UserValidations,
+    TokenValidations: TokenValidations,
 };

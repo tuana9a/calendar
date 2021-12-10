@@ -6,23 +6,24 @@ const cookieParser = require("cookie-parser");
 
 const { apis } = require("./apis");
 const { AppConfig } = require("./configs");
-const { MongoDBClient } = require("./database/MongoDBClient");
+const { MongoDBClient } = require("./database");
 
 async function main() {
     const server = express();
     server.use(express.json());
-    server.use(express.static("./webapp"));
     server.use(cookieParser());
+    server.use(express.static("./webapp"));
 
     if (AppConfig.security.cors) {
         server.use(cors());
     }
 
-    server.post("/auth/login", apis.login);
-    server.post("/auth/register", apis.register);
-    server.put("/auth/user", apis.updateUser);
-    server.delete("/auth/user", apis.deleteUser);
-    server.get("/auth/user", apis.findUserById);
+    server.post("/login", apis.login);
+    server.post("/register", apis.register);
+    server.get("/api/user/:id", apis.findUserById);
+    server.get("/api/user", apis.userInfo);
+    server.put("/api/user", apis.updateUser);
+    server.delete("/api/user", apis.deleteUser);
 
     await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);

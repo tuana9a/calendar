@@ -3,8 +3,7 @@ const { MongoClient } = require("mongodb");
 class MongoDBClient {
     static async init(connectionString) {
         this.mongoClient = new MongoClient(connectionString);
-        await this.mongoClient.connect();
-        return this.mongoClient;
+        return this.mongoClient.connect();
     }
     static getInstance() {
         return this.mongoClient;

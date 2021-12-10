@@ -8,7 +8,7 @@
         * {
             box-sizing: border-box;
         }
-        
+
         input[type=text],
         input[type=password] {
             width: 100%;
@@ -18,43 +18,41 @@
             border: none;
             background: #f1f1f1;
         }
-        
+
         input[type=text]:focus,
         input[type=password]:focus {
             background-color: #ddd;
             outline: none;
         }
     </style>
+    <title>Account</title>
 </head>
 
 <body>
     <div class="account-top ">
         <h1>Account Settings</h1>
-        <button class="deletebtn btn-red " id="deleteAccBtn">Delete</button>
+        <button class="short-btn btn-red" id="logoutBtn">Logout</button>
     </div>
-    <form class="">
-        <div class="background-color-white padding-16px">
+    <div class="background-color-white padding-16px">
 
-            <hr class="register-hr-box">
+        <hr class="register-hr-box">
 
-            <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Your Username" name="username" id="username" required readonly>
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Your Username" name="username" id="username" required readonly>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" id="psw" required readonly>
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required readonly>
 
-            <label for="psw-repeat"><b>Repeat Password</b></label>
-            <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required readonly>
-            <hr>
+        <label for="psw-repeat"><b>Repeat Password</b></label>
+        <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required readonly>
+        <hr>
 
-            <button type="submit" class="full-width-btn btn-green display-none" id="saveAccBtn">Save</button>
-
-        </div>
-
-    </form>
-    <button type="" class="full-width-btn btn-red display-none" id="discardBtn">Discard</button>
-    <button type="" class="full-width-btn btn-green" id="updateBtn">Update</button>
-    <script src="./js/account.js"></script>
+    </div>
+    <button class="full-width-btn btn-green" id="updateBtn">Update</button>
+    <button class="full-width-btn btn-green display-none" id="saveAccBtn">Save</button>
+    <button class="full-width-btn btn-red display-none" id="discardBtn">Discard</button>
+    <button class="full-width-btn btn-red display-none" id="deleteAccBtn">Delete</button>
+    <script type="module" src="./account.js"></script>
 </body>
 
 </html>

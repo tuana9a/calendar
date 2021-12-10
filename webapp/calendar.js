@@ -136,6 +136,22 @@ function main() {
         updateMainCalendar();
         updateMiniCalendar();
     });
+
+    fetch("/api/user")
+        .then((resp) => resp.json())
+        .then((resp) => {
+            if (resp.code == 1) {
+                let user = resp.data;
+                let username = user.username;
+                let iconTypes = ["adventurer-neutral", "big-ears-neutral", "initials"];
+                let index = Math.floor(Math.random() * iconTypes.length);
+                let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
+                document.getElementById("user-icon").src = iconSrc;
+            } else {
+                alert("not logined yet");
+                window.location.href = "/login.html";
+            }
+        });
 }
 
 main();

@@ -254,7 +254,7 @@ input::-webkit-inner-spin-button {
     opacity: 1;
 }
 
-.deletebtn {
+.short-btn {
     color: white;
     padding: 16px 20px;
     margin: 8px 16px;
@@ -264,7 +264,7 @@ input::-webkit-inner-spin-button {
     opacity: 0.9;
 }
 
-.deletebtn:hover {
+.short-btn:hover {
     opacity: 1;
 }
 

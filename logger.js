@@ -1,8 +1,8 @@
 const fs = require("fs");
 
 const { AppConfig } = require("./configs");
-const { LogOption } = require("./models/LogOption");
-const { MongoDBClient } = require("./database/MongoDBClient");
+const { LogOption } = require("./entities");
+const { MongoDBClient } = require("./database");
 const { dateTimeUtils } = require("./utils");
 
 function fsLog(option = new LogOption()) {
@@ -14,6 +14,7 @@ function fsLog(option = new LogOption()) {
 
 function dbLog(option = new LogOption()) {
     let now = new Date();
+    const client = MongoDBClient.getInstance();
     let record = {
         date: dateTimeUtils.getDate(now),
         time: dateTimeUtils.getTime(now),
@@ -22,7 +23,7 @@ function dbLog(option = new LogOption()) {
         data: option.data,
         _timestamp: now,
     };
-    MongoDBClient.getInstance().db("logs").collection(option.collection).insertOne(record);
+    client.db("logs").collection(option.collection).insertOne(record);
 }
 
 function csLog(option = new LogOption()) {

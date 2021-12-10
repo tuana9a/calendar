@@ -1,11 +1,8 @@
 const { LOGGER } = require("./logger");
-const { Validations } = require("./validations");
-const { ResponseEntity } = require("./models/ResponseEntity");
-const { AppUserController } = require("./controllers/AppUserController");
+const { UserValidations, TokenValidations } = require("./validations");
+const { ResponseEntity } = require("./entities");
+const { UserController } = require("./controllers");
 const { ValidationError } = require("./exceptions");
-const jwt = require("jsonwebtoken");
-const { MongoDBClient } = require("./database/MongoDBClient");
-const { AppConfig } = require("./configs");
 
 function wrapExpressHandler(handler = async () => {}) {
     return async function (req, resp) {
@@ -26,72 +23,69 @@ function wrapExpressHandler(handler = async () => {}) {
     };
 }
 
-//with apis that need authentication
-//ex:
-// function needAuth(req, resp) {
-//   const callApi = async () => {
-//     //...
-//   };
-//   verifyToken(req, resp, callApi);
-// }
-async function verifyToken(req, resp, next) {
-    const token = req.cookies.access_token;
-    const validations = Validations.getInstance();
-    const user = await validations.checkToken(token); // return user if success or throw error if fail
-    req.user = user; //add user to req to process in the next function
-    next();
+function userController() {
+    return UserController.getInstance();
 }
 
-//authentication
-async function register(req, resp) {
-    let data = req.body;
-    const validations = Validations.getInstance();
-    validations.checkAuthentication(data);
-    let result = await AppUserController.getInstance().register(data);
+function userValidations() {
+    return UserValidations.getInstance();
+}
 
+function tokenValidations() {
+    return TokenValidations.getInstance();
+}
+
+function sendResponse(resp, code = 1, message = "", data = {}) {
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    resp.send(ResponseEntity.builder().code(code).message(message).data(data).build());
+}
+
+async function register(req, resp) {
+    let user = req.body;
+    userValidations().checkUser(user);
+    let result = await userController().register(user);
+    sendResponse(resp, 1, "success", result);
 }
 
 async function login(req, resp) {
-    let data = req.body;
-    const validations = Validations.getInstance();
-    validations.checkAuthentication(data);
-    let accessToken = await AppUserController.getInstance().login(data);
-
+    let user = req.body;
+    userValidations().checkUser(user);
+    let accessToken = await userController().login(user);
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
     resp.cookie("access_token", accessToken).send(ResponseEntity.builder().code(1).message("success").data().build());
 }
 
 async function updateUser(req, resp) {
-    let data = req.body;
-    const validations = Validations.getInstance();
-    validations.checkAuthentication(data);
-    let result;
-    const updateApi = async () => {
-        result = await AppUserController.getInstance().update(data);
-    };
-    verifyToken(req, resp, updateApi);
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    let user = req.body;
+    let token = req.cookies.access_token;
+    let _user = await tokenValidations().checkToken(token);
+    user.username = _user.username;
+    userValidations().checkUser(user);
+    let result = await userController().update(user);
+    sendResponse(resp, 1, "success", result);
 }
 
 async function deleteUser(req, resp) {
-    let data = req.body;
-    let result;
-    const deleteApi = async () => {
-        result = await AppUserController.getInstance().delete(data);
-    };
-    verifyToken(req, resp, deleteApi);
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    let user = req.body;
+    let token = req.cookies.access_token;
+    let _user = await tokenValidations().checkToken(token);
+    user.username = _user.username;
+    let result = await userController().delete(user);
+    sendResponse(resp, 1, "success", result);
 }
 
 async function findUserById(req, resp) {
-    let id = req.query.userId;
-    let result = await AppUserController.getInstance().findById(id);
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(1).message("success").data(result).build());
+    let id = req.params.id;
+    let user = await userController().findById(id);
+    delete user.password;
+    sendResponse(resp, 1, "success", user);
+}
+
+async function userInfo(req, resp) {
+    let token = req.cookies.access_token;
+    let user = await tokenValidations().checkToken(token);
+    delete user.password;
+    sendResponse(resp, 1, "success", user);
 }
 
 const apis = {
@@ -100,6 +94,7 @@ const apis = {
     updateUser: wrapExpressHandler(updateUser),
     deleteUser: wrapExpressHandler(deleteUser),
     findUserById: wrapExpressHandler(findUserById),
+    userInfo: wrapExpressHandler(userInfo),
 };
 
 module.exports = {
