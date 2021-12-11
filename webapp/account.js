@@ -80,6 +80,6 @@ apis.user.info().then((response) => {
         let user = response.data;
         $usernameText.value = user.username;
     } else {
-        alert("you're not logined yet");
+        alert("you're not login yet");
     }
 });

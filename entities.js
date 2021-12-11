@@ -46,8 +46,7 @@ class ResponseEntityBuilder {
 }
 
 class UserEvent {
-    title; 
-    date;
+    title;
     startTime;
     endTime;
     description;

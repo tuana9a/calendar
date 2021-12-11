@@ -27,24 +27,10 @@ const closeModalButton = document.getElementById("close-modal");
 const addModalButton = document.getElementById("add-modal");
 
 const modalTitle = document.getElementById("title");
-const modalDate = document.getElementById("date");
 const modalStartTime = document.getElementById("time-start");
 const modalEndTime = document.getElementById("time-end");
 const modalLocation = document.getElementById("location");
 const modalDescription = document.getElementById("description");
-
-const miniOpts = {
-    showYearOnTitle: true,
-    fullOrShort: "short",
-};
-
-const mainOpts = {
-    showYearOnTitle: true,
-    fullOrShort: "full",
-    skipClickHandler: false,
-    dbClickHandler: null,
-    events: [],
-};
 
 function calendarize() {
     return Calendarize.getInstance();
@@ -62,118 +48,105 @@ function updateMainCalendar() {
     calendarize().write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
 }
 
-function appendEvent(dayElement, myEvent = { title: "", date: "", startTime: "", endTime: "", description: "" }) {
+function appendEvent(dayElement, myEvent) {
     // add new div contains title
-    let newEvent = document.createElement("div");
-    newEvent.setAttribute("title", myEvent.title);
-    newEvent.setAttribute("date", myEvent.date);
-    newEvent.setAttribute("description", myEvent.description);
-    newEvent.onmouseover = function (e) {
-        console.log("mouse over", e.target.getAttribute("title"));
-        console.log(e.target.getAttribute("date"));
-        console.log(e.target.getAttribute("description"));
+    let eventElement = document.createElement("div");
+    eventElement.setAttribute("title", myEvent.title);
+    eventElement.setAttribute("description", myEvent.description);
+    eventElement.setAttribute("eventId", myEvent.eventId);
+    eventElement.setAttribute("startTime", myEvent.startTime);
+    eventElement.setAttribute("endTime", myEvent.endTime);
+    let eventDisplayName = document.createTextNode(myEvent.title);
+    eventElement.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("reeach");
+        // not let event go to dayELement;
     };
-    newEvent.onmouseout = (e) => {
-        console.log("mouse out", e.target.getAttribute("title"));
-        console.log(e.target.getAttribute("date"));
-        console.log(e.target.getAttribute("description"));
-    };
-    newEvent.onclick = (e) => {
-        if (!e) var e = window.event;
-        e.cancelBubble = true;
-        if (e.stopPropagation) e.stopPropagation();
-        console.log("delete event");
-    };
-    let newContent = document.createTextNode(myEvent.startTime + " - " + myEvent.title);
-    newEvent.appendChild(newContent);
-    dayElement.appendChild(newEvent);
+    eventElement.appendChild(eventDisplayName);
+    dayElement.appendChild(eventElement);
 }
 
-mainOpts.dbClickHandler = function (e) {
-    selectingDateElement = e.target;
-    let dataDate = parseInt(selectingDateElement.getAttribute("data-date"));
-    let now = new Date();
-    modalStartTime.value = now.toTimeString().substring(0, 8);
-    now.setHours(now.getHours() + 1);
-    modalEndTime.value = now.toTimeString().substring(0, 8);
-    modalDate.value = dateUtils().dateToString(new Date(dataDate), "-");
-    modalElement.showModal();
+const miniOpts = {
+    showYearOnTitle: true,
+    fullOrShort: "short",
 };
 
-addModalButton.onclick = async () => {
-    let title = modalTitle.value;
-    let date = dateUtils().stringToDate(modalDate.value).getTime();
-    let description = modalDescription.value;
-    let startTime = modalStartTime.value;
-    let endTime = modalEndTime.value;
-
-    //TODO: chuẩn hóa convert cả date và startTime, endTime về milise
-    // để add phía database và frontend đều p theo chuẩn chung này
-    let response = await apis.event.add({
-        title: title,
-        date: date,
-        startTime: startTime,
-        endTime: endTime,
-        description: description,
-    });
-    if (response.code == 1) {
-        console.log(response.data);
-        appendEvent(selectingDateElement, {
-            title: title,
-            date: date,
-            startTime: startTime,
-            endTime: endTime,
-            description: description,
-        });
-    }
-};
-
-closeModalButton.onclick = () => modalElement.close();
-
-returnCurrentMonthButton.onclick = () => {
-    changeMonth = currentMonth;
-    changeYear = currentYear;
-    updateMainCalendar();
-    updateMiniCalendar();
-};
-
-backwardMonthButton.onclick = () => {
-    changeMonth -= 1;
-    if (changeMonth == -1) {
-        changeMonth = 11;
-        changeYear -= 1;
-    }
-    updateMainCalendar();
-    updateMiniCalendar();
-};
-
-forwardMonthButton.onclick = () => {
-    changeMonth += 1;
-    if (changeMonth == 12) {
-        changeMonth = 0;
-        changeYear += 1;
-    }
-    updateMainCalendar();
-    updateMiniCalendar();
+const mainOpts = {
+    showYearOnTitle: true,
+    fullOrShort: "full",
+    skipClickHandler: false,
+    dbClickHandler: function (e) {
+        selectingDateElement = e.target;
+        let date = new Date(parseInt(selectingDateElement.getAttribute("data-date")));
+        let now = new Date();
+        date.setHours(now.getHours());
+        date.setMinutes(now.getMinutes());
+        date.setSeconds(now.getSeconds());
+        modalStartTime.value = dateUtils().fullDateToInputDatetimeLocalValue(date);
+        date.setHours(date.getHours() + 1);
+        modalEndTime.value = dateUtils().fullDateToInputDatetimeLocalValue(date);
+        modalElement.showModal();
+    },
 };
 
 async function main() {
-    let now = new Date();
-    let nowYear = now.getFullYear();
-    let nowMonth = now.getMonth() + 1; // month start from 0
-
-    await apis.event
-        .find({ yearAndMonth: nowYear + "-" + (nowMonth >= 10 ? nowMonth : "0" + nowMonth) })
-        .then((resp) => {
-            if (resp.code == 1) {
-                let events = resp.data;
-                mainOpts.events = events;
-            }
-        });
-
     updateMiniCalendar();
     updateMainCalendar();
     mainOpts.skipClickHandler = true; // after first time add event handler then skip it
+
+    addModalButton.onclick = async () => {
+        let title = modalTitle.value;
+        let description = modalDescription.value;
+        let startTime = new Date(modalStartTime.value).getTime();
+        let endTime = new Date(modalEndTime.value).getTime();
+        let location = modalLocation.value;
+
+        //TODO: chuẩn hóa convert cả date và startTime, endTime về milise
+        // để add phía database và frontend đều p theo chuẩn chung này
+        let myEvent = {
+            title: title,
+            startTime: startTime,
+            endTime: endTime,
+            description: description,
+            location: location,
+        };
+        let response = await apis.event.add(myEvent);
+        if (response.code == 1) {
+            myEvent.eventId = response.data.eventId;
+            appendEvent(selectingDateElement, myEvent);
+        }
+    };
+
+    closeModalButton.onclick = () => modalElement.close();
+
+    returnCurrentMonthButton.onclick = () => {
+        changeMonth = currentMonth;
+        changeYear = currentYear;
+        updateMainCalendar();
+        updateMiniCalendar();
+    };
+
+    backwardMonthButton.onclick = () => {
+        changeMonth -= 1;
+        if (changeMonth == -1) {
+            changeMonth = 11;
+            changeYear -= 1;
+        }
+        updateMainCalendar();
+        updateMiniCalendar();
+    };
+
+    forwardMonthButton.onclick = () => {
+        changeMonth += 1;
+        if (changeMonth == 12) {
+            changeMonth = 0;
+            changeYear += 1;
+        }
+        updateMainCalendar();
+        updateMiniCalendar();
+    };
+
     apis.user.info().then((resp) => {
         if (resp.code == 1) {
             let user = resp.data;
@@ -183,8 +156,27 @@ async function main() {
             let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
             document.getElementById("user-icon").src = iconSrc;
         } else {
-            alert("not logined yet");
+            alert("not login yet");
             window.location.href = "/login.html";
+        }
+    });
+
+    let date = new Date();
+    date.setDate(1);
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    let rangeStart = date.getTime();
+    date.setMonth(date.getMonth() + 1);
+    let rangeEnd = date.getTime();
+
+    apis.event.find({ startTime: { $gt: rangeStart, $lt: rangeEnd } }).then((resp) => {
+        if (resp.code == 1) {
+            let events = resp.data;
+            console.log(events);
+            // TODO: tạo một mảng lưu các index[] có thể dùng luôn ngày trong tháng làm index
+            // sau đó loop các phần tử opts.events, lấy các ngày chứa event
+            // sau đó lấy element từ chỉ mục và gọi hàm appendEvent :)
         }
     });
 }

@@ -52,7 +52,7 @@ export class DateUtils {
      * @returns string
      */
     dateToStringVn(input = new Date(), spliter = "/") {
-        let day = input.getDate() + 1;
+        let day = input.getDate();
         let month = input.getMonth() + 1; //EXPLAIN: range: 0-11
         let year = input.getFullYear();
         return (day < 10 ? "0" : "") + day + spliter + (month < 10 ? "0" : "") + month + spliter + year;
@@ -65,7 +65,7 @@ export class DateUtils {
      * @returns string
      */
     dateToString(input = new Date(), spliter = "/") {
-        let day = input.getDate() + 1;
+        let day = input.getDate();
         let month = input.getMonth() + 1; //EXPLAIN: range: 0-11
         let year = input.getFullYear();
         return year + spliter + (month < 10 ? "0" : "") + month + spliter + (day < 10 ? "0" : "") + day;
@@ -114,6 +114,34 @@ export class DateUtils {
         date.setMinutes(minute);
         date.setSeconds(second);
         return date;
+    }
+    fullDateToString(input = new Date()) {
+        let year = input.getFullYear();
+        let month = input.getMonth() + 1; //EXPLAIN: range: 0-11
+        let day = input.getDate();
+        let hour = input.getHours();
+        let minute = input.getMinutes();
+        let second = input.getSeconds();
+        let _month = month < 10 ? "0" + month : month;
+        let _day = day < 10 ? "0" + day : day;
+        let _hour = hour < 10 ? "0" + hour : hour;
+        let _minute = minute < 10 ? "0" + minute : minute;
+        let _second = second < 10 ? "0" + second : second;
+        return _month + "/" + _day + "/" + year + " " + _hour + ":" + _minute + ":" + _second;
+    }
+    fullDateToInputDatetimeLocalValue(input = new Date()) {
+        let y = input.getFullYear();
+        let m = input.getMonth() + 1; //EXPLAIN: range: 0-11
+        let d = input.getDate();
+        let h = input.getHours();
+        let M = input.getMinutes();
+        let s = input.getSeconds();
+        m = m < 10 ? "0" + m : m;
+        d = d < 10 ? "0" + d : d;
+        h = h < 10 ? "0" + h : h;
+        M = M < 10 ? "0" + M : M;
+        s = s < 10 ? "0" + s : s;
+        return y + "-" + m + "-" + d + "T" + h + ":" + M + ":" + s;
     }
     toDayWeekVn(input = 0) {
         switch (input) {

@@ -130,7 +130,6 @@ export class Calendarize {
                 let dataDate = e.target.getAttribute("data-date");
                 console.log(dataDate);
             },
-            events: [],
         },
     ) {
         //if (monthNum === undefined || year === undefined) return "something is missing";
@@ -166,7 +165,6 @@ export class Calendarize {
 
         let dayElements = containerElement.getElementsByClassName(DAY_CLASS_NAME);
         let countMainDay = 0;
-        opts.events = opts.events || [];
 
         // Add a Title to the month
         let titleElement = containerElement.getElementsByClassName(CALENDAR_DATE_TITLE_CLASS_NAME).item(0);
@@ -199,7 +197,7 @@ export class Calendarize {
             dayElement.innerText = dayNum + 1;
             clearDayStateClassName(dayElement);
             dayElement.classList.add(DAY_CURRENT_MONTH_CLASS_NAME);
-            dayElement.setAttribute("data-date", new Date(yearNum, monthNum, dayNum).getTime());
+            dayElement.setAttribute("data-date", new Date(yearNum, monthNum, dayNum + 1).getTime());
             countMainDay += 1;
 
             let dow = new Date(date).getDay();
