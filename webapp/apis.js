@@ -52,46 +52,38 @@ export const apis = {
         },
     },
     event: {
-        add: async function (params = { user_event: {} }) {
-            //TODO
-            let url = "/api/user/event";
-            let requestInfo = {
+        add: async function (event) {
+            let url = "/api/event";
+            return fetch(url, {
                 method: "POST",
-                body: params.user_event,
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(event),
+            }).then((resp) => resp.json());
         },
-        info: async function (params = { id: false }) {
+        find: async function (filter) {
+            // TODO
+            let url = "/api/event?filter=" + JSON.stringify(filter);
+            return fetch(url).then((resp) => resp.json());
+        },
+        update: async function (event) {
             //TODO
-            let url = "/api/user/event/" + params.id;
-            let requestInfo = {
-                method: "GET",
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
-        },
-        search: async function (params = { q: false }) {
-            let url = "/api/user/event?" + params.q;
-            let requestInfo = {
-                method: "GET",
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
-        },
-        update: async function (params = { user_event: {} }) {
-            //TODO
-            let url = "/api/user/event";
-            let requestInfo = {
+            let url = "/api/event";
+            return fetch(url, {
                 method: "PUT",
-                body: params.user_event,
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(event),
+            }).then((resp) => resp.json());
         },
-        cancel: async function (params = { id: false }) {
+        delete: async function ({ _id }) {
             //TODO
-            let url = "/api/user/event/" + params.id;
-            let requestInfo = {
+            let url = "/api/event?eventId=" + _id;
+            return fetch(url, {
                 method: "DELETE",
-            };
-            return fetch(url, requestInfo).then((resp) => resp.json());
+            }).then((resp) => resp.json());
         },
     },
 };

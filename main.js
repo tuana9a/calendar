@@ -24,6 +24,10 @@ async function main() {
     server.get("/api/user", apis.userInfo);
     server.put("/api/user", apis.updateUser);
     server.delete("/api/user", apis.deleteUser);
+    server.get("/api/event", apis.find);
+    server.post("/api/event", apis.addEvent);
+    server.put("/api/event", apis.updateEvent);
+    server.delete("/api/event", apis.deleteEvent);
 
     await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);

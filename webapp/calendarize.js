@@ -1,4 +1,3 @@
-import { apis } from "./apis.js";
 import { DateUtils } from "./utils.js";
 
 const MONTH_NAMES = [
@@ -124,9 +123,14 @@ export class Calendarize {
             isMinimal: false,
             skipClickHandler: false,
             clickHandler: function (e) {
-                let day = e.target.getAttribute("data-date");
-                console.log(day);
+                let dataDate = e.target.getAttribute("data-date");
+                console.log(dataDate);
             },
+            dbClickHandler: function (e) {
+                let dataDate = e.target.getAttribute("data-date");
+                console.log(dataDate);
+            },
+            events: [],
         },
     ) {
         //if (monthNum === undefined || year === undefined) return "something is missing";
@@ -162,6 +166,7 @@ export class Calendarize {
 
         let dayElements = containerElement.getElementsByClassName(DAY_CLASS_NAME);
         let countMainDay = 0;
+        opts.events = opts.events || [];
 
         // Add a Title to the month
         let titleElement = containerElement.getElementsByClassName(CALENDAR_DATE_TITLE_CLASS_NAME).item(0);
@@ -194,8 +199,7 @@ export class Calendarize {
             dayElement.innerText = dayNum + 1;
             clearDayStateClassName(dayElement);
             dayElement.classList.add(DAY_CURRENT_MONTH_CLASS_NAME);
-            let dataDate = `${yearNum}-${monthNum}-${dayNum}`;
-            dayElement.setAttribute("data-date", dataDate);
+            dayElement.setAttribute("data-date", new Date(yearNum, monthNum, dayNum).getTime());
             countMainDay += 1;
 
             let dow = new Date(date).getDay();
@@ -225,13 +229,23 @@ export class Calendarize {
                 }
             }
 
-            if (!opts.skipClickHandler && opts.clickHandler && !dayElement.classList.contains(DAY_DUMMY_CLASS_NAME)) {
-                dayElement.addEventListener("click", function (e) {
+            if (dayElement.classList.contains(DAY_DUMMY_CLASS_NAME)) return;
+            if (opts.skipClickHandler) return;
+            if (opts.clickHandler) {
+                dayElement.onclick = function (e) {
                     e = e || window.event;
                     e.preventDefault();
                     e.stopPropagation();
                     opts.clickHandler(e);
-                });
+                };
+            }
+            if (opts.dbClickHandler) {
+                dayElement.ondblclick = function (e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    opts.dbClickHandler(e);
+                };
             }
         });
 

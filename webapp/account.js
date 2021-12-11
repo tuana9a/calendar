@@ -73,15 +73,13 @@ $deleteAccBtn.onclick = handleDeleteAccount;
 $saveAccBtn.onclick = handleUpdateAccount;
 $discardBtn.onclick = handleCloseUpdateMode;
 $updateBtn.onclick = handleOpenUpdateMode;
-$logoutBtn.onclick= handleLogout;
+$logoutBtn.onclick = handleLogout;
 
-fetch("/api/user")
-    .then((resp) => resp.json())
-    .then((response) => {
-        if (response.code == 1) {
-            let user = response.data;
-            $usernameText.value = user.username;
-        } else {
-            alert("you're not logined yet");
-        }
-    });
+apis.user.info().then((response) => {
+    if (response.code == 1) {
+        let user = response.data;
+        $usernameText.value = user.username;
+    } else {
+        alert("you're not logined yet");
+    }
+});
