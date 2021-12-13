@@ -44,7 +44,7 @@ class NotifyUtils {
             console.log("Notification Permission:", status);
         });
     }
-    sendNotification(title = "", options = { body: "", data: {}, actions: [{ action: "", title: "" }] }) {
+    async sendNotification(title = "", options = { body: "", data: {}, actions: [{ action: "", title: "" }] }) {
         if (Notification.permission != "granted") return;
         if (!isServiceWorkderAvailable) return;
 

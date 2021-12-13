@@ -11,7 +11,6 @@ const $pswText = document.getElementById("psw");
 const $repeatPswText = document.getElementById("psw-repeat");
 
 const handleOpenUpdateMode = () => {
-    $usernameText.removeAttribute("readonly");
     $pswText.removeAttribute("readonly");
     $repeatPswText.removeAttribute("readonly");
 
@@ -22,7 +21,6 @@ const handleOpenUpdateMode = () => {
 };
 
 const handleCloseUpdateMode = () => {
-    $usernameText.setAttribute("readonly", "readonly");
     $pswText.setAttribute("readonly", "readonly");
     $repeatPswText.setAttribute("readonly", "readonly");
 
