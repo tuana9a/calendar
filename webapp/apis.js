@@ -63,7 +63,6 @@ export const apis = {
             }).then((resp) => resp.json());
         },
         find: async function (filter) {
-            // TODO
             let url = "/api/event?filter=" + JSON.stringify(filter);
             return fetch(url).then((resp) => resp.json());
         },

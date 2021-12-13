@@ -52,6 +52,7 @@ class UserEvent {
     description;
     username;
     location;
+    dismiss; // boolean, người dùng click dismiss thì không không báo nữa
 }
 
 module.exports = {

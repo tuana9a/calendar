@@ -1,5 +1,6 @@
 import { apis } from "./apis.js";
 import { Calendarize } from "./calendarize.js";
+import { CLASSNAME_DAY, CLASSNAME_MONTH, CLASSNAME_DOW } from "./constants.js";
 import { DateUtils } from "./utils.js";
 
 let currentYear = -1;
@@ -53,15 +54,13 @@ function appendEvent(dayElement, myEvent) {
     let eventElement = document.createElement("div");
     eventElement.setAttribute("title", myEvent.title);
     eventElement.setAttribute("description", myEvent.description);
-    eventElement.setAttribute("eventId", myEvent.eventId);
+    eventElement.setAttribute("_id", myEvent._id);
     eventElement.setAttribute("startTime", myEvent.startTime);
     eventElement.setAttribute("endTime", myEvent.endTime);
     let eventDisplayName = document.createTextNode(myEvent.title);
     eventElement.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("reeach");
-        // not let event go to dayELement;
+        // TODO: show details event
+        // include update, delete
     };
     eventElement.appendChild(eventDisplayName);
     dayElement.appendChild(eventElement);
@@ -110,10 +109,11 @@ async function main() {
             endTime: endTime,
             description: description,
             location: location,
+            dismiss: false,
         };
         let response = await apis.event.add(myEvent);
         if (response.code == 1) {
-            myEvent.eventId = response.data.eventId;
+            myEvent._id = response.data.eventId;
             appendEvent(selectingDateElement, myEvent);
         }
     };
@@ -177,6 +177,14 @@ async function main() {
             // TODO: tạo một mảng lưu các index[] có thể dùng luôn ngày trong tháng làm index
             // sau đó loop các phần tử opts.events, lấy các ngày chứa event
             // sau đó lấy element từ chỉ mục và gọi hàm appendEvent :)
+            let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
+            let dayElements = mainCalendarElement.querySelectorAll(selector);
+            events.forEach((myEvent) => {
+                let startDate = new Date(myEvent.startTime);
+                let elementIndex = startDate.getDate() - 1; //seriously don't ask;
+                let dayElement = dayElements.item(elementIndex);
+                appendEvent(dayElement, myEvent);
+            });
         }
     });
 }
