@@ -170,6 +170,7 @@ async function main() {
     date.setMonth(date.getMonth() + 1);
     let rangeEnd = date.getTime();
 
+    await apis.notification.request();
     apis.event.find({ startTime: { $gt: rangeStart, $lt: rangeEnd } }).then((resp) => {
         if (resp.code == 1) {
             let events = resp.data;
@@ -184,6 +185,29 @@ async function main() {
                 let elementIndex = startDate.getDate() - 1; //seriously don't ask;
                 let dayElement = dayElements.item(elementIndex);
                 appendEvent(dayElement, myEvent);
+
+                // if event dismiss then no need to notify
+                if (myEvent.dismiss) return;
+
+                let now = new Date();
+                if (now < startDate.getTime() - 900_000) return;
+
+                // 15min before event;
+                apis.notification.send(myEvent.title, {
+                    body: myEvent.description,
+                    actions: [
+                        {
+                            action: "ok",
+                            title: "ok",
+                        },
+                        {
+                            action: "dismiss",
+                            title: "dismiss",
+                        },
+                    ],
+                    icon: "/images/calendar.png",
+                    silent: true,
+                });
             });
         }
     });

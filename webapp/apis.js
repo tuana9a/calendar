@@ -10,7 +10,7 @@ const CACHED_URLS = [
     "/account.js",
     "/apis.js",
     "/calendar.html",
-    "/calendar.js",
+    // "/calendar.js",
     "/calendarize.js",
     "/common.css",
     "/constants.js",
@@ -88,21 +88,26 @@ class NotifyUtils {
     static getInstance() {
         return this.INSTANCE;
     }
-    requestPermission() {
-        Notification.requestPermission(function (status) {
+    async requestPermission() {
+        return Notification.requestPermission(function (status) {
             console.log("Notification Permission:", status);
         });
     }
-    async sendNotification(title = "", options = { body: "", data: {}, actions: [{ action: "", title: "" }] }) {
+    async sendNotification(
+        title = "",
+        opts = {
+            body: "",
+            data: {},
+            silent: true,
+            icon: "/icons/Icon=check.svg",
+            actions: [{ action: "ok", title: "ok" }],
+        },
+    ) {
         if (Notification.permission != "granted") return;
         if (!isServiceWorkderAvailable) return;
 
         const sw = await navigator.serviceWorker.getRegistration();
-        sw.showNotification(title, {
-            ...options,
-            icon: "icons/manifest-icon-192.png",
-            silent: true,
-        });
+        sw.showNotification(title, opts);
     }
 }
 
