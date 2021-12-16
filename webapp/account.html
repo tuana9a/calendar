@@ -8,7 +8,7 @@
         * {
             box-sizing: border-box;
         }
-        
+
         input[type=text],
         input[type=password] {
             width: 100%;
@@ -18,11 +18,17 @@
             border: none;
             background: #f1f1f1;
         }
-        
+
         input[type=text]:focus,
         input[type=password]:focus {
             background-color: #ddd;
             outline: none;
+        }
+
+        .account-top {
+            margin: 8px;
+            display: flex;
+            justify-content: space-between;
         }
     </style>
     <title>Account</title>
@@ -31,11 +37,17 @@
 <body>
     <div class="account-top ">
         <h1>Account Settings</h1>
-
-        <button class="short-btn btn-red" id="logoutBtn">Logout</button>
+        <div class="container text-align-center display-flex">
+            <p><a class="dodgerblue" href="./calendar.html">Go back calendar</a></p>
+        </div>
+        <div class="display-flex" style="min-width: 20%;">
+            <button class="full-width-btn btn-green" id="installBtn">Install</button>
+            <button class="full-width-btn btn-green" id="updateAppBtn">Update</button>
+            <button class="full-width-btn btn-green" id="uninstallBtn">Uninstall</button>
+            <button class="full-width-btn btn-red" id="logoutBtn">Logout</button>
+        </div>
     </div>
     <div class="background-color-white padding-16px">
-
         <hr class="register-hr-box">
 
         <label for="username"><b>Username</b></label>
@@ -46,19 +58,13 @@
 
         <label for="psw-repeat"><b>Repeat Password</b></label>
         <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required readonly>
-        <hr>
 
+        <hr>
     </div>
     <div class="display-flex justify-content-space-around">
         <button class="full-width-btn btn-green" id="updateBtn">Update</button>
         <button class="full-width-btn btn-red " id="deleteAccBtn">Delete</button>
     </div>
-    <div>
-        <button class="full-width-btn btn-yellow " id="moreBtn">More</button>
-        <button class="full-width-btn btn-green display-none" id="installBtn">Install</button>
-        <button class="full-width-btn btn-red display-none" id="uninstallBtn">Uninstall</button>
-    </div>
-
     <script type="module" src="./account.js"></script>
 </body>
 

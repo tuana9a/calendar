@@ -1,11 +1,6 @@
 const fs = require("fs");
 
-let hardCodeConfig = {
-    app_config_path: "resource/app.conf.json",
-};
-const HardCodeConfig = hardCodeConfig;
-
-let appConfig = {
+let config = {
     bind: "127.0.0.1",
     listen_port: 80,
     log_enabled: true,
@@ -24,15 +19,9 @@ let appConfig = {
     },
     tokenSecret: "",
 };
-appConfig = JSON.parse(
-    fs.readFileSync(HardCodeConfig.app_config_path, {
-        flag: "r",
-        encoding: "utf-8",
-    }),
-);
-const AppConfig = appConfig;
+config = JSON.parse(fs.readFileSync("resource/app.conf.json", { flag: "r", encoding: "utf-8" }));
+const AppConfig = config;
 
 module.exports = {
-    HardCodeConfig: HardCodeConfig,
     AppConfig: AppConfig,
 };

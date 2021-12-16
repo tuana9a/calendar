@@ -4,7 +4,60 @@ let isServiceWorkderAvailable = "serviceWorker" in navigator;
 
 const SERVICE_WORKER_FILE = "sw.js";
 const CACHE_NAME = "app";
-const CACHED_URLS = [];
+const CACHED_URLS = [
+    "/",
+    "/account.html",
+    "/account.js",
+    "/apis.js",
+    "/calendar.html",
+    "/calendar.js",
+    "/calendarize.js",
+    "/common.css",
+    "/constants.js",
+    "/index.html",
+    "/login.html",
+    "/login.js",
+    "/README.md",
+    "/register.html",
+    "/register.js",
+    "/sw.js",
+    "/utils.js",
+    "/css/button.css",
+    "/css/calendar.css",
+    "/css/create-event.css",
+    "/css/global.css",
+    "/css/header.css",
+    "/css/icons.css",
+    "/css/index.css",
+    "/css/input.css",
+    "/css/modal.css",
+    "/css/page.css",
+    "/css/select.css",
+    "/fonts/icomoon.eot",
+    "/fonts/icomoon.svg",
+    "/fonts/icomoon.ttf",
+    "/fonts/icomoon.woff",
+    "/icons/Icon-calendar.svg",
+    "/icons/Icon=check-square.svg",
+    "/icons/Icon=check.svg",
+    "/icons/Icon=chevron-down.svg",
+    "/icons/Icon=chevron-left.svg",
+    "/icons/Icon=chevron-right.svg",
+    "/icons/Icon=chevron-up.svg",
+    "/icons/Icon=clock.svg",
+    "/icons/Icon=gps.svg",
+    "/icons/Icon=hamburguer-button.svg",
+    "/icons/Icon=help-circle.svg",
+    "/icons/Icon=plus.svg",
+    "/icons/Icon=search.svg",
+    "/icons/Icon=settings.svg",
+    "/icons/Icon=text.svg",
+    "/icons/Icon=users.svg",
+    "/icons/Icon=video.svg",
+    "/fonts/icomoon.woff?aa7569",
+    "/fonts/icomoon.ttf?aa7569",
+    "/images/calendar.svg",
+];
 
 class CacheUtils {
     static INSTANCE = new CacheUtils();
@@ -20,17 +73,13 @@ class CacheUtils {
             );
         });
     }
-    async getBackup() {
+    async snapshot() {
         let cache = await caches.open(CACHE_NAME);
         let backup = new Map();
         for (const url of CACHED_URLS) {
             backup.set(url, await cache.match(new Request(url)));
         }
         return backup;
-    }
-    async update() {
-        let cache = await caches.open(CACHE_NAME);
-        return cache.addAll(CACHED_URLS.map((url) => new Request(url, { cache: "reload" })));
     }
 }
 
@@ -62,11 +111,9 @@ class ServiceWorkerUtils {
     static getInstance() {
         return this.INSTANCE;
     }
-    registerServiceWorker(serviceWorkerFile = "", onSuccess = (e) => {}, onError = (e) => {}) {
+    registerServiceWorker(serviceWorkerFile = "", onSuccess = console.log, onError = console.error) {
         if (!isServiceWorkderAvailable) return;
-        window.addEventListener("load", function () {
-            navigator.serviceWorker.register(serviceWorkerFile).then(onSuccess).catch(onError);
-        });
+        navigator.serviceWorker.register(serviceWorkerFile).then(onSuccess).catch(onError);
     }
     async unregisterServiceWorkers() {
         return navigator.serviceWorker.getRegistrations().then(function (serviceWorkers) {
@@ -84,13 +131,13 @@ class App {
     }
     async update() {
         const cacheUtils = CacheUtils.getInstance();
-        const BACKUP = await cacheUtils.getBackup();
+        const BACKUP = await cacheUtils.snapshot();
         await cacheUtils.clear();
         try {
-            await cacheUtils.update();
-            console.log("update: success");
+            let cache = await caches.open(CACHE_NAME);
+            await cache.addAll(CACHED_URLS.map((url) => new Request(url, { cache: "reload" })));
         } catch (err) {
-            console.log("update: failed");
+            console.error(err);
             let cache = await caches.open(CACHE_NAME);
             for (const url of CACHED_URLS) {
                 const req = new Request(url);
@@ -99,8 +146,8 @@ class App {
             }
         }
     }
-    install() {
-        ServiceWorkerUtils.getInstance().registerServiceWorker(SERVICE_WORKER_FILE);
+    install(onSuccess = (e) => {}, onError = (e) => {}) {
+        ServiceWorkerUtils.getInstance().registerServiceWorker(SERVICE_WORKER_FILE, onSuccess, onError);
     }
     uninstall() {
         localStorage.clear();
@@ -193,6 +240,7 @@ export const apis = {
     },
     app: {
         install: App.getInstance().install,
+        update: App.getInstance().update,
         uninstall: App.getInstance().uninstall,
     },
     notification: {

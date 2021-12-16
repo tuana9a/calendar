@@ -124,7 +124,6 @@ input::-webkit-inner-spin-button {
     padding: 16px;
 }
 
-
 /* DAD CHILD */
 
 .display-none {
@@ -272,7 +271,7 @@ input::-webkit-inner-spin-button {
 }
 
 .btn-green {
-    background-color: #04AA6D;
+    background-color: #04aa6d;
 }
 
 .btn-yellow {
@@ -281,10 +280,4 @@ input::-webkit-inner-spin-button {
 
 .btn-red {
     background-color: #d4554e;
-}
-
-.account-top {
-    margin: 8px;
-    display: flex;
-    justify-content: space-between;
 }
