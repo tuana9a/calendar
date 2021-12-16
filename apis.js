@@ -81,14 +81,14 @@ async function findUserById(req, resp) {
     sendResponse(resp, 1, "success", user);
 }
 
-async function userInfo(req, resp) {
+async function getUserInfo(req, resp) {
     let token = req.cookies.access_token;
     let user = await userController().checkToken(token);
     delete user.password;
     sendResponse(resp, 1, "success", user);
 }
 
-async function find(req, resp) {
+async function findEvent(req, resp) {
     let token = req.cookies.access_token;
     let user = await userController().checkToken(token);
     let filter = JSON.parse(req.query.filter);
@@ -130,10 +130,10 @@ const apis = {
         update: wrapExpressHandler(updateUser),
         delete: wrapExpressHandler(deleteUser),
         findById: wrapExpressHandler(findUserById),
-        info: wrapExpressHandler(userInfo),
+        info: wrapExpressHandler(getUserInfo),
     },
     event: {
-        find: wrapExpressHandler(find),
+        find: wrapExpressHandler(findEvent),
         add: wrapExpressHandler(addEvent),
         update: wrapExpressHandler(updateEvent),
         delete: wrapExpressHandler(deleteEvent),
