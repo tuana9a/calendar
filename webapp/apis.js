@@ -10,7 +10,7 @@ const CACHED_URLS = [
     "/account.js",
     "/apis.js",
     "/calendar.html",
-    // "/calendar.js",
+    "/calendar.js",
     "/calendarize.js",
     "/common.css",
     "/constants.js",
@@ -225,7 +225,6 @@ export const apis = {
             return fetch(url).then((resp) => resp.json());
         },
         update: async function (event) {
-            //TODO
             let url = "/api/event";
             return fetch(url, {
                 method: "PUT",

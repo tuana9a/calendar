@@ -20,14 +20,14 @@ async function main() {
 
     server.post("/login", apis.login);
     server.post("/register", apis.register);
-    server.get("/api/user/:id", apis.findUserById);
-    server.get("/api/user", apis.userInfo);
-    server.put("/api/user", apis.updateUser);
-    server.delete("/api/user", apis.deleteUser);
-    server.get("/api/event", apis.find);
-    server.post("/api/event", apis.addEvent);
-    server.put("/api/event", apis.updateEvent);
-    server.delete("/api/event", apis.deleteEvent);
+    server.get("/api/user/:id", apis.user.findById);
+    server.get("/api/user", apis.user.info);
+    server.put("/api/user", apis.user.update);
+    server.delete("/api/user", apis.user.delete);
+    server.get("/api/event", apis.event.find);
+    server.post("/api/event", apis.event.add);
+    server.put("/api/event", apis.event.update);
+    server.delete("/api/event", apis.event.delete);
 
     await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);

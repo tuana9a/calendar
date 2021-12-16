@@ -111,7 +111,7 @@ async function updateEvent(req, resp) {
     let user = await userController().checkToken(token);
     let event = req.body;
     event.username = user.username;
-    let result = await eventController().delete(event);
+    let result = await eventController().update(event);
     sendResponse(resp, 1, "received", result);
 }
 
@@ -126,14 +126,18 @@ async function deleteEvent(req, resp) {
 const apis = {
     register: wrapExpressHandler(register),
     login: wrapExpressHandler(login),
-    updateUser: wrapExpressHandler(updateUser),
-    deleteUser: wrapExpressHandler(deleteUser),
-    findUserById: wrapExpressHandler(findUserById),
-    userInfo: wrapExpressHandler(userInfo),
-    find: wrapExpressHandler(find),
-    addEvent: wrapExpressHandler(addEvent),
-    updateEvent: wrapExpressHandler(updateEvent),
-    deleteEvent: wrapExpressHandler(deleteEvent),
+    user: {
+        update: wrapExpressHandler(updateUser),
+        delete: wrapExpressHandler(deleteUser),
+        findById: wrapExpressHandler(findUserById),
+        info: wrapExpressHandler(userInfo),
+    },
+    event: {
+        find: wrapExpressHandler(find),
+        add: wrapExpressHandler(addEvent),
+        update: wrapExpressHandler(updateEvent),
+        delete: wrapExpressHandler(deleteEvent),
+    },
 };
 
 module.exports = {

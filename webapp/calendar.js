@@ -147,19 +147,22 @@ async function main() {
         updateMiniCalendar();
     };
 
-    apis.user.info().then((resp) => {
-        if (resp.code == 1) {
-            let user = resp.data;
-            let username = user.username;
-            let iconTypes = ["adventurer-neutral", "big-ears-neutral", "initials"];
-            let index = Math.floor(Math.random() * iconTypes.length);
-            let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
-            document.getElementById("user-icon").src = iconSrc;
-        } else {
-            alert("not login yet");
-            window.location.href = "/login.html";
-        }
-    });
+    apis.user
+        .info()
+        .then((resp) => {
+            if (resp.code == 1) {
+                let user = resp.data;
+                let username = user.username;
+                let iconTypes = ["adventurer-neutral", "big-ears-neutral", "initials"];
+                let index = Math.floor(Math.random() * iconTypes.length);
+                let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
+                document.getElementById("user-icon").src = iconSrc;
+            } else {
+                alert("not login yet");
+                window.location.href = "/login.html";
+            }
+        })
+        .catch();
 
     let date = new Date();
     date.setDate(1);
@@ -171,45 +174,51 @@ async function main() {
     let rangeEnd = date.getTime();
 
     await apis.notification.request();
-    apis.event.find({ startTime: { $gt: rangeStart, $lt: rangeEnd } }).then((resp) => {
+    let events = JSON.parse(localStorage.getItem("events")) || [];
+    try {
+        let resp = await apis.event.find({ startTime: { $gt: rangeStart, $lt: rangeEnd } });
         if (resp.code == 1) {
-            let events = resp.data;
-            console.log(events);
-            // TODO: tạo một mảng lưu các index[] có thể dùng luôn ngày trong tháng làm index
-            // sau đó loop các phần tử opts.events, lấy các ngày chứa event
-            // sau đó lấy element từ chỉ mục và gọi hàm appendEvent :)
-            let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
-            let dayElements = mainCalendarElement.querySelectorAll(selector);
-            events.forEach((myEvent) => {
-                let startDate = new Date(myEvent.startTime);
-                let elementIndex = startDate.getDate() - 1; //seriously don't ask;
-                let dayElement = dayElements.item(elementIndex);
-                appendEvent(dayElement, myEvent);
-
-                // if event dismiss then no need to notify
-                if (myEvent.dismiss) return;
-
-                let now = new Date();
-                if (now < startDate.getTime() - 900_000) return;
-
-                // 15min before event;
-                apis.notification.send(myEvent.title, {
-                    body: myEvent.description,
-                    actions: [
-                        {
-                            action: "ok",
-                            title: "ok",
-                        },
-                        {
-                            action: "dismiss",
-                            title: "dismiss",
-                        },
-                    ],
-                    icon: "/images/calendar.png",
-                    silent: true,
-                });
-            });
+            events = resp.data;
         }
+    } catch (err) {
+        // ignored
+    }
+    localStorage.setItem("events", JSON.stringify(events));
+
+    let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
+    let dayElements = mainCalendarElement.querySelectorAll(selector);
+    events.forEach((myEvent) => {
+        let startDate = new Date(myEvent.startTime);
+        let elementIndex = startDate.getDate() - 1; //seriously don't ask;
+        let dayElement = dayElements.item(elementIndex);
+        appendEvent(dayElement, myEvent);
+
+        // if event dismiss then no need to notify
+        if (myEvent.dismiss) return;
+
+        let now = new Date();
+        if (now < startDate.getTime() - 900000) return;
+
+        // 15min before event;
+        apis.notification.send(myEvent.title, {
+            body: myEvent.description,
+            actions: [
+                {
+                    action: "ok",
+                    title: "ok",
+                },
+                {
+                    action: "dismiss",
+                    title: "dismiss",
+                },
+            ],
+            icon: "/images/calendar.png",
+            silent: true,
+        });
+
+        // After notify then no auto dimiss
+        myEvent.dismiss = true;
+        apis.event.update(myEvent);
     });
 }
 

@@ -63,13 +63,14 @@ class UserController {
     }
     async checkToken(token) {
         if (!token) throw new ValidationError("Access denied");
-
-        const verified = jwt.verify(token, AppConfig.tokenSecret);
-        const _id = new mongodb.ObjectId(verified._id);
-
-        let user = await this.collection().findOne({ _id: _id });
-        if (!user) throw new ValidationError("User not found");
-
+        let userId;
+        try {
+            const verified = jwt.verify(token, AppConfig.tokenSecret);
+            userId = verified._id;
+        } catch (err) {
+            throw new ValidationError("Invalid Token: " + err.message);
+        }
+        let user = await this.collection().findOne({ _id: new mongodb.ObjectId(userId) });
         return user;
     }
 }
@@ -105,6 +106,7 @@ class EventController {
                     endTime: userEvent.endTime,
                     description: userEvent.description,
                     location: userEvent.location,
+                    dismiss: userEvent.dismiss,
                 },
             },
         );
