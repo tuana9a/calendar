@@ -44,6 +44,10 @@ input::-webkit-inner-spin-button {
     margin-bottom: 25px;
 }
 
+.margin-right-8px {
+    margin-right: 8px;
+}
+
 .color-red {
     color: red;
 }
@@ -242,11 +246,11 @@ input::-webkit-inner-spin-button {
 
 .full-width-btn {
     color: white;
-    padding: 16px 20px;
-    margin: 8px 0;
+    padding: 16px;
+    margin: 0.5% 1%;
     border: none;
     cursor: pointer;
-    width: 100%;
+    width: 98%;
     opacity: 0.9;
 }
 
@@ -256,7 +260,6 @@ input::-webkit-inner-spin-button {
 
 .short-btn {
     color: white;
-    padding: 16px 20px;
     margin: 8px 16px;
     border: none;
     cursor: pointer;
@@ -270,6 +273,10 @@ input::-webkit-inner-spin-button {
 
 .btn-green {
     background-color: #04AA6D;
+}
+
+.btn-yellow {
+    background-color: #ccc131;
 }
 
 .btn-red {

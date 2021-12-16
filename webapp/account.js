@@ -1,36 +1,18 @@
 import { apis } from "./apis.js";
 
-const $saveAccBtn = document.getElementById("saveAccBtn");
+
 const $deleteAccBtn = document.getElementById("deleteAccBtn");
-const $discardBtn = document.getElementById("discardBtn");
 const $updateBtn = document.getElementById("updateBtn");
 const $logoutBtn = document.getElementById("logoutBtn");
+const $moreBtn = document.getElementById("moreBtn");
+const $installBtn = document.getElementById("installBtn");
+const $uninstallBtn = document.getElementById("uninstallBtn");
 
 const $usernameText = document.getElementById("username");
 const $pswText = document.getElementById("psw");
 const $repeatPswText = document.getElementById("psw-repeat");
 
-const handleOpenUpdateMode = () => {
-    $pswText.removeAttribute("readonly");
-    $repeatPswText.removeAttribute("readonly");
-
-    $discardBtn.classList.remove("display-none");
-    $saveAccBtn.classList.remove("display-none");
-    $deleteAccBtn.classList.remove("display-none");
-    $updateBtn.classList.add("display-none");
-};
-
-const handleCloseUpdateMode = () => {
-    $pswText.setAttribute("readonly", "readonly");
-    $repeatPswText.setAttribute("readonly", "readonly");
-
-    $discardBtn.classList.add("display-none");
-    $saveAccBtn.classList.add("display-none");
-    $deleteAccBtn.classList.add("display-none");
-    $updateBtn.classList.remove("display-none");
-};
-
-const handleUpdateAccount = async () => {
+const handleUpdateAccount = async() => {
     let psw = $pswText.value;
     let repeatPsw = $repeatPswText.value;
     let username = $usernameText.value;
@@ -51,14 +33,18 @@ const handleUpdateAccount = async () => {
     }
 };
 
-const handleDeleteAccount = async () => {
-    const response = await apis.user.delete();
-    if (response.code == 1) {
-        alert("delete success");
-        window.location.href = "/login.html";
-    } else {
-        alert(response.message);
+const handleDeleteAccount = async() => {
+    const confirmation = confirm("Are you sure?")
+    if (confirmation) {
+        const response = await apis.user.delete();
+        if (response.code == 1) {
+            alert("delete success");
+            window.location.href = "/login.html";
+        } else {
+            alert(response.message);
+        }
     }
+
 };
 
 const handleLogout = () => {
@@ -67,11 +53,40 @@ const handleLogout = () => {
     window.location.href = "/login.html";
 };
 
+const handleMoreBtn = () => {
+    $moreBtn.textContent = "Hide";
+    $installBtn.classList.remove("display-none");
+    $uninstallBtn.classList.remove("display-none");
+    $moreBtn.onclick = handleHideBtn;
+}
+
+const handleHideBtn = () => {
+    $moreBtn.textContent = "More";
+    $installBtn.classList.add("display-none");
+    $uninstallBtn.classList.add("display-none");
+    $moreBtn.onclick = handleMoreBtn;
+}
+const handleInstall = () => {
+    apis.app.install();
+    alert("install success")
+}
+
+const handleUninstall = () => {
+    const confirmation = confirm("Do you want to uninstall?");
+    if (confirmation) {
+        apis.app.install();
+        alert("uninstall success")
+    }
+
+
+}
+
 $deleteAccBtn.onclick = handleDeleteAccount;
-$saveAccBtn.onclick = handleUpdateAccount;
-$discardBtn.onclick = handleCloseUpdateMode;
-$updateBtn.onclick = handleOpenUpdateMode;
+$updateBtn.onclick = handleUpdateAccount;
 $logoutBtn.onclick = handleLogout;
+$moreBtn.onclick = handleMoreBtn;
+$installBtn.onclick = handleInstall;
+$uninstallBtn.onclick = handleUninstall;
 
 apis.user.info().then((response) => {
     if (response.code == 1) {
