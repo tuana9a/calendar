@@ -1,36 +1,15 @@
 import { apis } from "./apis.js";
 
-const $saveAccBtn = document.getElementById("saveAccBtn");
-const $deleteAccBtn = document.getElementById("deleteAccBtn");
-const $discardBtn = document.getElementById("discardBtn");
-const $updateBtn = document.getElementById("updateBtn");
 const $logoutBtn = document.getElementById("logoutBtn");
+const $updateBtn = document.getElementById("updateBtn");
+const $updateAppBtn = document.getElementById("updateAppBtn");
+const $deleteAccBtn = document.getElementById("deleteAccBtn");
+const $installBtn = document.getElementById("installBtn");
+const $uninstallBtn = document.getElementById("uninstallBtn");
 
 const $usernameText = document.getElementById("username");
 const $pswText = document.getElementById("psw");
 const $repeatPswText = document.getElementById("psw-repeat");
-
-const handleOpenUpdateMode = () => {
-    $usernameText.removeAttribute("readonly");
-    $pswText.removeAttribute("readonly");
-    $repeatPswText.removeAttribute("readonly");
-
-    $discardBtn.classList.remove("display-none");
-    $saveAccBtn.classList.remove("display-none");
-    $deleteAccBtn.classList.remove("display-none");
-    $updateBtn.classList.add("display-none");
-};
-
-const handleCloseUpdateMode = () => {
-    $usernameText.setAttribute("readonly", "readonly");
-    $pswText.setAttribute("readonly", "readonly");
-    $repeatPswText.setAttribute("readonly", "readonly");
-
-    $discardBtn.classList.add("display-none");
-    $saveAccBtn.classList.add("display-none");
-    $deleteAccBtn.classList.add("display-none");
-    $updateBtn.classList.remove("display-none");
-};
 
 const handleUpdateAccount = async () => {
     let psw = $pswText.value;
@@ -54,12 +33,15 @@ const handleUpdateAccount = async () => {
 };
 
 const handleDeleteAccount = async () => {
-    const response = await apis.user.delete();
-    if (response.code == 1) {
-        alert("delete success");
-        window.location.href = "/login.html";
-    } else {
-        alert(response.message);
+    const confirmation = confirm("Are you sure?");
+    if (confirmation) {
+        const response = await apis.user.delete();
+        if (response.code == 1) {
+            alert("delete success");
+            window.location.href = "/login.html";
+        } else {
+            alert(response.message);
+        }
     }
 };
 
@@ -69,19 +51,40 @@ const handleLogout = () => {
     window.location.href = "/login.html";
 };
 
-$deleteAccBtn.onclick = handleDeleteAccount;
-$saveAccBtn.onclick = handleUpdateAccount;
-$discardBtn.onclick = handleCloseUpdateMode;
-$updateBtn.onclick = handleOpenUpdateMode;
-$logoutBtn.onclick= handleLogout;
+const handleInstall = () => {
+    const onSuccess = () => {
+        alert("install success");
+    };
+    const onError = () => {
+        alert("install failed");
+    };
+    apis.app.install(onSuccess, onError);
+};
 
-fetch("/api/user")
-    .then((resp) => resp.json())
-    .then((response) => {
-        if (response.code == 1) {
-            let user = response.data;
-            $usernameText.value = user.username;
-        } else {
-            alert("you're not logined yet");
-        }
-    });
+const handlerUpdateApp = () => {
+    apis.app.update();
+};
+
+const handleUninstall = () => {
+    const confirmation = confirm("Do you want to uninstall?");
+    if (confirmation) {
+        apis.app.uninstall();
+        alert("uninstall success");
+    }
+};
+
+$logoutBtn.onclick = handleLogout;
+$updateBtn.onclick = handleUpdateAccount;
+$updateAppBtn.onclick = handlerUpdateApp;
+$deleteAccBtn.onclick = handleDeleteAccount;
+$installBtn.onclick = handleInstall;
+$uninstallBtn.onclick = handleUninstall;
+
+apis.user.info().then((response) => {
+    if (response.code == 1) {
+        let user = response.data;
+        $usernameText.value = user.username;
+    } else {
+        alert("you're not login yet");
+    }
+});

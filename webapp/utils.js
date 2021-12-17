@@ -44,25 +44,106 @@ export class DateUtils {
     static getInstance() {
         return this.INSTANCE;
     }
-    dateToDash(input = new Date()) {
+    /**
+     * chuyển từ object date thành string
+     *      VD: Date -> 10/12/2021 lần lượt là ngày/tháng/năm
+     * @param {Date} input input date tương ứng
+     * @param {String} spliter là splittler cho string cuối cùng
+     * @returns string
+     */
+    dateToStringVn(input = new Date(), spliter = "/") {
         let day = input.getDate();
         let month = input.getMonth() + 1; //EXPLAIN: range: 0-11
         let year = input.getFullYear();
-        return (day < 10 ? "0" : "") + day + "/" + (month < 10 ? "0" : "") + month + "/" + year;
+        return (day < 10 ? "0" : "") + day + spliter + (month < 10 ? "0" : "") + month + spliter + year;
     }
-    fromStringToDate_VN(input = "") {
+    /**
+     * chuyển từ object Date thành string
+     *      VD: 2021/12/10 lần lượt là năm/tháng/ngày
+     * @param {Date} input input date tương ứng
+     * @param {String} spliter là splilter cho output
+     * @returns string
+     */
+    dateToString(input = new Date(), spliter = "/") {
+        let day = input.getDate();
+        let month = input.getMonth() + 1; //EXPLAIN: range: 0-11
+        let year = input.getFullYear();
+        return year + spliter + (month < 10 ? "0" : "") + month + spliter + (day < 10 ? "0" : "") + day;
+    }
+    /**
+     * convert từ string thành Date nhưng theo format của người việt nam
+     *      VD: 10/12/2021 -> Date
+     * @param {String} input đầu vào xâu
+     * @returns Date
+     */
+    stringToDateVn(input = "") {
         if (!input.match(/^\d{1,2}(\/|-|\.)\d{1,2}(\/|-|\.)\d+$/)) return new Date();
-        try {
-            let parts = input.split(/(\/|-|\.)/).filter((e) => !e.match(/^(\/|-|\.)$/));
-            let day = parts[0],
-                month = parts[1],
-                year = parts[2];
-            return new Date(`${month}/${day}/${year}`);
-        } catch (e) {
-            return new Date();
-        }
+        let parts = input.split(/(\/|-|\.)/).filter((e) => !e.match(/^(\/|-|\.)$/));
+        let day = parts[0],
+            month = parts[1],
+            year = parts[2];
+        return new Date(`${month}/${day}/${year}`);
     }
-    toDayWeek_VN(input = 0) {
+    /**
+     * convert từ string thành Date
+     *      VD: 2021-12-10 -> Date
+     * @param {String} input đầu vào xâu
+     * @returns Date
+     */
+    stringToDate(input = "") {
+        if (!input.match(/^\d{1,2}(\/|-|\.)\d{1,2}(\/|-|\.)\d+$/)) return new Date();
+        let parts = input.split(/(\/|-|\.)/).filter((e) => !e.match(/^(\/|-|\.)$/));
+        let year = parts[0],
+            month = parts[1],
+            day = parts[2];
+        return new Date(`${month}/${day}/${year}`);
+    }
+    /**
+     * convert từ string thành Date
+     *      VD: 10:12:13 -> Date
+     * @param {String} input đầu vào xâu
+     * @returns Date
+     */
+    stringToTime(input = "") {
+        let parts = input.split(/:/);
+        let hour = parts[0],
+            minute = parts[1],
+            second = parts[2];
+        let date = new Date();
+        date.setHours(hour);
+        date.setMinutes(minute);
+        date.setSeconds(second);
+        return date;
+    }
+    fullDateToString(input = new Date()) {
+        let year = input.getFullYear();
+        let month = input.getMonth() + 1; //EXPLAIN: range: 0-11
+        let day = input.getDate();
+        let hour = input.getHours();
+        let minute = input.getMinutes();
+        let second = input.getSeconds();
+        let _month = month < 10 ? "0" + month : month;
+        let _day = day < 10 ? "0" + day : day;
+        let _hour = hour < 10 ? "0" + hour : hour;
+        let _minute = minute < 10 ? "0" + minute : minute;
+        let _second = second < 10 ? "0" + second : second;
+        return _month + "/" + _day + "/" + year + " " + _hour + ":" + _minute + ":" + _second;
+    }
+    fullDateToInputDatetimeLocalValue(input = new Date()) {
+        let y = input.getFullYear();
+        let m = input.getMonth() + 1; //EXPLAIN: range: 0-11
+        let d = input.getDate();
+        let h = input.getHours();
+        let M = input.getMinutes();
+        let s = input.getSeconds();
+        m = m < 10 ? "0" + m : m;
+        d = d < 10 ? "0" + d : d;
+        h = h < 10 ? "0" + h : h;
+        M = M < 10 ? "0" + M : M;
+        s = s < 10 ? "0" + s : s;
+        return y + "-" + m + "-" + d + "T" + h + ":" + M + ":" + s;
+    }
+    toDayWeekVn(input = 0) {
         switch (input) {
             case 0:
                 return 8;
@@ -74,7 +155,7 @@ export class DateUtils {
         let delta = date1.getTime() - date2.getTime();
         return Math.abs(delta) / 86_400_000;
     }
-    timeBetween_String(date1 = new Date(), date2 = new Date()) {
+    timeBetween(date1 = new Date(), date2 = new Date()) {
         let miliseconds = date2.getTime() - date1.getTime();
         if (miliseconds < 1000) return miliseconds + "ms ago";
         let seconds = miliseconds / 1000.0;
@@ -88,14 +169,14 @@ export class DateUtils {
     }
     //CAUTION: nếu lệch mất một tuần thì vào đây mà sửa
     weeksFromStartDay(dash = "", firstWeekDay = "") {
-        let date1 = this.fromStringToDate_VN(dash);
-        let date2 = this.fromStringToDate_VN(firstWeekDay);
+        let date1 = this.stringToDateVn(dash);
+        let date2 = this.stringToDateVn(firstWeekDay);
         let weeks = this.daysBetween(date1, date2) / 7;
         return Math.floor(weeks) + 1;
         //EXPLAIN: đéo biết giải thích thế nào cái cộng 1, thời gian mệt vlòn
     }
     calcCurrentWeek(firstWeekDay = "") {
-        let start = DateUtils.getInstance().fromStringToDate_VN(firstWeekDay);
+        let start = DateUtils.getInstance().stringToDateVn(firstWeekDay);
         let weeks = Math.floor(DateUtils.getInstance().daysBetween(start, new Date()) / DAYWEEK_COUNT);
         return weeks + 1; //EXPLAIN: vd chia đc 0.5 thì là tuần 1, chia đc 1.2 là tuần 2
     }

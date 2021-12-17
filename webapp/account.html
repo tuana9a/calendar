@@ -24,6 +24,12 @@
             background-color: #ddd;
             outline: none;
         }
+
+        .account-top {
+            margin: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
     <title>Account</title>
 </head>
@@ -31,27 +37,34 @@
 <body>
     <div class="account-top ">
         <h1>Account Settings</h1>
-        <button class="short-btn btn-red" id="logoutBtn">Logout</button>
+        <div class="container text-align-center display-flex">
+            <p><a class="dodgerblue" href="./calendar.html">Go back calendar</a></p>
+        </div>
+        <div class="display-flex" style="min-width: 20%;">
+            <button class="full-width-btn btn-green" id="installBtn">Install</button>
+            <button class="full-width-btn btn-green" id="updateAppBtn">Update</button>
+            <button class="full-width-btn btn-green" id="uninstallBtn">Uninstall</button>
+            <button class="full-width-btn btn-red" id="logoutBtn">Logout</button>
+        </div>
     </div>
     <div class="background-color-white padding-16px">
-
         <hr class="register-hr-box">
 
         <label for="username"><b>Username</b></label>
-        <input type="text" placeholder="Enter Your Username" name="username" id="username" required readonly>
+        <input type="text" name="username" id="username" required readonly>
 
-        <label for="psw"><b>Password</b></label>
+        <label for="psw"><b>New Password</b></label>
         <input type="password" placeholder="Enter Password" name="psw" id="psw" required readonly>
 
         <label for="psw-repeat"><b>Repeat Password</b></label>
         <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required readonly>
-        <hr>
 
+        <hr>
     </div>
-    <button class="full-width-btn btn-green" id="updateBtn">Update</button>
-    <button class="full-width-btn btn-green display-none" id="saveAccBtn">Save</button>
-    <button class="full-width-btn btn-red display-none" id="discardBtn">Discard</button>
-    <button class="full-width-btn btn-red display-none" id="deleteAccBtn">Delete</button>
+    <div class="display-flex justify-content-space-around">
+        <button class="full-width-btn btn-green" id="updateBtn">Update</button>
+        <button class="full-width-btn btn-red " id="deleteAccBtn">Delete</button>
+    </div>
     <script type="module" src="./account.js"></script>
 </body>
 

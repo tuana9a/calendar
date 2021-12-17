@@ -44,6 +44,10 @@ input::-webkit-inner-spin-button {
     margin-bottom: 25px;
 }
 
+.margin-right-8px {
+    margin-right: 8px;
+}
+
 .color-red {
     color: red;
 }
@@ -119,7 +123,6 @@ input::-webkit-inner-spin-button {
 .padding-16px {
     padding: 16px;
 }
-
 
 /* DAD CHILD */
 
@@ -242,11 +245,11 @@ input::-webkit-inner-spin-button {
 
 .full-width-btn {
     color: white;
-    padding: 16px 20px;
-    margin: 8px 0;
+    padding: 16px;
+    margin: 0.5% 1%;
     border: none;
     cursor: pointer;
-    width: 100%;
+    width: 98%;
     opacity: 0.9;
 }
 
@@ -256,7 +259,6 @@ input::-webkit-inner-spin-button {
 
 .short-btn {
     color: white;
-    padding: 16px 20px;
     margin: 8px 16px;
     border: none;
     cursor: pointer;
@@ -269,15 +271,13 @@ input::-webkit-inner-spin-button {
 }
 
 .btn-green {
-    background-color: #04AA6D;
+    background-color: #04aa6d;
+}
+
+.btn-yellow {
+    background-color: #ccc131;
 }
 
 .btn-red {
     background-color: #d4554e;
-}
-
-.account-top {
-    margin: 8px;
-    display: flex;
-    justify-content: space-between;
 }

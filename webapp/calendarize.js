@@ -1,108 +1,26 @@
-import { apis } from "./apis.js";
 import { DateUtils } from "./utils.js";
-
-const MONTH_NAMES = [
-    {
-        full: "January",
-        short: "Jan",
-    },
-    {
-        full: "February",
-        short: "Feb",
-    },
-    {
-        full: "March",
-        short: "Mar",
-    },
-    {
-        full: "April",
-        short: "Apr",
-    },
-    {
-        full: "May",
-        short: "May",
-    },
-    {
-        full: "June",
-        short: "Jun",
-    },
-    {
-        full: "July",
-        short: "Jul",
-    },
-    {
-        full: "August",
-        short: "Aug",
-    },
-    {
-        full: "September",
-        short: "Sep",
-    },
-    {
-        full: "October",
-        short: "Oct",
-    },
-    {
-        full: "November",
-        short: "Nov",
-    },
-    {
-        full: "December",
-        short: "Dec",
-    },
-];
-
-const DAY_NAMES = [
-    {
-        full: "Sunday",
-        short: "Su",
-    },
-    {
-        full: "Monday",
-        short: "Mo",
-    },
-    {
-        full: "Tuesday",
-        short: "Tu",
-    },
-    {
-        full: "Wednesday",
-        short: "We",
-    },
-    {
-        full: "Thursday",
-        short: "Th",
-    },
-    {
-        full: "Friday",
-        short: "Fr",
-    },
-    {
-        full: "Saturday",
-        short: "Sa",
-    },
-];
-
-const DAY_CLASS_NAME = "day";
-const DAY_DOW_CLASS_NAME = "dow";
-const DAY_HIDE_CLASS_NAME = "hide";
-const DAY_DUMMY_CLASS_NAME = "dummy";
-const DAY_CURRENT_MONTH_CLASS_NAME = "month";
-const DAY_WEEKEND_CLASS_NAME = "weekend";
-const DAY_TODAY_CLASS_NAME = "today";
-const DAY_FUTURE_CLASS_NAME = "future";
-const DAY_PAST_CLASS_NAME = "past";
-
-const CALENDAR_GRID_CLASS_NAME = "calendar-grid";
-const CALENDAR_DATE_TITLE_CLASS_NAME = "calendar-date-title";
+import {
+    CLASSNAME_CALENDAR_DATE_TITLE,
+    CLASSNAME_CALENDAR_GRID,
+    CLASSNAME_DAY,
+    CLASSNAME_MONTH,
+    CLASSNAME_DOW,
+    CLASSNAME_DUMMY,
+    CLASSNAME_FUTURE,
+    DAY_NAMES,
+    CLASSNAME_PAST,
+    CLASSNAME_TODAY,
+    CLASSNAME_WEEKEND,
+    MONTH_NAMES,
+} from "./constants.js";
 
 function clearDayStateClassName(element) {
-    element.classList.remove(DAY_DUMMY_CLASS_NAME);
-    element.classList.remove(DAY_CURRENT_MONTH_CLASS_NAME);
-    element.classList.remove(DAY_WEEKEND_CLASS_NAME);
-    element.classList.remove(DAY_TODAY_CLASS_NAME);
-    element.classList.remove(DAY_FUTURE_CLASS_NAME);
-    element.classList.remove(DAY_PAST_CLASS_NAME);
+    element.classList.remove(CLASSNAME_DUMMY);
+    element.classList.remove(CLASSNAME_MONTH);
+    element.classList.remove(CLASSNAME_WEEKEND);
+    element.classList.remove(CLASSNAME_TODAY);
+    element.classList.remove(CLASSNAME_FUTURE);
+    element.classList.remove(CLASSNAME_PAST);
 }
 
 export class Calendarize {
@@ -113,7 +31,7 @@ export class Calendarize {
     // Add days and place fillers for a given month
     // This function and the one above needs consolidated
     write(
-        containerElement = document.getElementsByClassName(CALENDAR_GRID_CLASS_NAME).item(0),
+        containerElement = document.getElementsByClassName(CLASSNAME_CALENDAR_GRID).item(0),
         yearNum,
         monthNum,
         dateNum, // hiện tại dateNum hơi vô dụng do build chỉ cần năm và tháng
@@ -124,8 +42,12 @@ export class Calendarize {
             isMinimal: false,
             skipClickHandler: false,
             clickHandler: function (e) {
-                let day = e.target.getAttribute("data-date");
-                console.log(day);
+                let dataDate = e.target.getAttribute("data-date");
+                console.log(dataDate);
+            },
+            dbClickHandler: function (e) {
+                let dataDate = e.target.getAttribute("data-date");
+                console.log(dataDate);
             },
         },
     ) {
@@ -160,17 +82,17 @@ export class Calendarize {
             }
         }
 
-        let dayElements = containerElement.getElementsByClassName(DAY_CLASS_NAME);
+        let dayElements = containerElement.getElementsByClassName(CLASSNAME_DAY);
         let countMainDay = 0;
 
         // Add a Title to the month
-        let titleElement = containerElement.getElementsByClassName(CALENDAR_DATE_TITLE_CLASS_NAME).item(0);
+        let titleElement = containerElement.getElementsByClassName(CLASSNAME_CALENDAR_DATE_TITLE).item(0);
         titleElement.innerText = MONTH_NAMES[monthNum][opts.fullOrShort] + (opts.showYearOnTitle ? " " + yearNum : "");
 
         // Add Days of week to the top row
         DAY_NAMES.forEach(function (name, index) {
             const dayElement = dayElements[countMainDay];
-            dayElement.classList.add(DAY_DOW_CLASS_NAME);
+            dayElement.classList.add(CLASSNAME_DOW);
             dayElement.innerText = DAY_NAMES[index][opts.fullOrShort];
             countMainDay += 1;
         });
@@ -181,7 +103,7 @@ export class Calendarize {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dummyDateNum;
             clearDayStateClassName(dayElement);
-            dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
+            dayElement.classList.add(CLASSNAME_DUMMY);
             countMainDay += 1;
         }
 
@@ -193,24 +115,23 @@ export class Calendarize {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dayNum + 1;
             clearDayStateClassName(dayElement);
-            dayElement.classList.add(DAY_CURRENT_MONTH_CLASS_NAME);
-            let dataDate = `${yearNum}-${monthNum}-${dayNum}`;
-            dayElement.setAttribute("data-date", dataDate);
+            dayElement.classList.add(CLASSNAME_MONTH);
+            dayElement.setAttribute("data-date", new Date(yearNum, monthNum, dayNum + 1).getTime());
             countMainDay += 1;
 
             let dow = new Date(date).getDay();
             let dateParsed = Date.parse(date);
 
             if (dateParsed === todayParsed) {
-                dayElement.classList.add(DAY_TODAY_CLASS_NAME);
+                dayElement.classList.add(CLASSNAME_TODAY);
             } else if (dateParsed > todayParsed) {
-                dayElement.classList.add(DAY_FUTURE_CLASS_NAME);
+                dayElement.classList.add(CLASSNAME_FUTURE);
             } else if (dateParsed < todayParsed) {
-                dayElement.classList.add(DAY_PAST_CLASS_NAME);
+                dayElement.classList.add(CLASSNAME_PAST);
             }
 
             if (dow === 0 || dow === 6) {
-                dayElement.classList.add(DAY_WEEKEND_CLASS_NAME);
+                dayElement.classList.add(CLASSNAME_WEEKEND);
             }
 
             if (opts.dropDayOfWeek) {
@@ -221,17 +142,27 @@ export class Calendarize {
                     }
                 }
                 if (!valid) {
-                    dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
+                    dayElement.classList.add(CLASSNAME_DUMMY);
                 }
             }
 
-            if (!opts.skipClickHandler && opts.clickHandler && !dayElement.classList.contains(DAY_DUMMY_CLASS_NAME)) {
-                dayElement.addEventListener("click", function (e) {
+            if (dayElement.classList.contains(CLASSNAME_DUMMY)) return;
+            if (opts.skipClickHandler) return;
+            if (opts.clickHandler) {
+                dayElement.onclick = function (e) {
                     e = e || window.event;
                     e.preventDefault();
                     e.stopPropagation();
                     opts.clickHandler(e);
-                });
+                };
+            }
+            if (opts.dbClickHandler) {
+                dayElement.ondblclick = function (e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    opts.dbClickHandler(e);
+                };
             }
         });
 
@@ -241,7 +172,7 @@ export class Calendarize {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dateNum;
             clearDayStateClassName(dayElement);
-            dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
+            dayElement.classList.add(CLASSNAME_DUMMY);
             countMainDay += 1;
         }
 
@@ -251,7 +182,7 @@ export class Calendarize {
                 const dayElement = dayElements[countMainDay + i];
                 dayElement.innerText = "";
                 clearDayStateClassName(dayElement);
-                dayElement.classList.add(DAY_DUMMY_CLASS_NAME);
+                dayElement.classList.add(CLASSNAME_DUMMY);
             }
         }
 

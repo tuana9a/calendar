@@ -19,7 +19,7 @@
 
 .button.is-primary {
     background: var(--blue10);
-    color: var(--dark);
+    color: var(--gray50);
 }
 
 .button.is-secondary {

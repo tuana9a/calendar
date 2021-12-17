@@ -1,9 +1,11 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mongodb = require("mongodb");
 
 const { MongoDBClient } = require("./database");
 const { AppConfig } = require("./configs");
 const { ValidationError } = require("./exceptions");
+const { UserEvent } = require("./entities");
 
 /*
 trước khi vào controller thì tầng apis.js phải qua các validates.js
@@ -59,12 +61,62 @@ class UserController {
         if (!user) throw new ValidationError("user not exist");
         return user;
     }
+    async checkToken(token) {
+        if (!token) throw new ValidationError("Access denied");
+        let userId;
+        try {
+            const verified = jwt.verify(token, AppConfig.tokenSecret);
+            userId = verified._id;
+        } catch (err) {
+            throw new ValidationError("Invalid Token: " + err.message);
+        }
+        let user = await this.collection().findOne({ _id: new mongodb.ObjectId(userId) });
+        return user;
+    }
 }
 
 class EventController {
     static INSTANCE = new EventController();
     static getInstance() {
         return this.INSTANCE;
+    }
+    collection() {
+        const client = MongoDBClient.getInstance();
+        const collection = client.db("calendar").collection("event");
+        return collection;
+    }
+    async find(filter) {
+        let result = await this.collection().find(filter).toArray();
+        return result;
+    }
+    async insert(event = new UserEvent()) {
+        let insertResult = await this.collection().insertOne(event);
+        return { eventId: insertResult.insertedId };
+    }
+    async update(userEvent = new UserEvent()) {
+        let eventId = new mongodb.ObjectId(userEvent._id);
+        let username = userEvent.username;
+        let updatedUser = await this.collection().updateOne(
+            { _id: eventId, username: username },
+            {
+                $set: {
+                    title: userEvent.title,
+                    date: userEvent.date,
+                    startTime: userEvent.startTime,
+                    endTime: userEvent.endTime,
+                    description: userEvent.description,
+                    location: userEvent.location,
+                    dismiss: userEvent.dismiss,
+                },
+            },
+        );
+        return { userId: updatedUser.upsertedId };
+    }
+    async delete(userEvent = new UserEvent()) {
+        let eventId = new mongodb.ObjectId(userEvent._id);
+        let username = userEvent.username;
+        let deleteResult = await this.collection().deleteOne({ _id: eventId, username: username });
+        return { count: deleteResult.deletedCount };
     }
 }
 
