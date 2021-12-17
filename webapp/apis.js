@@ -3,61 +3,7 @@
 let isServiceWorkderAvailable = "serviceWorker" in navigator;
 
 const SERVICE_WORKER_FILE = "sw.js";
-const CACHE_NAME = "app";
-const CACHED_URLS = [
-    "/",
-    "/account.html",
-    "/account.js",
-    "/apis.js",
-    "/calendar.html",
-    "/calendar.js",
-    "/calendarize.js",
-    "/common.css",
-    "/constants.js",
-    "/index.html",
-    "/login.html",
-    "/login.js",
-    "/README.md",
-    "/register.html",
-    "/register.js",
-    "/sw.js",
-    "/utils.js",
-    "/css/button.css",
-    "/css/calendar.css",
-    "/css/create-event.css",
-    "/css/global.css",
-    "/css/header.css",
-    "/css/icons.css",
-    "/css/index.css",
-    "/css/input.css",
-    "/css/modal.css",
-    "/css/page.css",
-    "/css/select.css",
-    "/fonts/icomoon.eot",
-    "/fonts/icomoon.svg",
-    "/fonts/icomoon.ttf",
-    "/fonts/icomoon.woff",
-    "/icons/Icon-calendar.svg",
-    "/icons/Icon=check-square.svg",
-    "/icons/Icon=check.svg",
-    "/icons/Icon=chevron-down.svg",
-    "/icons/Icon=chevron-left.svg",
-    "/icons/Icon=chevron-right.svg",
-    "/icons/Icon=chevron-up.svg",
-    "/icons/Icon=clock.svg",
-    "/icons/Icon=gps.svg",
-    "/icons/Icon=hamburguer-button.svg",
-    "/icons/Icon=help-circle.svg",
-    "/icons/Icon=plus.svg",
-    "/icons/Icon=search.svg",
-    "/icons/Icon=settings.svg",
-    "/icons/Icon=text.svg",
-    "/icons/Icon=users.svg",
-    "/icons/Icon=video.svg",
-    "/fonts/icomoon.woff?aa7569",
-    "/fonts/icomoon.ttf?aa7569",
-    "/images/calendar.svg",
-];
+const CACHE_NAME = "calendar";
 
 class CacheUtils {
     static INSTANCE = new CacheUtils();
@@ -75,11 +21,13 @@ class CacheUtils {
     }
     async snapshot() {
         let cache = await caches.open(CACHE_NAME);
-        let backup = new Map();
-        for (const url of CACHED_URLS) {
-            backup.set(url, await cache.match(new Request(url)));
+        let snapshot = new Map();
+        const requests = await cache.keys();
+        for (const request of requests) {
+            const response = await cache.match(request);
+            snapshot.set(request, response);
         }
-        return backup;
+        return snapshot;
     }
 }
 
@@ -134,21 +82,24 @@ class App {
     static getInstance() {
         return this.INSTANCE;
     }
-    async update() {
+    async update(onSuccess = () => {}, onError = console.error) {
         const cacheUtils = CacheUtils.getInstance();
-        const BACKUP = await cacheUtils.snapshot();
+        const snapshot = await cacheUtils.snapshot();
         await cacheUtils.clear();
         try {
+            const cacheUrls = await apis.app.cache_urls();
             let cache = await caches.open(CACHE_NAME);
-            await cache.addAll(CACHED_URLS.map((url) => new Request(url, { cache: "reload" })));
-        } catch (err) {
-            console.error(err);
-            let cache = await caches.open(CACHE_NAME);
-            for (const url of CACHED_URLS) {
-                const req = new Request(url);
-                const resp = BACKUP.get(url);
-                cache.put(req, resp);
+            for (const url of cacheUrls) {
+                const request = new Request(url, { cache: "reload" });
+                cache.add(request);
             }
+            onSuccess();
+        } catch (err) {
+            let cache = await caches.open(CACHE_NAME);
+            snapshot.forEach((response, request) => {
+                cache.put(request, response);
+            });
+            onError(err);
         }
     }
     install(onSuccess = (e) => {}, onError = (e) => {}) {
@@ -246,6 +197,10 @@ export const apis = {
         install: App.getInstance().install,
         update: App.getInstance().update,
         uninstall: App.getInstance().uninstall,
+        cache_urls: async function () {
+            let url = "/caches.json";
+            return fetch(url).then((resp) => resp.json());
+        },
     },
     notification: {
         request: NotifyUtils.getInstance().requestPermission,

@@ -62,7 +62,14 @@ const handleInstall = () => {
 };
 
 const handlerUpdateApp = () => {
-    apis.app.update();
+    const onSuccess = () => {
+        alert("update success");
+        location.reload();
+    };
+    const onError = (err) => {
+        alert("update error " + err.message);
+    };
+    apis.app.update(onSuccess, onError);
 };
 
 const handleUninstall = () => {
