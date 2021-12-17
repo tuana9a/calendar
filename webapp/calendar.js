@@ -64,6 +64,24 @@ function appendEvent(dayElement, myEvent) {
     };
     eventElement.appendChild(eventDisplayName);
     dayElement.appendChild(eventElement);
+
+    // if event dismiss then no need to notify
+    if (myEvent.dismiss) return;
+
+    let now = new Date();
+    let startDate = new Date(myEvent.startTime);
+    if (now < startDate.getTime() - 900000) return;
+
+    // 15min before event;
+    apis.notification.send(myEvent.title, {
+        body: myEvent.description,
+        icon: "/images/calendar.png",
+        silent: true,
+    });
+
+    // After notify then no auto dimiss
+    myEvent.dismiss = true;
+    apis.event.update(myEvent);
 }
 
 const miniOpts = {
@@ -192,33 +210,6 @@ async function main() {
         let elementIndex = startDate.getDate() - 1; //seriously don't ask;
         let dayElement = dayElements.item(elementIndex);
         appendEvent(dayElement, myEvent);
-
-        // if event dismiss then no need to notify
-        if (myEvent.dismiss) return;
-
-        let now = new Date();
-        if (now < startDate.getTime() - 900000) return;
-
-        // 15min before event;
-        apis.notification.send(myEvent.title, {
-            body: myEvent.description,
-            actions: [
-                {
-                    action: "ok",
-                    title: "ok",
-                },
-                {
-                    action: "dismiss",
-                    title: "dismiss",
-                },
-            ],
-            icon: "/images/calendar.png",
-            silent: true,
-        });
-
-        // After notify then no auto dimiss
-        myEvent.dismiss = true;
-        apis.event.update(myEvent);
     });
 }
 
