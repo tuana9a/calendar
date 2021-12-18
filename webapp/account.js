@@ -22,7 +22,6 @@ const handleUpdateAccount = async () => {
             const response = await apis.user.update({ username: username, password: psw });
             if (response.code == 1) {
                 alert("update success");
-                window.location.href = "/login.html";
             } else {
                 alert(response.message);
             }
@@ -38,7 +37,6 @@ const handleDeleteAccount = async () => {
         const response = await apis.user.delete();
         if (response.code == 1) {
             alert("delete success");
-            window.location.href = "/login.html";
         } else {
             alert(response.message);
         }
@@ -48,7 +46,6 @@ const handleDeleteAccount = async () => {
 const handleLogout = () => {
     apis.user.logout();
     alert("logout success");
-    window.location.href = "/login.html";
 };
 
 const handleInstall = () => {
@@ -64,7 +61,6 @@ const handleInstall = () => {
 const handlerUpdateApp = () => {
     const onSuccess = () => {
         alert("update success");
-        location.reload();
     };
     const onError = (err) => {
         alert("update error " + err.message);

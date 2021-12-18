@@ -14,7 +14,6 @@ const handleSignIn = async () => {
         const response = await apis.user.login({ username: username, password: psw });
         if (response.code == 1) {
             alert("login success");
-            window.location.href = "/calendar.html";
         } else {
             alert(response.message);
         }

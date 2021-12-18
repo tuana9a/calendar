@@ -177,7 +177,6 @@ async function main() {
                 document.getElementById("user-icon").src = iconSrc;
             } else {
                 alert("not login yet");
-                window.location.href = "/login.html";
             }
         })
         .catch();

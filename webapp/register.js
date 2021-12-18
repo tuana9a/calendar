@@ -16,7 +16,6 @@ const handleRegiter = async () => {
         const response = await apis.user.register({ username: username, password: psw });
         if (response.code == 1) {
             alert("register success");
-            window.location.href = "/login.html";
         } else {
             alert(response.message);
         }
