@@ -4,7 +4,7 @@
     position: absolute;
     padding-inline: 1.5rem;
     padding-block: 1.5rem;
-    max-inline-size: 28rem;
+    max-inline-size: 30rem;
     inline-size: 100%;
     border-radius: 0.25rem;
     border: none;
@@ -25,3 +25,7 @@
     justify-content: flex-end;
     gap: 1rem;
 }
+
+textarea {
+    resize: none;
+  }

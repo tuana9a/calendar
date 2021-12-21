@@ -198,13 +198,6 @@
                     </div>
                 </div>
     
-                <!-- <div class="input">
-                    <i class="icon-text"></i>
-                    <div class="input-body">
-                        <input type="file" multiple>
-                    </div>
-                </div> -->
-    
                 <div class="input">
                     <i class="icon-text"></i>
                     <div class="input-body">
@@ -215,6 +208,43 @@
             <div class="modal-actions">
                 <button class="button is-secondary" id="close-modal">Cancel</button>
                 <button class="button is-primary" id="add-modal">Add</button>
+            </div>
+        </dialog>
+
+        <dialog class="modal" id="modalDetails">
+            <form class="createEvent">
+                <div class="input its-outstanding">
+                    <div class="input-body">
+                        <input type="text" id="title-detail" placeholder="Name" required>
+                    </div>
+                </div>
+    
+                <div class="input">
+                    <!-- <i class="icon-clock"></i> -->
+                    <div class="input-body">
+                        <input type="datetime-local" id="time-start-detail" required>
+                        <input type="datetime-local" id="time-end-detail" required>
+                    </div>
+                </div>
+    
+                <div class="input">
+                    <i class="icon-gps"></i>
+                    <div class="input-body">
+                        <input type="text" placeholder="Location" id="location-detail">
+                    </div>
+                </div>
+    
+                <div class="input">
+                    <i class="icon-text"></i>
+                    <div class="input-body">
+                        <textarea id="description-detail" placeholder="Description" cols="40" rows="3"></textarea>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button class="button is-secondary" id="close-details">Cancel</button>
+                <button class="button is-primary" id="update-details">Update</button>
+                <button class="button is-primary" id="delete-details">Delete</button>
             </div>
         </dialog>
     </body>
