@@ -49,6 +49,10 @@
 
 }
 
+.day .event {
+    background-color: #234056c5;
+}
+
 /* custom existing */
 #miniCalendar {
     margin: 7px;

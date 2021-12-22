@@ -54,8 +54,9 @@ class NotifyUtils {
         if (Notification.permission != "granted") return;
         if (!isServiceWorkderAvailable) return;
 
-        const sw = await navigator.serviceWorker.getRegistration();
-        sw.showNotification(title, opts);
+        const serviceWorker = await navigator.serviceWorker.getRegistration();
+        if (!serviceWorker) return;
+        serviceWorker.showNotification(title, opts);
     }
 }
 

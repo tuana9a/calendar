@@ -63,28 +63,31 @@ function updateMainCalendar() {
     calendarize().write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
 }
 
+function createEventOnClickHandler(eventElement) {
+    function handler() {
+        selectingElement = eventElement;
+        modalTitleDetail.value = eventElement.getAttribute("data-title");
+        modalStartTimeDetail.value = dateUtils().fullDetailDate(eventElement.getAttribute("data-startTime"));
+        modalEndTimeDetail.value = dateUtils().fullDetailDate(eventElement.getAttribute("data-endTime"));
+        modalDescriptionDetail.value = eventElement.getAttribute("data-description");
+        modalLocationDetail.value = eventElement.getAttribute("data-location");
+        modalDetails.showModal();
+    }
+    return handler;
+}
+
 function appendEvent(dayElement, myEvent) {
     // add new div contains title
     let eventElement = document.createElement("div");
-    eventElement.setAttribute("_id", myEvent._id);
-    eventElement.setAttribute("title", myEvent.title);
-    eventElement.setAttribute("description", myEvent.description);
-    eventElement.setAttribute("startTime", myEvent.startTime);
-    eventElement.setAttribute("endTime", myEvent.endTime);
-    eventElement.setAttribute("location", myEvent.location);
+    eventElement.classList.add("event");
+    eventElement.setAttribute("data-eventId", myEvent._id);
+    eventElement.setAttribute("data-title", myEvent.title);
+    eventElement.setAttribute("data-description", myEvent.description);
+    eventElement.setAttribute("data-startTime", myEvent.startTime);
+    eventElement.setAttribute("data-endTime", myEvent.endTime);
+    eventElement.setAttribute("data-location", myEvent.location);
     eventElement.innerText = myEvent.title;
-    eventElement.onclick = (e) => {
-        selectingElement = eventElement;
-        let startTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("startTime"));
-        let endTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("endTime"));
-
-        modalTitleDetail.value = eventElement.getAttribute("title");
-        modalStartTimeDetail.value = startTimeDetail;
-        modalEndTimeDetail.value = endTimeDetail;
-        modalDescriptionDetail.value = eventElement.getAttribute("description");
-        modalLocationDetail.value = eventElement.getAttribute("location");
-        modalDetails.showModal();
-    };
+    eventElement.onclick = createEventOnClickHandler(eventElement);
     dayElement.appendChild(eventElement);
 
     // if event dismiss then no need to notify
@@ -132,21 +135,29 @@ async function updateAll() {
 }
 
 async function fetchUserInfo() {
-    return apis.user
-        .info()
-        .then((resp) => {
-            if (resp.code == 1) {
-                let user = resp.data;
-                let username = user.username;
-                let iconTypes = ["adventurer-neutral", "big-ears-neutral", "initials"];
-                let index = Math.floor(Math.random() * iconTypes.length);
-                let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
-                document.getElementById("user-icon").src = iconSrc;
-            } else {
-                alert("not login yet");
-            }
-        })
-        .catch();
+    try {
+        let response = await apis.user.info();
+        if (response.code != 1) {
+            alert("not login yet");
+            return;
+        }
+        let user = response.data;
+        let username = user.username;
+        let iconTypes = [
+            "adventurer-neutral",
+            "big-ears-neutral",
+            "initials",
+            "jdenticon",
+            "miniavs",
+            "pixel-art-neutral",
+        ];
+        let index = Math.floor(Math.random() * iconTypes.length);
+        let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
+        document.getElementById("user-icon").src = iconSrc;
+    } catch (err) {
+        // ignore
+        // maybe server down or network error
+    }
 }
 
 const miniOpts = {
@@ -203,7 +214,7 @@ async function main() {
 
     updateDetailsButton.onclick = async () => {
         let updateDetails = {
-            _id: selectingElement.getAttribute("_id"),
+            _id: selectingElement.getAttribute("data-eventId"),
             title: modalTitleDetail.value,
             startTime: new Date(modalStartTimeDetail.value).getTime(),
             endTime: new Date(modalEndTimeDetail.value).getTime(),
@@ -220,17 +231,17 @@ async function main() {
             alert("update failed");
             return;
         }
-        selectingElement.setAttribute("_id", updateDetails._id);
-        selectingElement.setAttribute("title", updateDetails.title);
-        selectingElement.setAttribute("description", updateDetails.description);
-        selectingElement.setAttribute("startTime", updateDetails.startTime);
-        selectingElement.setAttribute("endTime", updateDetails.endTime);
-        selectingElement.setAttribute("location", updateDetails.location);
+        selectingElement.setAttribute("data-eventId", updateDetails._id);
+        selectingElement.setAttribute("data-title", updateDetails.title);
+        selectingElement.setAttribute("data-description", updateDetails.description);
+        selectingElement.setAttribute("data-startTime", updateDetails.startTime);
+        selectingElement.setAttribute("data-endTime", updateDetails.endTime);
+        selectingElement.setAttribute("data-location", updateDetails.location);
         selectingElement.innerText = updateDetails.title;
     };
 
     deleteDetailsButton.onclick = async () => {
-        let eventId = selectingElement.getAttribute("_id");
+        let eventId = selectingElement.getAttribute("data-eventId");
         let response = await apis.event.delete({ _id: eventId });
         if (response.code != 1) {
             alert("deleted failed");
