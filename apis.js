@@ -116,6 +116,7 @@ async function updateEvent(req, resp) {
 }
 
 async function deleteEvent(req, resp) {
+    let token = req.cookies.access_token;
     let eventId = req.query.eventId;
     let user = await userController().checkToken(token);
     let username = user.username;

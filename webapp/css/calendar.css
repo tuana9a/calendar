@@ -34,7 +34,6 @@
     opacity: 0.5;
 }
 .day.month {
-    /* TODO */
     background-color: #535353;
 }
 .day.hide {
@@ -44,10 +43,10 @@
     background-color: #4067e7;
 }
 .day.future {
-    /* TODO */
+
 }
 .day.past {
-    /* TODO */
+
 }
 
 /* custom existing */

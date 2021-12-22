@@ -186,7 +186,6 @@ export const apis = {
             }).then((resp) => resp.json());
         },
         delete: async function ({ _id }) {
-            //TODO
             let url = "/api/event?eventId=" + _id;
             return fetch(url, {
                 method: "DELETE",

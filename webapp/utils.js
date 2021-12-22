@@ -181,7 +181,7 @@ export class DateUtils {
         let days = hours / 24.0;
         return Math.round(days) + "d ago";
     }
-    //CAUTION: nếu lệch mất một tuần thì vào đây mà sửa
+    // nếu lệch mất một tuần thì vào đây mà sửa
     weeksFromStartDay(dash = "", firstWeekDay = "") {
         let date1 = this.stringToDateVn(dash);
         let date2 = this.stringToDateVn(firstWeekDay);

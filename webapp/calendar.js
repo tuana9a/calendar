@@ -71,8 +71,6 @@ function appendEvent(dayElement, myEvent) {
     eventElement.setAttribute("location", myEvent.location);
     eventElement.innerText = myEvent.title;
     eventElement.onclick = (e) => {
-        // TODO: show details event
-        // include update, delete
         selectingDateElement = eventElement;
         let startTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("startTime"));
         let endTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("endTime"));
@@ -140,8 +138,6 @@ async function main() {
         let endTime = new Date(modalEndTime.value).getTime();
         let location = modalLocation.value;
 
-        //TODO: chuẩn hóa convert cả date và startTime, endTime về milise
-        // để add phía database và frontend đều p theo chuẩn chung này
         let myEvent = {
             title: title,
             startTime: startTime,
@@ -188,11 +184,8 @@ async function main() {
     };
 
     deleteDetailsButton.onclick = async () => {
-        //TODO Minh Tuấn
-        // nhờ ông gửi request update details đến server
-        //......................
-        // server response thành công thì set biến idGlobal = null
-        let response = await apis.event.delete({ _id: selectingDateElement.getAttribute("_id") });
+        let eventId = selectingDateElement.getAttribute("_id");
+        let response = await apis.event.delete({ _id: eventId });
         if (response.code != 1) {
             alert("deleted failed");
             return;
