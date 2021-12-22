@@ -22,7 +22,10 @@ const currentMonthButton = document.getElementById("returnCurrentMonth");
 const backwardMonthButton = document.getElementById("backwardMonth");
 const forwardMonthButton = document.getElementById("forwardMonth");
 
-var selectingDateElement; // dayElement đang được click để tạo sự kiện
+// dayElement đang được click để tạo sự kiện
+// eventElement đang được chọn để cập nhật hoặc xoá
+var selectingElement;
+
 const modalElement = document.getElementById("modalEvent");
 const closeModalButton = document.getElementById("close-modal");
 const addModalButton = document.getElementById("add-modal");
@@ -71,7 +74,7 @@ function appendEvent(dayElement, myEvent) {
     eventElement.setAttribute("location", myEvent.location);
     eventElement.innerText = myEvent.title;
     eventElement.onclick = (e) => {
-        selectingDateElement = eventElement;
+        selectingElement = eventElement;
         let startTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("startTime"));
         let endTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("endTime"));
 
@@ -103,6 +106,49 @@ function appendEvent(dayElement, myEvent) {
     apis.event.update(myEvent);
 }
 
+async function updateEvents() {
+    let startTime = new Date(changeYear, changeMonth).getTime();
+    let endTime = new Date(changeYear, changeMonth + 1).getTime();
+    let events = [];
+    let response = await apis.event.find({ startTime: { $gt: startTime, $lt: endTime } }).catch();
+    if (response.code == 1) {
+        events = response.data;
+    }
+    let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
+    let dayElements = mainCalendarElement.querySelectorAll(selector);
+    events.forEach((myEvent) => {
+        let startDate = new Date(myEvent.startTime);
+        let elementIndex = startDate.getDate() - 1; //seriously don't ask;
+        let dayElement = dayElements.item(elementIndex);
+        appendEvent(dayElement, myEvent);
+    });
+    return events;
+}
+
+async function updateAll() {
+    updateMainCalendar();
+    updateMiniCalendar();
+    updateEvents();
+}
+
+async function fetchUserInfo() {
+    return apis.user
+        .info()
+        .then((resp) => {
+            if (resp.code == 1) {
+                let user = resp.data;
+                let username = user.username;
+                let iconTypes = ["adventurer-neutral", "big-ears-neutral", "initials"];
+                let index = Math.floor(Math.random() * iconTypes.length);
+                let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
+                document.getElementById("user-icon").src = iconSrc;
+            } else {
+                alert("not login yet");
+            }
+        })
+        .catch();
+}
+
 const miniOpts = {
     showYearOnTitle: true,
     fullOrShort: "short",
@@ -113,8 +159,8 @@ const mainOpts = {
     fullOrShort: "full",
     skipClickHandler: false,
     dbClickHandler: function (e) {
-        selectingDateElement = e.target;
-        let date = new Date(parseInt(selectingDateElement.getAttribute("data-date")));
+        selectingElement = e.target;
+        let date = new Date(parseInt(selectingElement.getAttribute("data-date")));
         let now = new Date();
         date.setHours(now.getHours());
         date.setMinutes(now.getMinutes());
@@ -149,7 +195,7 @@ async function main() {
         let response = await apis.event.add(myEvent);
         if (response.code == 1) {
             myEvent._id = response.data.eventId;
-            appendEvent(selectingDateElement, myEvent);
+            appendEvent(selectingElement, myEvent);
         }
     };
 
@@ -157,7 +203,7 @@ async function main() {
 
     updateDetailsButton.onclick = async () => {
         let updateDetails = {
-            _id: selectingDateElement.getAttribute("_id"),
+            _id: selectingElement.getAttribute("_id"),
             title: modalTitleDetail.value,
             startTime: new Date(modalStartTimeDetail.value).getTime(),
             endTime: new Date(modalEndTimeDetail.value).getTime(),
@@ -174,17 +220,17 @@ async function main() {
             alert("update failed");
             return;
         }
-        selectingDateElement.setAttribute("_id", updateDetails._id);
-        selectingDateElement.setAttribute("title", updateDetails.title);
-        selectingDateElement.setAttribute("description", updateDetails.description);
-        selectingDateElement.setAttribute("startTime", updateDetails.startTime);
-        selectingDateElement.setAttribute("endTime", updateDetails.endTime);
-        selectingDateElement.setAttribute("location", updateDetails.location);
-        selectingDateElement.innerText = updateDetails.title;
+        selectingElement.setAttribute("_id", updateDetails._id);
+        selectingElement.setAttribute("title", updateDetails.title);
+        selectingElement.setAttribute("description", updateDetails.description);
+        selectingElement.setAttribute("startTime", updateDetails.startTime);
+        selectingElement.setAttribute("endTime", updateDetails.endTime);
+        selectingElement.setAttribute("location", updateDetails.location);
+        selectingElement.innerText = updateDetails.title;
     };
 
     deleteDetailsButton.onclick = async () => {
-        let eventId = selectingDateElement.getAttribute("_id");
+        let eventId = selectingElement.getAttribute("_id");
         let response = await apis.event.delete({ _id: eventId });
         if (response.code != 1) {
             alert("deleted failed");
@@ -194,7 +240,7 @@ async function main() {
             alert("deleted failed");
             return;
         }
-        selectingDateElement.remove();
+        selectingElement.remove();
     };
 
     closeDetailsButton.onclick = () => modalDetails.close();
@@ -202,8 +248,7 @@ async function main() {
     currentMonthButton.onclick = () => {
         changeMonth = currentMonth;
         changeYear = currentYear;
-        updateMainCalendar();
-        updateMiniCalendar();
+        updateAll();
     };
 
     backwardMonthButton.onclick = () => {
@@ -212,8 +257,7 @@ async function main() {
             changeMonth = 11;
             changeYear -= 1;
         }
-        updateMainCalendar();
-        updateMiniCalendar();
+        updateAll();
     };
 
     forwardMonthButton.onclick = () => {
@@ -222,55 +266,15 @@ async function main() {
             changeMonth = 0;
             changeYear += 1;
         }
-        updateMainCalendar();
-        updateMiniCalendar();
+        updateAll();
     };
 
-    apis.user
-        .info()
-        .then((resp) => {
-            if (resp.code == 1) {
-                let user = resp.data;
-                let username = user.username;
-                let iconTypes = ["adventurer-neutral", "big-ears-neutral", "initials"];
-                let index = Math.floor(Math.random() * iconTypes.length);
-                let iconSrc = `https://avatars.dicebear.com/api/${iconTypes[index]}/${username}.svg`;
-                document.getElementById("user-icon").src = iconSrc;
-            } else {
-                alert("not login yet");
-            }
-        })
-        .catch();
-
-    let date = new Date();
-    date.setDate(1);
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    let rangeStart = date.getTime();
-    date.setMonth(date.getMonth() + 1);
-    let rangeEnd = date.getTime();
+    fetchUserInfo();
 
     await apis.notification.request();
-    let events = JSON.parse(localStorage.getItem("events")) || [];
-    try {
-        let resp = await apis.event.find({ startTime: { $gt: rangeStart, $lt: rangeEnd } });
-        if (resp.code == 1) {
-            events = resp.data;
-        }
-    } catch (err) {
-        // ignored
-    }
+    let events = await updateEvents();
+    events = events || JSON.parse(localStorage.getItem("events")) || [];
     localStorage.setItem("events", JSON.stringify(events));
-
-    let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
-    let dayElements = mainCalendarElement.querySelectorAll(selector);
-    events.forEach((myEvent) => {
-        let startDate = new Date(myEvent.startTime);
-        let elementIndex = startDate.getDate() - 1; //seriously don't ask;
-        let dayElement = dayElements.item(elementIndex);
-        appendEvent(dayElement, myEvent);
-    });
 }
 
 main();
