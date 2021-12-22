@@ -143,6 +143,20 @@ export class DateUtils {
         s = s < 10 ? "0" + s : s;
         return y + "-" + m + "-" + d + "T" + h + ":" + M + ":" + s;
     }
+    fullDetailDate(input) {
+        let y = new Date(parseInt(input)).getFullYear();
+        let m = new Date(parseInt(input)).getMonth() + 1; //EXPLAIN: range: 0-11
+        let d = new Date(parseInt(input)).getDate();
+        let h = new Date(parseInt(input)).getHours();   
+        let M = new Date(parseInt(input)).getMinutes();
+        let s = new Date(parseInt(input)).getSeconds();
+        m = m < 10 ? "0" + m : m;
+        d = d < 10 ? "0" + d : d;
+        h = h < 10 ? "0" + h : h;
+        M = M < 10 ? "0" + M : M;
+        s = s < 10 ? "0" + s : s;
+        return y + "-" + m + "-" + d + "T" + h + ":" + M + ":" + s;
+    }
     toDayWeekVn(input = 0) {
         switch (input) {
             case 0:

@@ -27,11 +27,25 @@ const modalElement = document.getElementById("modalEvent");
 const closeModalButton = document.getElementById("close-modal");
 const addModalButton = document.getElementById("add-modal");
 
+const modalDetails = document.getElementById("modalDetails");
+const closeDetailsButton = document.getElementById("close-details");
+const updateDetailsButton = document.getElementById("update-details");
+const deleteDetailsButton = document.getElementById("delete-details");
+
+const modalTitleDetail = document.getElementById("title-detail");
+const modalStartTimeDetail = document.getElementById("time-start-detail");
+const modalEndTimeDetail = document.getElementById("time-end-detail");
+const modalLocationDetail = document.getElementById("location-detail");
+const modalDescriptionDetail = document.getElementById("description-detail");
+
+
 const modalTitle = document.getElementById("title");
 const modalStartTime = document.getElementById("time-start");
 const modalEndTime = document.getElementById("time-end");
 const modalLocation = document.getElementById("location");
 const modalDescription = document.getElementById("description");
+
+var selectingDateId = null; //Lưu trữ giá trị id của sự kiện cần xóa
 
 function calendarize() {
     return Calendarize.getInstance();
@@ -57,10 +71,24 @@ function appendEvent(dayElement, myEvent) {
     eventElement.setAttribute("_id", myEvent._id);
     eventElement.setAttribute("startTime", myEvent.startTime);
     eventElement.setAttribute("endTime", myEvent.endTime);
+    eventElement.setAttribute("location", myEvent.location);
     let eventDisplayName = document.createTextNode(myEvent.title);
     eventElement.onclick = (e) => {
         // TODO: show details event
         // include update, delete
+        console.log(e.target.getAttribute("startTime"));
+        let startTimeDetail = dateUtils().fullDetailDate(e.target.getAttribute("startTime"));
+        let endTimeDetail = dateUtils().fullDetailDate(e.target.getAttribute("endTime"));
+
+        selectingDateId = myEvent._id; // Lưu id vào biến selectingDateId
+
+        modalTitleDetail.value = e.target.getAttribute("title");
+        modalStartTimeDetail.value = startTimeDetail;
+        modalEndTimeDetail.value = endTimeDetail;
+        modalDescriptionDetail.value = e.target.getAttribute("description");
+        modalLocationDetail.value = e.target.getAttribute("location");
+        modalDetails.showModal();   
+        
     };
     eventElement.appendChild(eventDisplayName);
     dayElement.appendChild(eventElement);
@@ -137,6 +165,30 @@ async function main() {
     };
 
     closeModalButton.onclick = () => modalElement.close();
+
+    updateDetailsButton.onclick = async () => {
+        //TODO Minh Tuấn
+        // nhờ ông gửi request update details đến server
+        let updateDetails = {
+            title: modalTitleDetail.value,
+            startTime: new Date(modalStartTimeDetail.value).getTime(),
+            endTime: new Date(modalEndTimeDetail.value).getTime(),
+            description: modalDescriptionDetail.value,
+            location: modalLocationDetail.value,
+            dismiss: false,
+        };
+        console.log("object", updateDetails);
+    };
+
+    deleteDetailsButton.onclick = async () => {
+        document.querySelectorAll(`[_id="${selectingDateId}"]`).forEach(e => e.remove());
+        //TODO Minh Tuấn
+        // nhờ ông gửi request update details đến server
+        //......................
+        // server response thành công thì set biến idGlobal = null
+    };
+
+    closeDetailsButton.onclick = () => modalDetails.close();
 
     returnCurrentMonthButton.onclick = () => {
         changeMonth = currentMonth;
