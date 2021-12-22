@@ -96,7 +96,7 @@ class EventController {
     async update(userEvent = new UserEvent()) {
         let eventId = new mongodb.ObjectId(userEvent._id);
         let username = userEvent.username;
-        let updatedUser = await this.collection().updateOne(
+        let updateResult = await this.collection().updateOne(
             { _id: eventId, username: username },
             {
                 $set: {
@@ -110,7 +110,7 @@ class EventController {
                 },
             },
         );
-        return { userId: updatedUser.upsertedId };
+        return { count: updateResult.matchedCount };
     }
     async delete(userEvent = new UserEvent()) {
         let eventId = new mongodb.ObjectId(userEvent._id);

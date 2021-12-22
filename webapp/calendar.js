@@ -18,7 +18,7 @@ changeYear = currentYear;
 
 const miniCalendarElement = document.getElementById("miniCalendar");
 const mainCalendarElement = document.getElementById("mainCalendar");
-const returnCurrentMonthButton = document.getElementById("returnCurrentMonth");
+const currentMonthButton = document.getElementById("returnCurrentMonth");
 const backwardMonthButton = document.getElementById("backwardMonth");
 const forwardMonthButton = document.getElementById("forwardMonth");
 
@@ -38,14 +38,11 @@ const modalEndTimeDetail = document.getElementById("time-end-detail");
 const modalLocationDetail = document.getElementById("location-detail");
 const modalDescriptionDetail = document.getElementById("description-detail");
 
-
 const modalTitle = document.getElementById("title");
 const modalStartTime = document.getElementById("time-start");
 const modalEndTime = document.getElementById("time-end");
 const modalLocation = document.getElementById("location");
 const modalDescription = document.getElementById("description");
-
-var selectingDateId = null; //Lưu trữ giá trị id của sự kiện cần xóa
 
 function calendarize() {
     return Calendarize.getInstance();
@@ -66,31 +63,27 @@ function updateMainCalendar() {
 function appendEvent(dayElement, myEvent) {
     // add new div contains title
     let eventElement = document.createElement("div");
+    eventElement.setAttribute("_id", myEvent._id);
     eventElement.setAttribute("title", myEvent.title);
     eventElement.setAttribute("description", myEvent.description);
-    eventElement.setAttribute("_id", myEvent._id);
     eventElement.setAttribute("startTime", myEvent.startTime);
     eventElement.setAttribute("endTime", myEvent.endTime);
     eventElement.setAttribute("location", myEvent.location);
-    let eventDisplayName = document.createTextNode(myEvent.title);
+    eventElement.innerText = myEvent.title;
     eventElement.onclick = (e) => {
         // TODO: show details event
         // include update, delete
-        console.log(e.target.getAttribute("startTime"));
-        let startTimeDetail = dateUtils().fullDetailDate(e.target.getAttribute("startTime"));
-        let endTimeDetail = dateUtils().fullDetailDate(e.target.getAttribute("endTime"));
+        selectingDateElement = eventElement;
+        let startTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("startTime"));
+        let endTimeDetail = dateUtils().fullDetailDate(eventElement.getAttribute("endTime"));
 
-        selectingDateId = myEvent._id; // Lưu id vào biến selectingDateId
-
-        modalTitleDetail.value = e.target.getAttribute("title");
+        modalTitleDetail.value = eventElement.getAttribute("title");
         modalStartTimeDetail.value = startTimeDetail;
         modalEndTimeDetail.value = endTimeDetail;
-        modalDescriptionDetail.value = e.target.getAttribute("description");
-        modalLocationDetail.value = e.target.getAttribute("location");
-        modalDetails.showModal();   
-        
+        modalDescriptionDetail.value = eventElement.getAttribute("description");
+        modalLocationDetail.value = eventElement.getAttribute("location");
+        modalDetails.showModal();
     };
-    eventElement.appendChild(eventDisplayName);
     dayElement.appendChild(eventElement);
 
     // if event dismiss then no need to notify
@@ -167,9 +160,8 @@ async function main() {
     closeModalButton.onclick = () => modalElement.close();
 
     updateDetailsButton.onclick = async () => {
-        //TODO Minh Tuấn
-        // nhờ ông gửi request update details đến server
         let updateDetails = {
+            _id: selectingDateElement.getAttribute("_id"),
             title: modalTitleDetail.value,
             startTime: new Date(modalStartTimeDetail.value).getTime(),
             endTime: new Date(modalEndTimeDetail.value).getTime(),
@@ -177,20 +169,44 @@ async function main() {
             location: modalLocationDetail.value,
             dismiss: false,
         };
-        console.log("object", updateDetails);
+        let response = await apis.event.update(updateDetails);
+        if (response.code != 1) {
+            alert("update failed");
+            return;
+        }
+        if (response.data.count == 0) {
+            alert("update failed");
+            return;
+        }
+        selectingDateElement.setAttribute("_id", updateDetails._id);
+        selectingDateElement.setAttribute("title", updateDetails.title);
+        selectingDateElement.setAttribute("description", updateDetails.description);
+        selectingDateElement.setAttribute("startTime", updateDetails.startTime);
+        selectingDateElement.setAttribute("endTime", updateDetails.endTime);
+        selectingDateElement.setAttribute("location", updateDetails.location);
+        selectingDateElement.innerText = updateDetails.title;
     };
 
     deleteDetailsButton.onclick = async () => {
-        document.querySelectorAll(`[_id="${selectingDateId}"]`).forEach(e => e.remove());
         //TODO Minh Tuấn
         // nhờ ông gửi request update details đến server
         //......................
         // server response thành công thì set biến idGlobal = null
+        let response = await apis.event.delete({ _id: selectingDateElement.getAttribute("_id") });
+        if (response.code != 1) {
+            alert("deleted failed");
+            return;
+        }
+        if (response.data.count != 1) {
+            alert("deleted failed");
+            return;
+        }
+        selectingDateElement.remove();
     };
 
     closeDetailsButton.onclick = () => modalDetails.close();
 
-    returnCurrentMonthButton.onclick = () => {
+    currentMonthButton.onclick = () => {
         changeMonth = currentMonth;
         changeYear = currentYear;
         updateMainCalendar();
