@@ -1,6 +1,3 @@
-# tuana9a
-resource/
-
 # Logs
 logs/
 *.log
@@ -105,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# custom tuana9a
+resource/
+.vscode/
