@@ -54,6 +54,7 @@ class UserController {
         let user = await this.collection().findOne({ username: username });
         if (!user) throw new ValidationError("user not exist");
         let deleted = await this.collection().deleteOne({ username: username });
+        EventController.getInstance().collection().deleteMany({ username: username });
         return deleted.deletedCount;
     }
     async findById(id) {
