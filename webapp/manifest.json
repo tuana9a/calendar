@@ -1,0 +1,31 @@
+{
+    "name": "Calendar",
+    "short_name": "Calendar",
+    "description": "A project from Nhom 23 of HUST to make simple PWA",
+    "icons": [
+        {
+            "src": "images/calendar-32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "images/calendar-64.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        },
+        {
+            "src": "images/calendar-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/calendar-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#B12A34",
+    "background_color": "#B12A34"
+}

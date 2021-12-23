@@ -1,251 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Calendar</title>
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap" rel="stylesheet" />
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./images/calendar-32.png" type="image/x-icon">
+    <link rel="manifest" href="./manifest.json">
+    <title>Calendar</title>
 
-        <link rel="stylesheet" href="./css/index.css" />
-        <link rel="stylesheet" href="./common.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap" rel="stylesheet" />
 
-        <script defer type="module" src="./calendar.js"></script>
-    </head>
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./common.css" />
 
-    <body>
-        <div class="page">
-            <header class="header">
-                <div class="header-left"></div>
-                <div class="header-mid">
-                    <div class="header-logo">
-                        <img  class="logo" src="./images/calendar.svg" />
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="account">
-                        <a href="./account.html">
-                            <img src="./images/calendar.svg" id="user-icon">
-                        </a>
-                    </div>
-                </div>
-            </header>
-            <div class="sidebar">
-                <div class="display-flex justify-content-space-evenly align-items-center margin-auto">
-                    <div>
-                        <button id="backwardMonth" class="button is-compact is-switched" aria-label="Backward Month">
-                            <i class="icon-chevronLeft" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div>
-                        <button id="returnCurrentMonth" class="button is-secondary">Today</button>
-                    </div>
-                    <div>
-                        <button id="forwardMonth" class="button is-compact is-switched" aria-label="Forward Month">
-                            <i class="icon-chevronRight" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="calendar" id="miniCalendar">
-                    <div class="calendar-date-title">&nbsp;</div>
-                    <div class="calendar-grid">
-                        <!-- split -->
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                    </div>
+    <script defer type="module" src="./calendar.js"></script>
+</head>
+
+<body>
+    <div class="page">
+        <header class="header">
+            <div class="header-left"></div>
+            <div class="header-mid">
+                <div class="header-logo">
+                    <img class="logo" src="./images/calendar.svg" />
                 </div>
             </div>
-            <main class="main">
-                <div class="calendar" id="mainCalendar">
-                    <div class="calendar-date-title">&nbsp;</div>
-                    <div class="calendar-grid">
-                        <!-- split -->
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <div class="day dow"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <!-- split -->
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                        <div class="day dummy"></div>
-                    </div>
+            <div class="header-right">
+                <div class="account">
+                    <a href="./account.html">
+                        <img src="./images/calendar.svg" id="user-icon">
+                    </a>
                 </div>
-            </main>
+            </div>
+        </header>
+        <div class="sidebar">
+            <div class="display-flex justify-content-space-evenly align-items-center margin-auto">
+                <div>
+                    <button id="backwardMonth" class="button is-compact is-switched" aria-label="Backward Month">
+                        <i class="icon-chevronLeft" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div>
+                    <button id="returnCurrentMonth" class="button is-secondary">Today</button>
+                </div>
+                <div>
+                    <button id="forwardMonth" class="button is-compact is-switched" aria-label="Forward Month">
+                        <i class="icon-chevronRight" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="calendar" id="miniCalendar">
+                <div class="calendar-date-title">&nbsp;</div>
+                <div class="calendar-grid">
+                    <!-- split -->
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                </div>
+            </div>
         </div>
-        <dialog class="modal" id="modalEvent">
-            <form class="createEvent">
-                <div class="input its-outstanding">
-                    <div class="input-body">
-                        <input type="text" id="title" placeholder="Name" required>
-                    </div>
+        <main class="main">
+            <div class="calendar" id="mainCalendar">
+                <div class="calendar-date-title">&nbsp;</div>
+                <div class="calendar-grid">
+                    <!-- split -->
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <div class="day dow"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <!-- split -->
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
+                    <div class="day dummy"></div>
                 </div>
-    
-                <div class="input">
-                    <!-- <i class="icon-clock"></i> -->
-                    <div class="input-body">
-                        <input type="datetime-local" id="time-start" required>
-                        <input type="datetime-local" id="time-end" required>
-                    </div>
-                </div>
-    
-                <div class="input">
-                    <i class="icon-gps"></i>
-                    <div class="input-body">
-                        <input type="text" placeholder="Location" id="location">
-                    </div>
-                </div>
-    
-                <div class="input">
-                    <i class="icon-text"></i>
-                    <div class="input-body">
-                        <textarea id="description" placeholder="Description" cols="40" rows="3"></textarea>
-                    </div>
-                </div>
-            </form>
-            <div class="modal-actions">
-                <button class="button is-secondary" id="close-modal">Close</button>
-                <button class="button is-primary" id="add-modal">Add</button>
             </div>
-        </dialog>
+        </main>
+    </div>
+    <dialog class="modal" id="modalEvent">
+        <form class="createEvent">
+            <div class="input its-outstanding">
+                <div class="input-body">
+                    <input type="text" id="title" placeholder="Name" required>
+                </div>
+            </div>
 
-        <dialog class="modal" id="modalDetails">
-            <form class="createEvent">
-                <div class="input its-outstanding">
-                    <div class="input-body">
-                        <input type="text" id="title-detail" placeholder="Name" required>
-                    </div>
+            <div class="input">
+                <!-- <i class="icon-clock"></i> -->
+                <div class="input-body">
+                    <input type="datetime-local" id="time-start" required>
+                    <input type="datetime-local" id="time-end" required>
                 </div>
-    
-                <div class="input">
-                    <!-- <i class="icon-clock"></i> -->
-                    <div class="input-body">
-                        <input type="datetime-local" id="time-start-detail" required>
-                        <input type="datetime-local" id="time-end-detail" required>
-                    </div>
-                </div>
-    
-                <div class="input">
-                    <i class="icon-gps"></i>
-                    <div class="input-body">
-                        <input type="text" placeholder="Location" id="location-detail">
-                    </div>
-                </div>
-    
-                <div class="input">
-                    <i class="icon-text"></i>
-                    <div class="input-body">
-                        <textarea id="description-detail" placeholder="Description" cols="40" rows="3"></textarea>
-                    </div>
-                </div>
-            </form>
-            <div class="modal-actions">
-                <button class="button is-secondary" id="close-details">Close</button>
-                <button class="button is-primary" id="update-details">Update</button>
-                <button class="button is-primary" id="delete-details">Delete</button>
             </div>
-        </dialog>
-    </body>
+
+            <div class="input">
+                <i class="icon-gps"></i>
+                <div class="input-body">
+                    <input type="text" placeholder="Location" id="location">
+                </div>
+            </div>
+
+            <div class="input">
+                <i class="icon-text"></i>
+                <div class="input-body">
+                    <textarea id="description" placeholder="Description" cols="40" rows="3"></textarea>
+                </div>
+            </div>
+        </form>
+        <div class="modal-actions">
+            <button class="button is-secondary" id="close-modal">Close</button>
+            <button class="button is-primary" id="add-modal">Add</button>
+        </div>
+    </dialog>
+
+    <dialog class="modal" id="modalDetails">
+        <form class="createEvent">
+            <div class="input its-outstanding">
+                <div class="input-body">
+                    <input type="text" id="title-detail" placeholder="Name" required>
+                </div>
+            </div>
+
+            <div class="input">
+                <!-- <i class="icon-clock"></i> -->
+                <div class="input-body">
+                    <input type="datetime-local" id="time-start-detail" required>
+                    <input type="datetime-local" id="time-end-detail" required>
+                </div>
+            </div>
+
+            <div class="input">
+                <i class="icon-gps"></i>
+                <div class="input-body">
+                    <input type="text" placeholder="Location" id="location-detail">
+                </div>
+            </div>
+
+            <div class="input">
+                <i class="icon-text"></i>
+                <div class="input-body">
+                    <textarea id="description-detail" placeholder="Description" cols="40" rows="3"></textarea>
+                </div>
+            </div>
+        </form>
+        <div class="modal-actions">
+            <button class="button is-secondary" id="close-details">Close</button>
+            <button class="button is-primary" id="update-details">Update</button>
+            <button class="button is-primary" id="delete-details">Delete</button>
+        </div>
+    </dialog>
+</body>
+
 </html>

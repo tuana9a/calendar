@@ -65,7 +65,6 @@ const handleInstall = () => {
 const handlerUpdateApp = () => {
     const onSuccess = () => {
         alert("update success");
-        apis.confirmRedirect.reload();
     };
     const onError = (err) => {
         alert("update error " + err.message);
