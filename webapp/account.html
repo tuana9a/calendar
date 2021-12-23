@@ -30,26 +30,27 @@
             display: flex;
             justify-content: space-between;
         }
+
+        a {
+            margin: 0 10px;
+        }
     </style>
     <title>Account</title>
 </head>
 
 <body>
+    <div class="container text-align-center display-flex">
+        <p><a class="dodgerblue" href="./calendar.html">Go back calendar</a></p>
+        <p><a class="dodgerblue" href="./login.html">Go to login page</a></p>
+        <p><a class="dodgerblue" href="/">Go to home page</a></p>
+    </div>
     <div class="account-top ">
-        <h1>Account Settings</h1>
-        <div class="container text-align-center display-flex">
-            <p><a class="dodgerblue" href="./calendar.html">Go back calendar</a></p>
-        </div>
+        <h1>Account</h1>
         <div class="display-flex" style="min-width: 20%;">
-            <button class="full-width-btn btn-green" id="installBtn">Install</button>
-            <button class="full-width-btn btn-green" id="updateAppBtn">Update</button>
-            <button class="full-width-btn btn-green" id="uninstallBtn">Uninstall</button>
             <button class="full-width-btn btn-red" id="logoutBtn">Logout</button>
         </div>
     </div>
     <div class="background-color-white padding-16px">
-        <hr class="register-hr-box">
-
         <label for="username"><b>Username</b></label>
         <input type="text" name="username" id="username" required readonly>
 
@@ -58,12 +59,18 @@
 
         <label for="psw-repeat"><b>Repeat Password</b></label>
         <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required readonly>
-
-        <hr>
     </div>
     <div class="display-flex justify-content-space-around">
         <button class="full-width-btn btn-green" id="updateBtn">Update</button>
         <button class="full-width-btn btn-red " id="deleteAccBtn">Delete</button>
+    </div>
+
+    <hr>
+    <h1>App Settings</h1>
+    <div class="display-flex" style="max-width: 30%;">
+        <button class="full-width-btn btn-green" id="installBtn">Install</button>
+        <button class="full-width-btn btn-green" id="updateAppBtn">Update</button>
+        <button class="full-width-btn btn-green" id="uninstallBtn">Uninstall</button>
     </div>
     <script type="module" src="./account.js"></script>
 </body>

@@ -1,5 +1,5 @@
 const { LOGGER } = require("./logger");
-const { UserValidations } = require("./validations");
+const { UserValidations, EventValidations } = require("./validations");
 const { ResponseEntity } = require("./entities");
 const { UserController, EventController } = require("./controllers");
 const { ValidationError } = require("./exceptions");
@@ -33,6 +33,10 @@ function userValidations() {
 
 function eventController() {
     return EventController.getInstance();
+}
+
+function eventvalidations() {
+    return EventValidations.getInstance();
 }
 
 function sendResponse(resp, code = 1, message = "", data = {}) {
@@ -102,6 +106,7 @@ async function addEvent(req, resp) {
     let user = await userController().checkToken(token);
     let event = req.body;
     event.username = user.username;
+    eventvalidations().checkEvent(event);
     let result = await eventController().insert(event);
     sendResponse(resp, 1, "success", result);
 }
@@ -111,6 +116,7 @@ async function updateEvent(req, resp) {
     let user = await userController().checkToken(token);
     let event = req.body;
     event.username = user.username;
+    eventvalidations().checkEvent(event);
     let result = await eventController().update(event);
     sendResponse(resp, 1, "received", result);
 }

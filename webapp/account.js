@@ -22,6 +22,7 @@ const handleUpdateAccount = async () => {
             const response = await apis.user.update({ username: username, password: psw });
             if (response.code == 1) {
                 alert("update success");
+                apis.confirmRedirect.login();
             } else {
                 alert(response.message);
             }
@@ -37,6 +38,7 @@ const handleDeleteAccount = async () => {
         const response = await apis.user.delete();
         if (response.code == 1) {
             alert("delete success");
+            apis.confirmRedirect.login();
         } else {
             alert(response.message);
         }
@@ -46,11 +48,13 @@ const handleDeleteAccount = async () => {
 const handleLogout = () => {
     apis.user.logout();
     alert("logout success");
+    apis.confirmRedirect.login();
 };
 
 const handleInstall = () => {
     const onSuccess = () => {
         alert("install success");
+        apis.app.update();
     };
     const onError = () => {
         alert("install failed");
@@ -61,6 +65,7 @@ const handleInstall = () => {
 const handlerUpdateApp = () => {
     const onSuccess = () => {
         alert("update success");
+        apis.confirmRedirect.reload();
     };
     const onError = (err) => {
         alert("update error " + err.message);

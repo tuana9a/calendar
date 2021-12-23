@@ -206,4 +206,26 @@ export const apis = {
         request: NotifyUtils.getInstance().requestPermission,
         send: NotifyUtils.getInstance().sendNotification,
     },
+    confirmRedirect: {
+        login: function () {
+            const accept = confirm("go to login ?");
+            if (accept) {
+                window.location.href = "/login.html";
+            }
+        },
+        register: function () {},
+        home: function () {},
+        calendar: function () {
+            const accept = confirm("go to calendar ?");
+            if (accept) {
+                window.location.href = "/calendar.html";
+            }
+        },
+        reload: function () {
+            const accept = confirm("reload page ?");
+            if (accept) {
+                window.location.reload();
+            }
+        },
+    },
 };

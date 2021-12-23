@@ -14,6 +14,7 @@ const handleSignIn = async () => {
         const response = await apis.user.login({ username: username, password: psw });
         if (response.code == 1) {
             alert("login success");
+            apis.confirmRedirect.calendar();
         } else {
             alert(response.message);
         }
