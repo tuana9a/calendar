@@ -1,6 +1,6 @@
 import { apis } from "./apis.js";
 import { Calendarize } from "./calendarize.js";
-import { CLASSNAME_DAY, CLASSNAME_MONTH, CLASSNAME_DOW } from "./constants.js";
+import { CLASSNAME_DAY, CLASSNAME_MONTH, CLASSNAME_DOW, CACHE_EVENTS_PREFIX, CLASSNAME_EVENT } from "./constants.js";
 import { DateUtils } from "./utils.js";
 
 let currentYear = -1;
@@ -76,10 +76,25 @@ function createEventOnClickHandler(eventElement) {
     return handler;
 }
 
+function getDayElements() {
+    let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
+    return Array.from(mainCalendarElement.querySelectorAll(selector));
+}
+
+function clearAllEvents() {
+    const dayElements = getDayElements();
+    dayElements.forEach((dayElement) => {
+        let eventElements = Array.from(dayElement.getElementsByClassName(CLASSNAME_EVENT));
+        eventElements.forEach((eventElement) => {
+            eventElement.remove();
+        });
+    });
+}
+
 function appendEvent(dayElement, myEvent) {
     // add new div contains title
     let eventElement = document.createElement("div");
-    eventElement.classList.add("event");
+    eventElement.classList.add(CLASSNAME_EVENT);
     eventElement.setAttribute("data-eventId", myEvent._id);
     eventElement.setAttribute("data-title", myEvent.title);
     eventElement.setAttribute("data-description", myEvent.description);
@@ -109,28 +124,54 @@ function appendEvent(dayElement, myEvent) {
     apis.event.update(myEvent);
 }
 
-async function updateEvents() {
-    let startTime = new Date(changeYear, changeMonth).getTime();
-    let endTime = new Date(changeYear, changeMonth + 1).getTime();
-    let events = [];
-    let response = await apis.event.find({ startTime: { $gt: startTime, $lt: endTime } }).catch();
-    if (response.code == 1) {
-        events = response.data;
-    }
-    let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
-    let dayElements = mainCalendarElement.querySelectorAll(selector);
+function appendManyEvents(events = []) {
+    const dayElements = getDayElements();
     events.forEach((myEvent) => {
         let startDate = new Date(myEvent.startTime);
         let elementIndex = startDate.getDate() - 1; //seriously don't ask;
-        let dayElement = dayElements.item(elementIndex);
+        let dayElement = dayElements[elementIndex];
         appendEvent(dayElement, myEvent);
     });
+}
+
+function getCurrentEventLocalStorageName() {
+    return CACHE_EVENTS_PREFIX + changeYear + "." + changeMonth;
+}
+
+function getCacheEventsExpireName() {
+    return CACHE_EVENTS_PREFIX + "expire";
+}
+
+async function fetchCacheEvents() {
+    let item = localStorage.getItem(getCurrentEventLocalStorageName());
+    if (!item) return;
+    let events = JSON.parse(item);
+    appendManyEvents(events);
+    return;
+}
+
+async function updateEvents() {
+    let startTime = new Date(changeYear, changeMonth).getTime();
+    let endTime = new Date(changeYear, changeMonth + 1).getTime();
+    let events = null;
+    try {
+        let response = await apis.event.find({ startTime: { $gt: startTime, $lt: endTime } });
+        if (response.code == 1) {
+            events = response.data;
+            localStorage.setItem(getCurrentEventLocalStorageName(), JSON.stringify(events));
+            clearAllEvents();
+            appendManyEvents(events);
+        }
+    } catch (err) {
+        // ignore maybe network
+    }
     return events;
 }
 
 async function updateAll() {
     updateMainCalendar();
     updateMiniCalendar();
+    fetchCacheEvents();
     updateEvents();
 }
 
@@ -139,6 +180,7 @@ async function fetchUserInfo() {
         let response = await apis.user.info();
         if (response.code != 1) {
             alert("not login yet");
+            apis.confirmRedirect.login();
             return;
         }
         let user = response.data;
@@ -157,6 +199,20 @@ async function fetchUserInfo() {
     } catch (err) {
         // ignore
         // maybe server down or network error
+    }
+}
+
+function checkCache() {
+    // remove cache if expired
+    const LOCALSTORAGE_NAME = getCacheEventsExpireName();
+    let cacheExpireAt = parseInt(localStorage.getItem(LOCALSTORAGE_NAME));
+    if (!cacheExpireAt) {
+        localStorage.setItem(LOCALSTORAGE_NAME, Date.now());
+    }
+    if (Date.now() > cacheExpireAt) {
+        localStorage.clear();
+        let delta = 7 * 24 * 60 * 60 * 1000; // 7 ngày
+        localStorage.setItem(LOCALSTORAGE_NAME, Date.now() + delta);
     }
 }
 
@@ -206,7 +262,7 @@ async function main() {
         let response = await apis.event.add(myEvent);
         if (response.code == 1) {
             myEvent._id = response.data.eventId;
-            appendEvent(selectingElement, myEvent);
+            appendManyEvents([myEvent]);
         }
     };
 
@@ -281,11 +337,10 @@ async function main() {
     };
 
     fetchUserInfo();
-
+    checkCache();
     await apis.notification.request();
-    let events = await updateEvents();
-    events = events || JSON.parse(localStorage.getItem("events")) || [];
-    localStorage.setItem("events", JSON.stringify(events));
+    fetchCacheEvents();
+    updateEvents();
 }
 
 main();

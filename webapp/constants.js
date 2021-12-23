@@ -91,3 +91,6 @@ export const CLASSNAME_FUTURE = "future";
 export const CLASSNAME_PAST = "past";
 export const CLASSNAME_CALENDAR_GRID = "calendar-grid";
 export const CLASSNAME_CALENDAR_DATE_TITLE = "calendar-date-title";
+
+export const CLASSNAME_EVENT = "event";
+export const CACHE_EVENTS_PREFIX = "calendar.events.";

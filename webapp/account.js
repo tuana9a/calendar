@@ -78,6 +78,7 @@ const handleUninstall = () => {
     if (confirmation) {
         apis.app.uninstall();
         alert("uninstall success");
+        apis.confirmRedirect.reload();
     }
 };
 

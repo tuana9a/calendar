@@ -14,7 +14,10 @@ self.addEventListener("fetch", function (event) {
     event.respondWith(
         caches.match(event.request).then(async function (response) {
             // If exist then return else make new request
-            return response || fetch(event.request);
+            if (response) {
+                return response;
+            }
+            return fetch(event.request);
         }),
     );
 });
