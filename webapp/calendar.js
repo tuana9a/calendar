@@ -244,8 +244,7 @@ async function main() {
         };
         let response = await apis.event.add(myEvent);
         if (response.code == 1) {
-            myEvent._id = response.data.eventId;
-            appendManyEvents([myEvent]);
+            updateEvents();
         }
     };
 
@@ -277,6 +276,7 @@ async function main() {
         selectingElement.setAttribute("data-endTime", updateDetails.endTime);
         selectingElement.setAttribute("data-location", updateDetails.location);
         selectingElement.innerText = updateDetails.title;
+        updateEvents();
     };
 
     deleteDetailsButton.onclick = async () => {
@@ -290,7 +290,7 @@ async function main() {
             alert("deleted failed");
             return;
         }
-        selectingElement.remove();
+        updateEvents();
     };
 
     closeDetailsButton.onclick = () => modalDetails.close();
