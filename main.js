@@ -3,6 +3,7 @@ const http = require("http");
 const https = require("https");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const childProcess = require("child_process");
 
 const { apis } = require("./apis");
 const { AppConfig } = require("./configs");
@@ -43,6 +44,8 @@ async function main() {
         http.createServer(server).listen(port, AppConfig.bind);
     }
     console.log(` * listen: ${port} (${AppConfig.security.ssl ? "https" : "http"})`);
+
+    childProcess.fork("background.js");
 }
 
 main();

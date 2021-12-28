@@ -132,7 +132,7 @@ class PushApiController {
         return collection;
     }
     async subscribe(user = new User(), pushSubObject) {
-        this.collection().updateOne(
+        let result = await this.collection().updateOne(
             { username: user.username },
             {
                 $set: {
@@ -143,6 +143,11 @@ class PushApiController {
                 upsert: true,
             },
         );
+        return { updateCountr: result.modifiedCount, upsertCount: result.upsertedCount };
+    }
+    async findSubObjectByUserName(username) {
+        const pushSubObject = await this.collection().findOne({ username: username });
+        return pushSubObject;
     }
 }
 
