@@ -28,9 +28,9 @@ async function main() {
     server.post("/api/event", apis.event.add);
     server.put("/api/event", apis.event.update);
     server.delete("/api/event", apis.event.delete);
-    server.get("/caches.json", (req, resp) => {
-        resp.sendFile(__dirname + "/resource/caches.json");
-    });
+    server.get("/caches.json", apis.getCacheUrls);
+    server.get("/api/push/pub", apis.push.getPubKey);
+    server.post("/api/push", apis.push.subscribe);
 
     await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);

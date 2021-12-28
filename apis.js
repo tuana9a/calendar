@@ -1,8 +1,9 @@
 const { LOGGER } = require("./logger");
 const { UserValidations, EventValidations } = require("./validations");
 const { ResponseEntity } = require("./entities");
-const { UserController, EventController } = require("./controllers");
+const { UserController, EventController, PushApiController } = require("./controllers");
 const { ValidationError } = require("./exceptions");
+const { AppConfig } = require("./configs");
 
 function wrapExpressHandler(handler = async () => {}) {
     return async function (req, resp) {
@@ -37,6 +38,10 @@ function eventController() {
 
 function eventvalidations() {
     return EventValidations.getInstance();
+}
+
+function pushApiController() {
+    return PushApiController.getInstance();
 }
 
 function sendResponse(resp, code = 1, message = "", data = {}) {
@@ -130,9 +135,27 @@ async function deleteEvent(req, resp) {
     sendResponse(resp, 1, "received", result);
 }
 
+function getCacheUrls(req, resp) {
+    resp.setHeader("Content-Type", "application/json; charset=utf-8");
+    resp.send(AppConfig.cache_urls);
+}
+
+async function subcribePushNotification(req, resp) {
+    let token = req.cookies.access_token;
+    let pushSubObject = req.body;
+    let user = await userController().checkToken(token);
+    let result = await pushApiController().subscribe(user, pushSubObject);
+    sendResponse(resp, 1, "received", result);
+}
+
+function getPushPubKey(req, resp) {
+    resp.send(AppConfig.pushApiKeyPair.publicKey);
+}
+
 const apis = {
     register: wrapExpressHandler(register),
     login: wrapExpressHandler(login),
+    getCacheUrls: getCacheUrls,
     user: {
         update: wrapExpressHandler(updateUser),
         delete: wrapExpressHandler(deleteUser),
@@ -144,6 +167,10 @@ const apis = {
         add: wrapExpressHandler(addEvent),
         update: wrapExpressHandler(updateEvent),
         delete: wrapExpressHandler(deleteEvent),
+    },
+    push: {
+        subscribe: wrapExpressHandler(subcribePushNotification),
+        getPubKey: wrapExpressHandler(getPushPubKey)
     },
 };
 

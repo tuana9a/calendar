@@ -31,35 +31,6 @@ class CacheUtils {
     }
 }
 
-class NotifyUtils {
-    static INSTANCE = new NotifyUtils();
-    static getInstance() {
-        return this.INSTANCE;
-    }
-    async requestPermission() {
-        return Notification.requestPermission(function (status) {
-            console.log("Notification Permission:", status);
-        });
-    }
-    async sendNotification(
-        title = "",
-        opts = {
-            body: "",
-            data: {},
-            silent: true,
-            icon: "/icons/Icon=check.svg",
-            actions: [{ action: "ok", title: "ok" }],
-        },
-    ) {
-        if (Notification.permission != "granted") return;
-        if (!isServiceWorkderAvailable) return;
-
-        const serviceWorker = await navigator.serviceWorker.getRegistration();
-        if (!serviceWorker) return;
-        serviceWorker.showNotification(title, opts);
-    }
-}
-
 class ServiceWorkerUtils {
     static INSTANCE = new ServiceWorkerUtils();
     static getInstance() {
@@ -203,8 +174,17 @@ export const apis = {
         },
     },
     notification: {
-        request: NotifyUtils.getInstance().requestPermission,
-        send: NotifyUtils.getInstance().sendNotification,
+        request: async function () {
+            return Notification.requestPermission();
+        },
+        send: async function (title = "", opts) {
+            if (Notification.permission != "granted") return;
+            if (!isServiceWorkderAvailable) return;
+
+            const serviceWorker = await navigator.serviceWorker.getRegistration();
+            if (!serviceWorker) return;
+            serviceWorker.showNotification(title, opts);
+        },
     },
     confirmRedirect: {
         login: function () {
@@ -226,6 +206,42 @@ export const apis = {
             if (accept) {
                 window.location.reload();
             }
+        },
+    },
+    push: {
+        publickey: async function () {
+            let url = "/api/push/pub";
+            return fetch(url).then((resp) => resp.text());
+        },
+        sub: {
+            send: async function (pushSubObject) {
+                let url = "/api/push";
+                return fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    body: JSON.stringify(pushSubObject),
+                }).then((resp) => resp.json());
+            },
+            update: async function () {
+                const serviceWorker = await navigator.serviceWorker.getRegistration();
+                if (!serviceWorker) return;
+
+                const pushManager = serviceWorker.pushManager;
+                const pushSubObject = await pushManager.getSubscription();
+                if (pushSubObject) {
+                    // exist but may update so send it to server
+                    return apis.push.sub.send(pushSubObject);
+                }
+                // create new one
+                const serverPubKey = await apis.push.publickey();
+                const newPushSubObject = await pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: serverPubKey,
+                });
+                return apis.push.sub.send(newPushSubObject);
+            },
         },
     },
 };
