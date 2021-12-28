@@ -51,6 +51,12 @@
 
 .day .event {
     background-color: #234056c5;
+    cursor: pointer;
+    padding: 3px 0;
+}
+
+.day .event:hover {
+    background-color: #12202bc5;
 }
 
 /* custom existing */

@@ -18,6 +18,12 @@ let config = {
         batch_size: 1,
     },
     tokenSecret: "",
+    pushApiEmail: "",
+    pushApiKeyPair: {
+        publicKey: "",
+        privateKey: "",
+    },
+    cache_urls: [],
 };
 config = JSON.parse(fs.readFileSync("resource/app.conf.json", { flag: "r", encoding: "utf-8" }));
 const AppConfig = config;

@@ -25,15 +25,16 @@ self.addEventListener("fetch", function (event) {
 self.addEventListener("notificationclick", function (event) {
     var notification = event.notification;
     var action = event.action;
-
-    switch (action) {
-        case "ok":
-        case "close":
-        case "cancel":
-        default:
-            // do something
-            break;
-    }
-
+    // TODO: base on action do something
+    // serviceWorker can even send request
     notification.close();
+});
+
+self.addEventListener("push", function (event) {
+    let data = JSON.parse(event.data.text());
+    var options = {
+        body: data.description,
+        icon: "/images/calendar.png",
+    };
+    event.waitUntil(self.registration.showNotification(data.title, options));
 });

@@ -104,24 +104,6 @@ function appendEvent(dayElement, myEvent) {
     eventElement.innerText = myEvent.title;
     eventElement.onclick = createEventOnClickHandler(eventElement);
     dayElement.appendChild(eventElement);
-
-    // if event dismiss then no need to notify
-    if (myEvent.dismiss) return;
-
-    let now = new Date();
-    let startDate = new Date(myEvent.startTime);
-    if (now < startDate.getTime() - 900000) return;
-
-    // 15min before event;
-    apis.notification.send(myEvent.title, {
-        body: myEvent.description,
-        icon: "/images/calendar.png",
-        silent: true,
-    });
-
-    // After notify then no auto dimiss
-    myEvent.dismiss = true;
-    apis.event.update(myEvent);
 }
 
 function appendManyEvents(events = []) {
@@ -243,6 +225,7 @@ async function main() {
     updateMiniCalendar();
     updateMainCalendar();
     mainOpts.skipClickHandler = true; // after first time add event handler then skip it
+    apis.notification.request().then(() => apis.push.sub.update());
 
     addModalButton.onclick = async () => {
         let title = modalTitle.value;
@@ -261,8 +244,7 @@ async function main() {
         };
         let response = await apis.event.add(myEvent);
         if (response.code == 1) {
-            myEvent._id = response.data.eventId;
-            appendManyEvents([myEvent]);
+            updateEvents();
         }
     };
 
@@ -294,6 +276,7 @@ async function main() {
         selectingElement.setAttribute("data-endTime", updateDetails.endTime);
         selectingElement.setAttribute("data-location", updateDetails.location);
         selectingElement.innerText = updateDetails.title;
+        updateEvents();
     };
 
     deleteDetailsButton.onclick = async () => {
@@ -307,7 +290,7 @@ async function main() {
             alert("deleted failed");
             return;
         }
-        selectingElement.remove();
+        updateEvents();
     };
 
     closeDetailsButton.onclick = () => modalDetails.close();
@@ -338,7 +321,6 @@ async function main() {
 
     fetchUserInfo();
     checkCache();
-    await apis.notification.request();
     fetchCacheEvents();
     updateEvents();
 }

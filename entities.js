@@ -56,7 +56,7 @@ class UserEvent {
 }
 
 module.exports = {
-    AppUser: User,
+    User: User,
     UserEvent: UserEvent,
     LogOption: LogOption,
     ResponseEntity: ResponseEntity,

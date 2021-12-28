@@ -3,6 +3,7 @@ const http = require("http");
 const https = require("https");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const childProcess = require("child_process");
 
 const { apis } = require("./apis");
 const { AppConfig } = require("./configs");
@@ -28,9 +29,9 @@ async function main() {
     server.post("/api/event", apis.event.add);
     server.put("/api/event", apis.event.update);
     server.delete("/api/event", apis.event.delete);
-    server.get("/caches.json", (req, resp) => {
-        resp.sendFile(__dirname + "/resource/caches.json");
-    });
+    server.get("/caches.json", apis.getCacheUrls);
+    server.get("/api/push/pub", apis.push.getPubKey);
+    server.post("/api/push", apis.push.subscribe);
 
     await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);
@@ -43,6 +44,8 @@ async function main() {
         http.createServer(server).listen(port, AppConfig.bind);
     }
     console.log(` * listen: ${port} (${AppConfig.security.ssl ? "https" : "http"})`);
+
+    childProcess.fork("background.js");
 }
 
 main();

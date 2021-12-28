@@ -5,7 +5,7 @@ const mongodb = require("mongodb");
 const { MongoDBClient } = require("./database");
 const { AppConfig } = require("./configs");
 const { ValidationError } = require("./exceptions");
-const { UserEvent } = require("./entities");
+const { UserEvent, User } = require("./entities");
 
 /*
 trước khi vào controller thì tầng apis.js phải qua các validates.js
@@ -121,7 +121,38 @@ class EventController {
     }
 }
 
+class PushApiController {
+    static INSTANCE = new PushApiController();
+    static getInstance() {
+        return this.INSTANCE;
+    }
+    collection() {
+        const client = MongoDBClient.getInstance();
+        const collection = client.db("calendar").collection("event.subs");
+        return collection;
+    }
+    async subscribe(user = new User(), pushSubObject) {
+        let result = await this.collection().updateOne(
+            { username: user.username },
+            {
+                $set: {
+                    subObject: pushSubObject,
+                },
+            },
+            {
+                upsert: true,
+            },
+        );
+        return { updateCountr: result.modifiedCount, upsertCount: result.upsertedCount };
+    }
+    async findSubObjectByUserName(username) {
+        const pushSubObject = await this.collection().findOne({ username: username });
+        return pushSubObject;
+    }
+}
+
 module.exports = {
     UserController: UserController,
     EventController: EventController,
+    PushApiController: PushApiController,
 };
