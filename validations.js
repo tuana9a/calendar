@@ -23,6 +23,9 @@ class EventValidations {
         if (!entry) throw new ValidationError("invalid event");
         if (!entry.title) throw new ValidationError("invalid title");
         if (entry.title.length < 2) throw new ValidationError("title to short");
+        if (Number.isNaN(entry.startTime)) throw new ValidationError("startTime is not a number");
+        if (Number.isNaN(entry.endTime)) throw new ValidationError("endTime is not a number");
+        if (entry.endTime < entry.startTime) throw new ValidationError("endTime is smaller than startTime");
     }
 }
 
