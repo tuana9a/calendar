@@ -35,7 +35,6 @@ async function fetchEventsToSendPushNotification() {
                 publicKey: vapidPublicKey,
                 privateKey: vapidPrivateKey,
             },
-            TTL: 60,
         };
 
         webPush.sendNotification(eventSub.subObject, payload, options);
