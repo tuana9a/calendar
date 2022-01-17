@@ -22,6 +22,9 @@ cấu trúc project như sau
 
 `utils.js` tập các tiện ích cho project
 
+# #modules
+
+`npm install`
 # #how to run
 
-npm start
+`npm start`
