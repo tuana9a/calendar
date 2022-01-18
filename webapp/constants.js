@@ -1,4 +1,4 @@
-export const MONTH_NAMES = [
+const MonthNames = [
     {
         full: "January",
         short: "Jan",
@@ -49,7 +49,7 @@ export const MONTH_NAMES = [
     },
 ];
 
-export const DAY_NAMES = [
+const DayNames = [
     {
         full: "Sunday",
         short: "Su",
@@ -80,17 +80,22 @@ export const DAY_NAMES = [
     },
 ];
 
-export const CLASSNAME_DAY = "day";
-export const CLASSNAME_DOW = "dow";
-export const CLASENAME_HIDE = "hide";
-export const CLASSNAME_DUMMY = "dummy";
-export const CLASSNAME_MONTH = "month";
-export const CLASSNAME_WEEKEND = "weekend";
-export const CLASSNAME_TODAY = "today";
-export const CLASSNAME_FUTURE = "future";
-export const CLASSNAME_PAST = "past";
-export const CLASSNAME_CALENDAR_GRID = "calendar-grid";
-export const CLASSNAME_CALENDAR_DATE_TITLE = "calendar-date-title";
-
-export const CLASSNAME_EVENT = "event";
-export const CACHE_EVENTS_PREFIX = "calendar.events.";
+export const constants = {
+    MonthNames: MonthNames,
+    DayNames: DayNames,
+    cacheEventsPrefix: "calendar.events.",
+    classname: {
+        DAY: "day",
+        DOW: "dow",
+        HIDE: "hide",
+        DUMMY: "dummy",
+        MONTH: "month",
+        WEEKEND: "weekend",
+        TODAY: "today",
+        FUTURE: "future",
+        PAST: "past",
+        CALENDAR_GRID: "calendar-grid",
+        CALENDAR_DATE_TITLE: "calendar-date-title",
+        EVENT: "event",
+    },
+};

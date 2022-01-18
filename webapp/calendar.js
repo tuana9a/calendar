@@ -1,6 +1,6 @@
 import { apis } from "./apis.js";
 import { Calendarize } from "./calendarize.js";
-import { CLASSNAME_DAY, CLASSNAME_MONTH, CLASSNAME_DOW, CACHE_EVENTS_PREFIX, CLASSNAME_EVENT } from "./constants.js";
+import { constants } from "./constants.js";
 import { DateUtils } from "./utils.js";
 
 let currentYear = -1;
@@ -72,7 +72,7 @@ function createEventOnClickHandler(eventElement) {
 function clearAllEvents() {
     const dayElements = mainCalendarize.getDayElements();
     dayElements.forEach((dayElement) => {
-        let eventElements = Array.from(dayElement.getElementsByClassName(CLASSNAME_EVENT));
+        let eventElements = Array.from(dayElement.getElementsByClassName(constants.classname.EVENT));
         eventElements.forEach((eventElement) => {
             eventElement.remove();
         });
@@ -82,7 +82,7 @@ function clearAllEvents() {
 function appendEvent(dayElement, myEvent) {
     // add new div contains title
     let eventElement = document.createElement("div");
-    eventElement.classList.add(CLASSNAME_EVENT);
+    eventElement.classList.add(constants.classname.EVENT);
     eventElement.setAttribute("data-eventId", myEvent._id);
     eventElement.setAttribute("data-title", myEvent.title);
     eventElement.setAttribute("data-description", myEvent.description);
@@ -105,11 +105,11 @@ function appendManyEvents(events = []) {
 }
 
 function getCurrentEventLocalStorageName() {
-    return CACHE_EVENTS_PREFIX + changeYear + "." + changeMonth;
+    return constants.cacheEventsPrefix + changeYear + "." + changeMonth;
 }
 
 function getCacheEventsExpireName() {
-    return CACHE_EVENTS_PREFIX + "expire";
+    return constants.cacheEventsPrefix + "expire";
 }
 
 async function fetchCacheEvents() {
