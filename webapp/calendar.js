@@ -16,8 +16,8 @@ currentDate = now.getDate();
 changeMonth = currentMonth;
 changeYear = currentYear;
 
-const miniCalendarElement = document.getElementById("miniCalendar");
-const mainCalendarElement = document.getElementById("mainCalendar");
+const miniCalendarize = new Calendarize(document.getElementById("miniCalendar"));
+const mainCalendarize = new Calendarize(document.getElementById("mainCalendar"));
 const currentMonthButton = document.getElementById("returnCurrentMonth");
 const backwardMonthButton = document.getElementById("backwardMonth");
 const forwardMonthButton = document.getElementById("forwardMonth");
@@ -47,28 +47,21 @@ const modalEndTime = document.getElementById("time-end");
 const modalLocation = document.getElementById("location");
 const modalDescription = document.getElementById("description");
 
-function calendarize() {
-    return Calendarize.getInstance();
-}
-
-function dateUtils() {
-    return DateUtils.getInstance();
-}
-
 function updateMiniCalendar() {
-    calendarize().write(miniCalendarElement, changeYear, changeMonth, null, miniOpts);
+    miniCalendarize.render(changeYear, changeMonth, null, miniOpts);
 }
 
 function updateMainCalendar() {
-    calendarize().write(mainCalendarElement, changeYear, changeMonth, null, mainOpts);
+    mainCalendarize.render(changeYear, changeMonth, null, mainOpts);
 }
 
 function createEventOnClickHandler(eventElement) {
     function handler() {
+        const dateUtils = DateUtils.getInstance();
         selectingElement = eventElement;
         modalTitleDetail.value = eventElement.getAttribute("data-title");
-        modalStartTimeDetail.value = dateUtils().fullDetailDate(eventElement.getAttribute("data-startTime"));
-        modalEndTimeDetail.value = dateUtils().fullDetailDate(eventElement.getAttribute("data-endTime"));
+        modalStartTimeDetail.value = dateUtils.fullDetailDate(eventElement.getAttribute("data-startTime"));
+        modalEndTimeDetail.value = dateUtils.fullDetailDate(eventElement.getAttribute("data-endTime"));
         modalDescriptionDetail.value = eventElement.getAttribute("data-description");
         modalLocationDetail.value = eventElement.getAttribute("data-location");
         modalDetails.showModal();
@@ -76,13 +69,8 @@ function createEventOnClickHandler(eventElement) {
     return handler;
 }
 
-function getDayElements() {
-    let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
-    return Array.from(mainCalendarElement.querySelectorAll(selector));
-}
-
 function clearAllEvents() {
-    const dayElements = getDayElements();
+    const dayElements = mainCalendarize.getDayElements();
     dayElements.forEach((dayElement) => {
         let eventElements = Array.from(dayElement.getElementsByClassName(CLASSNAME_EVENT));
         eventElements.forEach((eventElement) => {
@@ -107,7 +95,7 @@ function appendEvent(dayElement, myEvent) {
 }
 
 function appendManyEvents(events = []) {
-    const dayElements = getDayElements();
+    const dayElements = mainCalendarize.getDayElements();
     events.forEach((myEvent) => {
         let startDate = new Date(myEvent.startTime);
         let elementIndex = startDate.getDate() - 1; //seriously don't ask;
@@ -208,15 +196,16 @@ const mainOpts = {
     fullOrShort: "full",
     skipClickHandler: false,
     dbClickHandler: function (e) {
+        const dateUtils = DateUtils.getInstance();
         selectingElement = e.target;
         let date = new Date(parseInt(selectingElement.getAttribute("data-date")));
         let now = new Date();
         date.setHours(now.getHours());
         date.setMinutes(now.getMinutes());
         date.setSeconds(now.getSeconds());
-        modalStartTime.value = dateUtils().fullDateToInputDatetimeLocalValue(date);
+        modalStartTime.value = dateUtils.fullDateToInputDatetimeLocalValue(date);
         date.setHours(date.getHours() + 1);
-        modalEndTime.value = dateUtils().fullDateToInputDatetimeLocalValue(date);
+        modalEndTime.value = dateUtils.fullDateToInputDatetimeLocalValue(date);
         modalElement.showModal();
     },
 };

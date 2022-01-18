@@ -24,14 +24,17 @@ function clearDayStateClassName(element) {
 }
 
 export class Calendarize {
-    static INSTANCE = new Calendarize();
-    static getInstance() {
-        return this.INSTANCE;
+    constructor(containerElement) {
+        this.containerElement = containerElement;
+    }
+    getDayElements() {
+        let selector = "." + CLASSNAME_DAY + "." + CLASSNAME_MONTH;
+        const calendarElement = this.containerElement;
+        return Array.from(calendarElement.querySelectorAll(selector));
     }
     // Add days and place fillers for a given month
     // This function and the one above needs consolidated
-    write(
-        containerElement = document.getElementsByClassName(CLASSNAME_CALENDAR_GRID).item(0),
+    render(
         yearNum,
         monthNum,
         dateNum, // hiện tại dateNum hơi vô dụng do build chỉ cần năm và tháng
@@ -53,6 +56,7 @@ export class Calendarize {
     ) {
         //if (monthNum === undefined || year === undefined) return "something is missing";
         const dateUtils = DateUtils.getInstance();
+        const calendarElement = this.containerElement;
 
         let date = new Date(yearNum, monthNum, dateNum);
         let prevMonth = new Date(date.setMonth(monthNum - 1));
@@ -82,11 +86,11 @@ export class Calendarize {
             }
         }
 
-        let dayElements = containerElement.getElementsByClassName(CLASSNAME_DAY);
+        let dayElements = calendarElement.getElementsByClassName(CLASSNAME_DAY);
         let countMainDay = 0;
 
         // Add a Title to the month
-        let titleElement = containerElement.getElementsByClassName(CLASSNAME_CALENDAR_DATE_TITLE).item(0);
+        let titleElement = calendarElement.getElementsByClassName(CLASSNAME_CALENDAR_DATE_TITLE).item(0);
         titleElement.innerText = MONTH_NAMES[monthNum][opts.fullOrShort] + (opts.showYearOnTitle ? " " + yearNum : "");
 
         // Add Days of week to the top row
@@ -185,7 +189,5 @@ export class Calendarize {
                 dayElement.classList.add(CLASSNAME_DUMMY);
             }
         }
-
-        return containerElement;
     }
 }
