@@ -2,12 +2,12 @@ import { DateUtils } from "./utils.js";
 import { constants } from "./constants.js";
 
 function clearDayStateClassName(element) {
-    element.classList.remove(constants.classname.DUMMY);
-    element.classList.remove(constants.classname.MONTH);
-    element.classList.remove(constants.classname.WEEKEND);
-    element.classList.remove(constants.classname.TODAY);
-    element.classList.remove(constants.classname.FUTURE);
-    element.classList.remove(constants.classname.PAST);
+    element.classList.remove(constants.classname.dummy);
+    element.classList.remove(constants.classname.month);
+    element.classList.remove(constants.classname.weekend);
+    element.classList.remove(constants.classname.today);
+    element.classList.remove(constants.classname.future);
+    element.classList.remove(constants.classname.past);
 }
 
 export class Calendarize {
@@ -15,7 +15,7 @@ export class Calendarize {
         this.containerElement = containerElement;
     }
     getDayElements() {
-        let selector = "." + constants.classname.DAY + "." + constants.classname.MONTH;
+        let selector = "." + constants.classname.day + "." + constants.classname.month;
         const calendarElement = this.containerElement;
         return Array.from(calendarElement.querySelectorAll(selector));
     }
@@ -73,19 +73,19 @@ export class Calendarize {
             }
         }
 
-        let dayElements = calendarElement.getElementsByClassName(constants.classname.DAY);
+        let dayElements = calendarElement.getElementsByClassName(constants.classname.day);
         let countMainDay = 0;
 
         // Add a Title to the month
         const monthNames = constants.MonthNames;
-        let titleElement = calendarElement.getElementsByClassName(constants.classname.CALENDAR_DATE_TITLE).item(0);
+        let titleElement = calendarElement.getElementsByClassName(constants.classname.calendar.date_title).item(0);
         titleElement.innerText = monthNames[monthNum][opts.fullOrShort] + (opts.showYearOnTitle ? " " + yearNum : "");
 
         // Add Days of week to the top row
         const dayNames = constants.DayNames;
         dayNames.forEach(function (name, index) {
             const dayElement = dayElements[countMainDay];
-            dayElement.classList.add(constants.classname.DOW);
+            dayElement.classList.add(constants.classname.dow);
             dayElement.innerText = dayNames[index][opts.fullOrShort];
             countMainDay += 1;
         });
@@ -96,7 +96,7 @@ export class Calendarize {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dummyDateNum;
             clearDayStateClassName(dayElement);
-            dayElement.classList.add(constants.classname.DUMMY);
+            dayElement.classList.add(constants.classname.dummy);
             countMainDay += 1;
         }
 
@@ -108,7 +108,7 @@ export class Calendarize {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dayNum + 1;
             clearDayStateClassName(dayElement);
-            dayElement.classList.add(constants.classname.MONTH);
+            dayElement.classList.add(constants.classname.month);
             dayElement.setAttribute("data-date", new Date(yearNum, monthNum, dayNum + 1).getTime());
             countMainDay += 1;
 
@@ -116,15 +116,15 @@ export class Calendarize {
             let dateParsed = Date.parse(date);
 
             if (dateParsed === todayParsed) {
-                dayElement.classList.add(constants.classname.TODAY);
+                dayElement.classList.add(constants.classname.today);
             } else if (dateParsed > todayParsed) {
-                dayElement.classList.add(constants.classname.FUTURE);
+                dayElement.classList.add(constants.classname.future);
             } else if (dateParsed < todayParsed) {
-                dayElement.classList.add(constants.classname.PAST);
+                dayElement.classList.add(constants.classname.past);
             }
 
             if (dow === 0 || dow === 6) {
-                dayElement.classList.add(constants.classname.WEEKEND);
+                dayElement.classList.add(constants.classname.weekend);
             }
 
             if (opts.dropDayOfWeek) {
@@ -135,11 +135,11 @@ export class Calendarize {
                     }
                 }
                 if (!valid) {
-                    dayElement.classList.add(constants.classname.DUMMY);
+                    dayElement.classList.add(constants.classname.dummy);
                 }
             }
 
-            if (dayElement.classList.contains(constants.classname.DUMMY)) return;
+            if (dayElement.classList.contains(constants.classname.dummy)) return;
             if (opts.skipClickHandler) return;
             if (opts.clickHandler) {
                 dayElement.onclick = function (e) {
@@ -165,7 +165,7 @@ export class Calendarize {
             const dayElement = dayElements[countMainDay];
             dayElement.innerText = dateNum;
             clearDayStateClassName(dayElement);
-            dayElement.classList.add(constants.classname.DUMMY);
+            dayElement.classList.add(constants.classname.dummy);
             countMainDay += 1;
         }
 
@@ -175,7 +175,7 @@ export class Calendarize {
                 const dayElement = dayElements[countMainDay + i];
                 dayElement.innerText = "";
                 clearDayStateClassName(dayElement);
-                dayElement.classList.add(constants.classname.DUMMY);
+                dayElement.classList.add(constants.classname.dummy);
             }
         }
     }

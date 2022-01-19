@@ -3,18 +3,12 @@ import { Calendarize } from "./calendarize.js";
 import { constants } from "./constants.js";
 import { DateUtils } from "./utils.js";
 
-let currentYear = -1;
-let currentMonth = -1;
-let currentDate = -1;
-let changeMonth = -1;
-let changeYear = -1;
-
 let now = new Date();
-currentYear = now.getFullYear();
-currentMonth = now.getMonth();
-currentDate = now.getDate();
-changeMonth = currentMonth;
-changeYear = currentYear;
+let currentYear = now.getFullYear();
+let currentMonth = now.getMonth();
+let currentDate = now.getDate();
+let changeMonth = currentMonth;
+let changeYear = currentYear;
 
 const miniCalendarize = new Calendarize(document.getElementById("miniCalendar"));
 const mainCalendarize = new Calendarize(document.getElementById("mainCalendar"));
@@ -48,11 +42,11 @@ const modalLocation = document.getElementById("location");
 const modalDescription = document.getElementById("description");
 
 function updateMiniCalendar() {
-    miniCalendarize.render(changeYear, changeMonth, null, miniOpts);
+    miniCalendarize.render(changeYear, changeMonth, currentDate, miniOpts);
 }
 
 function updateMainCalendar() {
-    mainCalendarize.render(changeYear, changeMonth, null, mainOpts);
+    mainCalendarize.render(changeYear, changeMonth, currentDate, mainOpts);
 }
 
 function createEventOnClickHandler(eventElement) {
