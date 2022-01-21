@@ -92,9 +92,15 @@ function appendManyEvents(events = []) {
     const dayElements = mainCalendarize.getDayElements();
     events.forEach((myEvent) => {
         let startDate = new Date(myEvent.startTime);
-        let elementIndex = startDate.getDate() - 1; //seriously don't ask;
-        let dayElement = dayElements[elementIndex];
-        appendEvent(dayElement, myEvent);
+        let startElementIndex = startDate.getDate() - 1; //seriously don't ask;
+
+        let endDate = new Date(myEvent.endTime);
+        let endElementIndex = endDate.getDate() - 1; //seriously don't ask;
+
+        for (let i = startElementIndex; i <= endElementIndex; i++) {
+            let dayElement = dayElements[i];
+            appendEvent(dayElement, myEvent);
+        }
     });
 }
 
@@ -195,8 +201,6 @@ const mainOpts = {
         let date = new Date(parseInt(selectingElement.getAttribute("data-date")));
         let now = new Date();
         date.setHours(now.getHours());
-        date.setMinutes(now.getMinutes());
-        date.setSeconds(now.getSeconds());
         modalStartTime.value = dateUtils.fullDateToInputDatetimeLocalValue(date);
         date.setHours(date.getHours() + 1);
         modalEndTime.value = dateUtils.fullDateToInputDatetimeLocalValue(date);
