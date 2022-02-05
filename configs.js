@@ -1,10 +1,12 @@
 const fs = require("fs");
 
-let config = {
+let appconfig = {
     bind: "127.0.0.1",
     listen_port: 80,
-    log_enabled: true,
-    log_destination: "cs",
+    log: {
+        enabled: true,
+        destination: "cs",
+    },
     security: {
         cors: false,
         ssl: false,
@@ -23,10 +25,10 @@ let config = {
         publicKey: "",
         privateKey: "",
     },
-    cache_urls: [],
+    cacheUrls: [],
 };
-config = JSON.parse(fs.readFileSync("resource/app.conf.json", { flag: "r", encoding: "utf-8" }));
-const AppConfig = config;
+appconfig = JSON.parse(fs.readFileSync("resource/app.conf.json", { flag: "r", encoding: "utf-8" }));
+const AppConfig = appconfig;
 
 module.exports = {
     AppConfig: AppConfig,

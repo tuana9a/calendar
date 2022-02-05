@@ -39,8 +39,8 @@ const _log = {
 };
 
 function log(option = new LogOption()) {
-    if (AppConfig.log_enabled) {
-        _log[AppConfig.log_destination](option);
+    if (AppConfig.log.enabled) {
+        _log[AppConfig.log.destination](option);
     }
 }
 

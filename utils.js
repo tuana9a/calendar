@@ -1,3 +1,5 @@
+const { ResponseEntity } = require("./entities");
+
 class Utils {
     reformatString(input) {
         try {
@@ -37,7 +39,35 @@ class DateTimeUtils {
 }
 const dateTimeUtils = new DateTimeUtils();
 
+class ServerUtils {
+    wrapExpressHandler(handler = async function () {}) {
+        return async function (req, resp) {
+            try {
+                await handler(req, resp);
+            } catch (err) {
+                resp.setHeader("Content-Type", "application/json; charset=utf-8");
+                resp.send(ResponseEntity.builder().code(0).message(err.message).build());
+                if (err instanceof ValidationError) {
+                    // do nothing safe catch :V
+                } else {
+                    LOGGER.error(err);
+                }
+            } finally {
+                //what ever error just end the connection
+                resp.end();
+            }
+        };
+    }
+    sendResponse(resp, code = 1, message = "", data = {}) {
+        resp.setHeader("Content-Type", "application/json; charset=utf-8");
+        resp.send(ResponseEntity.builder().code(code).message(message).data(data).build());
+    }
+}
+
+const serverUtils = new ServerUtils();
+
 module.exports = {
     utils: utils,
     dateTimeUtils: dateTimeUtils,
+    serverUtils: serverUtils,
 };

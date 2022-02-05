@@ -4,25 +4,7 @@ const { ResponseEntity } = require("./entities");
 const { UserController, EventController, PushApiController } = require("./controllers");
 const { ValidationError } = require("./exceptions");
 const { AppConfig } = require("./configs");
-
-function wrapExpressHandler(handler = async () => {}) {
-    return async function (req, resp) {
-        try {
-            await handler(req, resp);
-        } catch (err) {
-            resp.setHeader("Content-Type", "application/json; charset=utf-8");
-            resp.send(ResponseEntity.builder().code(0).message(err.message).build());
-            if (err instanceof ValidationError) {
-                // do nothing safe catch :V
-            } else {
-                LOGGER.error(err);
-            }
-        } finally {
-            //what ever error just end the connection
-            resp.end();
-        }
-    };
-}
+const { serverUtils } = require("./utils");
 
 function userController() {
     return UserController.getInstance();
@@ -44,16 +26,11 @@ function pushApiController() {
     return PushApiController.getInstance();
 }
 
-function sendResponse(resp, code = 1, message = "", data = {}) {
-    resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(ResponseEntity.builder().code(code).message(message).data(data).build());
-}
-
 async function register(req, resp) {
     let user = req.body;
     userValidations().checkUser(user);
     let result = await userController().register(user);
-    sendResponse(resp, 1, "success", result);
+    serverUtils.sendResponse(resp, 1, "success", result);
 }
 
 async function login(req, resp) {
@@ -71,7 +48,7 @@ async function updateUser(req, resp) {
     user.username = _user.username;
     userValidations().checkUser(user);
     let result = await userController().update(user);
-    sendResponse(resp, 1, "success", result);
+    serverUtils.sendResponse(resp, 1, "success", result);
 }
 
 async function deleteUser(req, resp) {
@@ -80,21 +57,21 @@ async function deleteUser(req, resp) {
     let _user = await userController().checkToken(token);
     user.username = _user.username;
     let result = await userController().delete(user);
-    sendResponse(resp, 1, "success", result);
+    serverUtils.sendResponse(resp, 1, "success", result);
 }
 
 async function findUserById(req, resp) {
     let id = req.params.id;
     let user = await userController().findById(id);
     delete user.password;
-    sendResponse(resp, 1, "success", user);
+    serverUtils.sendResponse(resp, 1, "success", user);
 }
 
 async function getUserInfo(req, resp) {
     let token = req.cookies.access_token;
     let user = await userController().checkToken(token);
     delete user.password;
-    sendResponse(resp, 1, "success", user);
+    serverUtils.sendResponse(resp, 1, "success", user);
 }
 
 async function findEvent(req, resp) {
@@ -103,7 +80,7 @@ async function findEvent(req, resp) {
     let filter = JSON.parse(req.query.filter);
     filter.username = user.username;
     let result = await eventController().find(filter);
-    sendResponse(resp, 1, "success", result);
+    serverUtils.sendResponse(resp, 1, "success", result);
 }
 
 async function addEvent(req, resp) {
@@ -113,7 +90,7 @@ async function addEvent(req, resp) {
     event.username = user.username;
     eventvalidations().checkEvent(event);
     let result = await eventController().insert(event);
-    sendResponse(resp, 1, "success", result);
+    serverUtils.sendResponse(resp, 1, "success", result);
 }
 
 async function updateEvent(req, resp) {
@@ -123,7 +100,7 @@ async function updateEvent(req, resp) {
     event.username = user.username;
     eventvalidations().checkEvent(event);
     let result = await eventController().update(event);
-    sendResponse(resp, 1, "received", result);
+    serverUtils.sendResponse(resp, 1, "received", result);
 }
 
 async function deleteEvent(req, resp) {
@@ -132,12 +109,12 @@ async function deleteEvent(req, resp) {
     let user = await userController().checkToken(token);
     let username = user.username;
     let result = await eventController().delete({ _id: eventId, username: username });
-    sendResponse(resp, 1, "received", result);
+    serverUtils.sendResponse(resp, 1, "received", result);
 }
 
 function getCacheUrls(req, resp) {
     resp.setHeader("Content-Type", "application/json; charset=utf-8");
-    resp.send(AppConfig.cache_urls);
+    resp.send(AppConfig.cacheUrls);
 }
 
 async function subcribePushNotification(req, resp) {
@@ -145,7 +122,7 @@ async function subcribePushNotification(req, resp) {
     let pushSubObject = req.body;
     let user = await userController().checkToken(token);
     let result = await pushApiController().subscribe(user, pushSubObject);
-    sendResponse(resp, 1, "received", result);
+    serverUtils.sendResponse(resp, 1, "received", result);
 }
 
 function getPushPubKey(req, resp) {
@@ -153,24 +130,24 @@ function getPushPubKey(req, resp) {
 }
 
 const apis = {
-    register: wrapExpressHandler(register),
-    login: wrapExpressHandler(login),
-    getCacheUrls: getCacheUrls,
+    register: serverUtils.wrapExpressHandler(register),
+    login: serverUtils.wrapExpressHandler(login),
+    getCacheUrls: serverUtils.wrapExpressHandler(getCacheUrls),
     user: {
-        update: wrapExpressHandler(updateUser),
-        delete: wrapExpressHandler(deleteUser),
-        findById: wrapExpressHandler(findUserById),
-        info: wrapExpressHandler(getUserInfo),
+        update: serverUtils.wrapExpressHandler(updateUser),
+        delete: serverUtils.wrapExpressHandler(deleteUser),
+        findById: serverUtils.wrapExpressHandler(findUserById),
+        info: serverUtils.wrapExpressHandler(getUserInfo),
     },
     event: {
-        find: wrapExpressHandler(findEvent),
-        add: wrapExpressHandler(addEvent),
-        update: wrapExpressHandler(updateEvent),
-        delete: wrapExpressHandler(deleteEvent),
+        find: serverUtils.wrapExpressHandler(findEvent),
+        add: serverUtils.wrapExpressHandler(addEvent),
+        update: serverUtils.wrapExpressHandler(updateEvent),
+        delete: serverUtils.wrapExpressHandler(deleteEvent),
     },
     push: {
-        subscribe: wrapExpressHandler(subcribePushNotification),
-        getPubKey: wrapExpressHandler(getPushPubKey)
+        subscribe: serverUtils.wrapExpressHandler(subcribePushNotification),
+        getPubKey: serverUtils.wrapExpressHandler(getPushPubKey),
     },
 };
 
