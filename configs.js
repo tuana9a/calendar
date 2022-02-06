@@ -2,7 +2,7 @@ const fs = require("fs");
 
 let appconfig = {
     bind: "127.0.0.1",
-    listen_port: 80,
+    port: 80,
     log: {
         enabled: true,
         destination: "cs",

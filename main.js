@@ -80,7 +80,7 @@ async function main() {
 
     await MongoDBClient.init(AppConfig.database.connection_string);
     console.log(" * database: " + AppConfig.database.connection_string);
-    let port = parseInt(process.env.PORT) || AppConfig.listen_port;
+    let port = parseInt(process.env.PORT) || AppConfig.port;
     if (AppConfig.security.ssl) {
         const key = fs.readFileSync(AppConfig.security.key_file);
         const cert = fs.readFileSync(AppConfig.security.cert_file);
