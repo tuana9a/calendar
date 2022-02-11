@@ -1,4 +1,5 @@
 const { ResponseEntity } = require("./entities");
+const { ValidationError } = require("./exceptions");
 
 class Utils {
     reformatString(input) {
