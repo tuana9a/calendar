@@ -58,7 +58,7 @@ async function main() {
     const server = express();
     server.use(express.json());
     server.use(cookieParser());
-    server.use(express.static("./webapp"));
+    server.use(express.static("src/main/webapp"));
 
     if (AppConfig.security.cors) {
         server.use(cors());
