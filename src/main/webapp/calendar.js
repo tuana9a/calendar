@@ -1,7 +1,7 @@
 import { apis } from "./apis.js";
 import { Calendarize } from "./calendarize.js";
 import { constants } from "./constants.js";
-import { DateUtils } from "./utils.js";
+import { dateUtils } from "./utils/date-utils.js";
 
 let now = new Date();
 let currentYear = now.getFullYear();
@@ -51,7 +51,6 @@ function updateMainCalendar() {
 
 function createEventOnClickHandler(eventElement) {
     function handler() {
-        const dateUtils = DateUtils.getInstance();
         selectingElement = eventElement;
         modalTitleDetail.value = eventElement.getAttribute("data-title");
         modalStartTimeDetail.value = dateUtils.fullDetailDate(eventElement.getAttribute("data-startTime"));
@@ -196,7 +195,6 @@ const mainOpts = {
     fullOrShort: "full",
     skipClickHandler: false,
     dbClickHandler: function (e) {
-        const dateUtils = DateUtils.getInstance();
         selectingElement = e.target;
         let date = new Date(parseInt(selectingElement.getAttribute("data-date")));
         let now = new Date();

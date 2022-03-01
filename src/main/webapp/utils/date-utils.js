@@ -2,48 +2,7 @@
 
 const DAYWEEK_COUNT = 7;
 
-export class CommonUtils {
-    static INSTANCE = new CommonUtils();
-    static getInstance() {
-        return this.INSTANCE;
-    }
-    getCookie(name) {
-        let pattern = name + "=";
-        let cookies = document.cookie.split(";");
-        for (let i = 0, length = cookies.length; i < length; i++) {
-            let cookie = cookies[i];
-            cookie = cookie.trim();
-            if (cookie.indexOf(pattern) == 0) {
-                return cookie.substring(pattern.length, cookie.length);
-            }
-        }
-        return "";
-    }
-    getQueryValueFromUrl(name, url = window.location.href) {
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return "";
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
-    existInArray(value, array = []) {
-        for (const e of array) {
-            if (e == value) return true;
-        }
-        return false;
-    }
-    fromAnyToNumber(input = {}) {
-        let value = parseInt(input);
-        return value ? value : 0;
-    }
-}
-
 export class DateUtils {
-    static INSTANCE = new DateUtils();
-    static getInstance() {
-        return this.INSTANCE;
-    }
     /**
      * chuyển từ object date thành string
      *      VD: Date -> 10/12/2021 lần lượt là ngày/tháng/năm
@@ -147,7 +106,7 @@ export class DateUtils {
         let y = new Date(parseInt(input)).getFullYear();
         let m = new Date(parseInt(input)).getMonth() + 1; //EXPLAIN: range: 0-11
         let d = new Date(parseInt(input)).getDate();
-        let h = new Date(parseInt(input)).getHours();   
+        let h = new Date(parseInt(input)).getHours();
         let M = new Date(parseInt(input)).getMinutes();
         let s = new Date(parseInt(input)).getSeconds();
         m = m < 10 ? "0" + m : m;
@@ -190,8 +149,8 @@ export class DateUtils {
         //EXPLAIN: đéo biết giải thích thế nào cái cộng 1, thời gian mệt vlòn
     }
     calcCurrentWeek(firstWeekDay = "") {
-        let start = DateUtils.getInstance().stringToDateVn(firstWeekDay);
-        let weeks = Math.floor(DateUtils.getInstance().daysBetween(start, new Date()) / DAYWEEK_COUNT);
+        let start = this.stringToDateVn(firstWeekDay);
+        let weeks = Math.floor(this.daysBetween(start, new Date()) / DAYWEEK_COUNT);
         return weeks + 1; //EXPLAIN: vd chia đc 0.5 thì là tuần 1, chia đc 1.2 là tuần 2
     }
     // Return the days in a month - given a year and the month number
@@ -218,24 +177,4 @@ export class DateUtils {
     }
 }
 
-export class RandomUtils {
-    static INSTANCE = new RandomUtils();
-    static getInstance() {
-        return this.INSTANCE;
-    }
-    color_hex(r = { s: 0, e: 255 }, g = { s: 0, e: 255 }, b = { s: 0, e: 255 }) {
-        let _r = Math.floor(r.s + Math.random() * (r.e - r.s));
-        let _g = Math.floor(g.s + Math.random() * (g.e - g.s));
-        let _b = Math.floor(b.s + Math.random() * (b.e - b.s));
-        _r = _r > 15 ? _r.toString(16) : "0" + _r.toString(16);
-        _g = _g > 15 ? _g.toString(16) : "0" + _g.toString(16);
-        _b = _b > 15 ? _b.toString(16) : "0" + _b.toString(16);
-        return `#${_r + _g + _b}`; //hexa
-    }
-    color_rgb(r = { start: 0, end: 255 }, g = { start: 0, end: 255 }, b = { start: 0, end: 255 }) {
-        let _r = Math.floor(r.start + Math.random() * (r.end - r.start));
-        let _g = Math.floor(g.start + Math.random() * (g.end - g.start));
-        let _b = Math.floor(b.start + Math.random() * (b.end - b.start));
-        return `rgb(${_r},${_g},${_b}`;
-    }
-}
+export const dateUtils = new DateUtils();

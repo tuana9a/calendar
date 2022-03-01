@@ -1,4 +1,4 @@
-import { DateUtils } from "./utils.js";
+import { dateUtils } from "./utils/date-utils.js";
 import { constants } from "./constants.js";
 
 function clearDayStateClassName(element) {
@@ -42,7 +42,6 @@ export class Calendarize {
         },
     ) {
         //if (monthNum === undefined || year === undefined) return "something is missing";
-        const dateUtils = DateUtils.getInstance();
         const calendarElement = this.containerElement;
 
         let date = new Date(yearNum, monthNum, dateNum);

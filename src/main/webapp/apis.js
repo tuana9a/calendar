@@ -1,88 +1,8 @@
 "use strict";
 
+import { app } from "./app.js";
+
 let isServiceWorkderAvailable = "serviceWorker" in navigator;
-
-const SERVICE_WORKER_FILE = "sw.js";
-const CACHE_NAME = "calendar";
-
-class CacheUtils {
-    static INSTANCE = new CacheUtils();
-    static getInstance() {
-        return this.INSTANCE;
-    }
-    async clear() {
-        return caches.keys().then(function (cacheNames) {
-            return Promise.all(
-                cacheNames.map(function (cacheName) {
-                    return caches.delete(cacheName);
-                }),
-            );
-        });
-    }
-    async snapshot() {
-        let cache = await caches.open(CACHE_NAME);
-        let snapshot = new Map();
-        const requests = await cache.keys();
-        for (const request of requests) {
-            const response = await cache.match(request);
-            snapshot.set(request, response);
-        }
-        return snapshot;
-    }
-}
-
-class ServiceWorkerUtils {
-    static INSTANCE = new ServiceWorkerUtils();
-    static getInstance() {
-        return this.INSTANCE;
-    }
-    registerServiceWorker(serviceWorkerFile = "", onSuccess = console.log, onError = console.error) {
-        if (!isServiceWorkderAvailable) return;
-        navigator.serviceWorker.register(serviceWorkerFile).then(onSuccess).catch(onError);
-    }
-    async unregisterServiceWorkers() {
-        return navigator.serviceWorker.getRegistrations().then(function (serviceWorkers) {
-            return serviceWorkers.map(function (serviceWorker) {
-                return serviceWorker.unregister();
-            });
-        });
-    }
-}
-
-class App {
-    static INSTANCE = new App();
-    static getInstance() {
-        return this.INSTANCE;
-    }
-    async update(onSuccess = () => {}, onError = console.error) {
-        const cacheUtils = CacheUtils.getInstance();
-        const snapshot = await cacheUtils.snapshot();
-        await cacheUtils.clear();
-        try {
-            const cacheUrls = await apis.app.cache_urls();
-            let cache = await caches.open(CACHE_NAME);
-            for (const url of cacheUrls) {
-                const request = new Request(url, { cache: "reload" });
-                cache.add(request);
-            }
-            onSuccess();
-        } catch (err) {
-            let cache = await caches.open(CACHE_NAME);
-            snapshot.forEach((response, request) => {
-                cache.put(request, response);
-            });
-            onError(err);
-        }
-    }
-    install(onSuccess = (e) => {}, onError = (e) => {}) {
-        ServiceWorkerUtils.getInstance().registerServiceWorker(SERVICE_WORKER_FILE, onSuccess, onError);
-    }
-    uninstall() {
-        localStorage.clear();
-        CacheUtils.getInstance().clear();
-        ServiceWorkerUtils.getInstance().unregisterServiceWorkers();
-    }
-}
 
 export const apis = {
     user: {
@@ -165,9 +85,9 @@ export const apis = {
         },
     },
     app: {
-        install: App.getInstance().install,
-        update: App.getInstance().update,
-        uninstall: App.getInstance().uninstall,
+        install: app.install,
+        update: app.update,
+        uninstall: app.uninstall,
         cache_urls: async function () {
             let url = "/caches.json";
             return fetch(url).then((resp) => resp.json());
